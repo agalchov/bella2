@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Обичам те ❤</title>
+<title>Мише ❤</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg-top:#fff6f8;
@@ -127,14 +127,56 @@
     50%      { margin-left:var(--sway, 30px); }
   }
 
+  .compliments{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:3;
+  }
+
+  .compliment{
+    position:absolute;
+    top:-80px;
+    left:0;
+    max-width:64vw;
+    text-align:center;
+    white-space:normal;
+    transform:translateX(-50%);
+    font-family:'Caveat', cursive;
+    font-weight:600;
+    font-size:clamp(22px, 4.4vw, 32px);
+    color:var(--text-pink);
+    opacity:0;
+    line-height:1.25;
+    text-shadow:0 1px 3px rgba(255,255,255,0.6);
+    animation-name:fallText, swayText;
+    animation-timing-function:linear, ease-in-out;
+    animation-iteration-count:infinite, infinite;
+    will-change:transform, top, opacity;
+  }
+
+  @keyframes fallText{
+    0%   { top:-80px; opacity:0; }
+    8%   { opacity:0.95; }
+    85%  { opacity:0.95; }
+    100% { top:108vh; opacity:0; }
+  }
+
+  @keyframes swayText{
+    0%, 100% { margin-left:0px; }
+    50%      { margin-left:var(--swayT, 24px); }
+  }
+
   @media (prefers-reduced-motion: reduce){
-    svg.heart, .glow, .petal{ animation:none !important; }
+    svg.heart, .glow, .petal, .compliment{ animation:none !important; }
   }
 </style>
 </head>
 <body>
 
   <div class="petals" id="petals"></div>
+  <div class="compliments" id="compliments"></div>
 
   <div class="stage">
     <h1>Сърцето ми бие още за теб, Мише! ❤</h1>
@@ -183,6 +225,40 @@
 
     field.appendChild(p);
   }
+
+  const compliments = [
+    "Усмивката ти ме топли",
+    "Гласът ти ми липсваше",
+    "С тебе светът изглежда по-хубав",
+    "Мислите ми все при тебе са",
+    "Липсваше ми повече, отколкото показвах",
+    "С тебе времето спира",
+    "Сърцето ми те разпознава отдалеко",
+    "Всяка моя мисъл стига до тебе",
+    "Споменът за теб ме кара да се усмихвам",
+    "Ти си моят любим спомен"
+  ];
+
+  const cField = document.getElementById('compliments');
+
+  compliments.forEach((text) => {
+    const c = document.createElement('div');
+    c.className = 'compliment';
+    c.textContent = text;
+
+    const left = 14 + Math.random() * 72;
+    const fallDur = 17 + Math.random() * 8;
+    const swayDur = 3 + Math.random() * 2.5;
+    const delay = -Math.random() * fallDur;
+    const swayAmt = (Math.random() * 22 + 14) * (Math.random() < 0.5 ? -1 : 1);
+
+    c.style.left = left + 'vw';
+    c.style.setProperty('--swayT', swayAmt + 'px');
+    c.style.animationDuration = `${fallDur}s, ${swayDur}s`;
+    c.style.animationDelay = `${delay}s, ${delay}s`;
+
+    cField.appendChild(c);
+  });
 </script>
 
 </body>
