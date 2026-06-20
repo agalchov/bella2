@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мише ❤</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-top:#fff6f8;
+    --bg-bottom:#ffe1ea;
+    --heart-dark:#d81b60;
+    --heart-mid:#ef4f86;
+    --heart-light:#ff8fb3;
+    --text-pink:#ec2c6d;
+    --petal-1:#f8b4c8;
+    --petal-2:#f4729f;
+    --petal-3:#ffd6e2;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0;
+    height:100%;
+    overflow:hidden;
+    background:linear-gradient(180deg,var(--bg-top) 0%, var(--bg-bottom) 100%);
+    font-family:'Baloo 2', sans-serif;
+  }
+
+  .stage{
+    position:relative;
+    width:100%;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:6vh;
+  }
+
+  h1{
+    margin:0;
+    padding:0 8vw;
+    text-align:center;
+    color:var(--text-pink);
+    font-weight:800;
+    font-size:clamp(28px, 7vw, 48px);
+    line-height:1.25;
+    letter-spacing:0.5px;
+    z-index:5;
+    text-shadow:0 2px 0 rgba(255,255,255,0.4);
+  }
+
+  .heart-wrap{
+    position:relative;
+    width:clamp(170px, 38vw, 260px);
+    height:clamp(170px, 38vw, 260px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:5;
+  }
+
+  .glow{
+    position:absolute;
+    width:160%;
+    height:160%;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(236,44,109,0.35) 0%, rgba(236,44,109,0) 65%);
+    animation:glowPulse 1.15s ease-in-out infinite;
+  }
+
+  svg.heart{
+    width:78%;
+    height:78%;
+    filter:drop-shadow(0 8px 18px rgba(216,27,96,0.45));
+    animation:beat 1.15s ease-in-out infinite;
+    transform-origin:center center;
+  }
+
+  @keyframes beat{
+    0%   { transform:scale(1); }
+    14%  { transform:scale(1.12); }
+    28%  { transform:scale(1); }
+    42%  { transform:scale(1.18); }
+    60%  { transform:scale(1); }
+    100% { transform:scale(1); }
+  }
+
+  @keyframes glowPulse{
+    0%   { opacity:0.5; transform:scale(0.9); }
+    28%  { opacity:0.9; transform:scale(1.05); }
+    60%  { opacity:0.45; transform:scale(0.95); }
+    100% { opacity:0.5; transform:scale(0.9); }
+  }
+
+  .petals{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:2;
+  }
+
+  .petal{
+    position:absolute;
+    top:-40px;
+    width:16px;
+    height:20px;
+    border-radius:0% 60% 0% 60%;
+    opacity:0.85;
+    animation-name:fall, sway;
+    animation-timing-function:linear, ease-in-out;
+    animation-iteration-count:infinite, infinite;
+    will-change:transform;
+  }
+
+  @keyframes fall{
+    0%   { top:-40px; }
+    100% { top:108vh; }
+  }
+
+  @keyframes sway{
+    0%, 100% { margin-left:0px; }
+    50%      { margin-left:var(--sway, 30px); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    svg.heart, .glow, .petal{ animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="petals" id="petals"></div>
+
+  <div class="stage">
+    <h1>Сърцето ми бие още за теб, Мише! ❤</h1>
+
+    <div class="heart-wrap">
+      <div class="glow"></div>
+      <svg class="heart" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="var(--heart-light)"/>
+            <stop offset="55%" stop-color="var(--heart-mid)"/>
+            <stop offset="100%" stop-color="var(--heart-dark)"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#heartGrad)" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </div>
+  </div>
+
+<script>
+  const colors = ['var(--petal-1)','var(--petal-2)','var(--petal-3)'];
+  const field = document.getElementById('petals');
+  const COUNT = 28;
+
+  for (let i = 0; i < COUNT; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+
+    const size = 12 + Math.random() * 14;
+    const left = Math.random() * 100;
+    const fallDur = 6 + Math.random() * 6;
+    const swayDur = 2 + Math.random() * 2;
+    const delay = -Math.random() * 12;
+    const rot = Math.random() * 360;
+    const sway = (Math.random() * 50 + 15) * (Math.random() < 0.5 ? -1 : 1);
+    const color = colors[Math.floor(Math.random() * colors.length)];
+
+    p.style.left = left + 'vw';
+    p.style.width = size + 'px';
+    p.style.height = (size * 1.25) + 'px';
+    p.style.background = color;
+    p.style.transform = `rotate(${rot}deg)`;
+    p.style.setProperty('--sway', sway + 'px');
+    p.style.animationDuration = `${fallDur}s, ${swayDur}s`;
+    p.style.animationDelay = `${delay}s, ${delay}s`;
+
+    field.appendChild(p);
+  }
+</script>
+
+</body>
+</html>
