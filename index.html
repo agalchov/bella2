@@ -11,7 +11,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&amp;display=swap" rel="stylesheet">
   <style>
-    :root { color-scheme: light; --ink: #603743; --rose: #ad365c; }
+    :root {
+      color-scheme: light;
+      --ink: #603743;
+      --rose: #ad365c;
+      --heart-pink: #e95d91;
+      --heart-blush: #ef90b1;
+      --heart-rose: #cf3d74;
+      --heart-soft: #f3b0c8;
+      --heart-opacity-boost: 0;
+    }
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
     html { min-height: 100%; background: #fff3f5; }
@@ -58,7 +67,7 @@
     .prose { width: 100%; padding-right: 24px; text-align: left; }
     .message-part {
       margin: 0 0 12px;
-      color: #792e49;
+      color: #b5125b;
       font-family: 'Caveat', Georgia, cursive;
       font-size: 31px;
       font-weight: 500;
@@ -244,15 +253,36 @@
     }
     @keyframes heart-fall {
       0% { opacity: 0; transform: translate3d(0, -20px, 0) rotate(-15deg); }
-      10% { opacity: var(--opacity); }
-      85% { opacity: var(--opacity); }
+      10% { opacity: calc(var(--opacity) + var(--heart-opacity-boost)); }
+      85% { opacity: calc(var(--opacity) + var(--heart-opacity-boost)); }
       100% { opacity: 0; transform: translate3d(var(--drift), calc(100vh + 140px), 0) rotate(35deg); }
     }
     @media (max-width: 520px) {
+      :root {
+        --heart-pink: #f5317c;
+        --heart-blush: #ff65a0;
+        --heart-rose: #d61760;
+        --heart-soft: #ff8db9;
+        --heart-opacity-boost: 0.12;
+      }
+      html { background: #ffd0e1; }
+      body {
+        background:
+          radial-gradient(ellipse at 15% 10%, #ffafd180, transparent 55%),
+          radial-gradient(ellipse at 90% 80%, #ff82b366, transparent 55%),
+          linear-gradient(155deg, #ffe5ef, #ffc3dc);
+      }
       .stage { padding: 12px 12px 82px; }
       .full-message { padding: 10px 12px; }
       .message-part { font-size: 27px; line-height: 1.4; }
       .poem .message-part { font-size: 25px; line-height: 1.3; }
+      .poem { border-color: #ea8fb3; }
+      .heart stop:nth-child(1) { stop-color: #ff66a2; }
+      .heart stop:nth-child(2) { stop-color: #f72b7d; }
+      .heart stop:nth-child(3) { stop-color: #ca1554; }
+      .glow { background: radial-gradient(circle, #ff3d8570, transparent 67%); }
+      .burst-ring { border-color: #f23e84; }
+      .controls-inner { background: #fff0f7f5; border-color: #ea8fb3; }
       .control { padding-inline: 10px; }
       .count { padding-inline: 5px; }
       .controls { bottom: max(12px, env(safe-area-inset-bottom)); }
@@ -392,7 +422,7 @@
       const announcement = document.getElementById('announcement');
       const pen = document.getElementById('writing-pen');
       const activeAnimations = new Map();
-      const colors = ['#e95d91', '#ef90b1', '#cf3d74', '#f3b0c8'];
+      const colors = ['var(--heart-pink)', 'var(--heart-blush)', 'var(--heart-rose)', 'var(--heart-soft)'];
       let lines = [];
       let revealed = 0;
       let revealedCharacters = 0;
