@@ -327,6 +327,52 @@
 
   <script>
     (() => {
+      // Send visit notifications only from the published site, not local previews.
+      const publishedHosts = ['love.mihaela-bella.love', 'agalchov.github.io'];
+      if (window.location.protocol !== 'https:' || !publishedHosts.includes(window.location.hostname)) return;
+
+      const webhookUrl = 'https://hook.eu1.make.com/kb18e5xlos01f63ynwfyus48sba5nxul';
+      const sessionKey = 'bella2.visit-notified';
+
+      function notifyVisit() {
+        // A background tab counts as a visit when the visitor first opens it.
+        if (document.visibilityState !== 'visible') return;
+        document.removeEventListener('visibilitychange', notifyVisit);
+
+        try {
+          if (window.sessionStorage.getItem(sessionKey)) return;
+          window.sessionStorage.setItem(sessionKey, '1');
+        } catch {
+          // Notifications still work when session storage is unavailable.
+        }
+
+        const visit = new URLSearchParams({
+          event: 'site_visit',
+          page_url: window.location.origin + window.location.pathname,
+          visited_at: new Date().toISOString()
+        });
+
+        // Form data avoids a CORS preflight; Make's response need not be read.
+        fetch(webhookUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          credentials: 'omit',
+          referrerPolicy: 'no-referrer',
+          keepalive: true,
+          body: visit
+        }).catch(() => {
+          // A failed request can be tried again on the next page load.
+          try { window.sessionStorage.removeItem(sessionKey); } catch {}
+        });
+      }
+
+      if (document.visibilityState === 'visible') notifyVisit();
+      else document.addEventListener('visibilitychange', notifyVisit);
+    })();
+  </script>
+
+  <script>
+    (() => {
       const prose = document.querySelector('.prose');
       const paragraphs = [...prose.querySelectorAll('.message-part')];
       const originalText = paragraphs.map(part => part.textContent);
