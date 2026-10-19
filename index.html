@@ -1,265 +1,757 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Обичам те ❤</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg-top:#fff6f8;
-    --bg-bottom:#ffe1ea;
-    --heart-dark:#d81b60;
-    --heart-mid:#ef4f86;
-    --heart-light:#ff8fb3;
-    --text-pink:#ec2c6d;
-    --petal-1:#f8b4c8;
-    --petal-2:#f4729f;
-    --petal-3:#ffd6e2;
-  }
-
-  *{ box-sizing:border-box; }
-
-  html,body{
-    margin:0;
-    height:100%;
-    overflow:hidden;
-    background:linear-gradient(180deg,var(--bg-top) 0%, var(--bg-bottom) 100%);
-    font-family:'Baloo 2', sans-serif;
-  }
-
-  .stage{
-    position:relative;
-    width:100%;
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:6vh;
-  }
-
-  h1{
-    margin:0;
-    padding:0 8vw;
-    text-align:center;
-    color:var(--text-pink);
-    font-weight:800;
-    font-size:clamp(28px, 7vw, 48px);
-    line-height:1.25;
-    letter-spacing:0.5px;
-    z-index:5;
-    text-shadow:0 2px 0 rgba(255,255,255,0.4);
-  }
-
-  .heart-wrap{
-    position:relative;
-    width:clamp(170px, 38vw, 260px);
-    height:clamp(170px, 38vw, 260px);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:5;
-  }
-
-  .glow{
-    position:absolute;
-    width:160%;
-    height:160%;
-    border-radius:50%;
-    background:radial-gradient(circle, rgba(236,44,109,0.35) 0%, rgba(236,44,109,0) 65%);
-    animation:glowPulse 1.15s ease-in-out infinite;
-  }
-
-  svg.heart{
-    width:78%;
-    height:78%;
-    filter:drop-shadow(0 8px 18px rgba(216,27,96,0.45));
-    animation:beat 1.15s ease-in-out infinite;
-    transform-origin:center center;
-  }
-
-  @keyframes beat{
-    0%   { transform:scale(1); }
-    14%  { transform:scale(1.12); }
-    28%  { transform:scale(1); }
-    42%  { transform:scale(1.18); }
-    60%  { transform:scale(1); }
-    100% { transform:scale(1); }
-  }
-
-  @keyframes glowPulse{
-    0%   { opacity:0.5; transform:scale(0.9); }
-    28%  { opacity:0.9; transform:scale(1.05); }
-    60%  { opacity:0.45; transform:scale(0.95); }
-    100% { opacity:0.5; transform:scale(0.9); }
-  }
-
-  .petals{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    overflow:hidden;
-    z-index:2;
-  }
-
-  .petal{
-    position:absolute;
-    top:-40px;
-    width:16px;
-    height:20px;
-    border-radius:0% 60% 0% 60%;
-    opacity:0.85;
-    animation-name:fall, sway;
-    animation-timing-function:linear, ease-in-out;
-    animation-iteration-count:infinite, infinite;
-    will-change:transform;
-  }
-
-  @keyframes fall{
-    0%   { top:-40px; }
-    100% { top:108vh; }
-  }
-
-  @keyframes sway{
-    0%, 100% { margin-left:0px; }
-    50%      { margin-left:var(--sway, 30px); }
-  }
-
-  .compliments{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    overflow:hidden;
-    z-index:3;
-  }
-
-  .compliment{
-    position:absolute;
-    top:-80px;
-    left:0;
-    max-width:64vw;
-    text-align:center;
-    white-space:normal;
-    transform:translateX(-50%);
-    font-family:'Caveat', cursive;
-    font-weight:600;
-    font-size:clamp(22px, 4.4vw, 32px);
-    color:var(--text-pink);
-    opacity:0;
-    line-height:1.25;
-    text-shadow:0 1px 3px rgba(255,255,255,0.6);
-    animation-name:fallText, swayText;
-    animation-timing-function:linear, ease-in-out;
-    animation-iteration-count:infinite, infinite;
-    will-change:transform, top, opacity;
-  }
-
-  @keyframes fallText{
-    0%   { top:-80px; opacity:0; }
-    8%   { opacity:0.95; }
-    85%  { opacity:0.95; }
-    100% { top:108vh; opacity:0; }
-  }
-
-  @keyframes swayText{
-    0%, 100% { margin-left:0px; }
-    50%      { margin-left:var(--swayT, 24px); }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    svg.heart, .glow, .petal, .compliment{ animation:none !important; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff3f5">
+  <meta name="description" content="За теб, Мише.">
+  <title>За теб, Мише ❤</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light; --ink: #603743; --rose: #ad365c; }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html { min-height: 100%; background: #fff3f5; }
+    body {
+      margin: 0;
+      min-width: 280px;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 20% 15%, #fbdce580, transparent 50%),
+        radial-gradient(ellipse at 85% 80%, #f2bfd390, transparent 50%),
+        linear-gradient(155deg, #fff8f7, #fce4ed);
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+    button { font: inherit; }
+    button:focus-visible { outline: 3px solid var(--rose); outline-offset: 4px; }
+    ::selection { background: #f4c5d5; color: #542333; }
+    .stage {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100svh;
+      padding: 20px 20px 88px;
+      text-align: center;
+    }
+    .is-enhanced .stage { height: 100svh; min-height: 0; }
+    .full-message {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      width: min(860px, 100%);
+      padding: 14px 22px;
+      scrollbar-width: thin;
+      scrollbar-color: #d89bb0 transparent;
+      overscroll-behavior: contain;
+      overflow-anchor: none;
+    }
+    .is-enhanced .full-message { overflow-y: auto; }
+    .full-message:focus { outline: none; }
+    .full-message:focus-visible { outline: 2px solid #c7849a; outline-offset: -2px; }
+    .message-content { width: 100%; max-width: 760px; margin: 0 auto; }
+    .prose { width: 100%; padding-right: 24px; text-align: left; }
+    .message-part {
+      margin: 0 0 12px;
+      color: #792e49;
+      font-family: 'Caveat', Georgia, cursive;
+      font-size: 31px;
+      font-weight: 500;
+      line-height: 1.4;
+      text-shadow: 0 1px 2px #fff8;
+    }
+    .message-part:last-child { margin-bottom: 0; }
+    .message-line { position: relative; display: block; }
+    .message-line.is-unread { visibility: hidden; }
+    .writing-ink { display: inline-block; max-width: 100%; }
+    .writing-ink.is-revealing {
+      -webkit-mask-image: linear-gradient(90deg, #000 calc(50% - 4px), transparent calc(50% + 4px));
+      mask-image: linear-gradient(90deg, #000 calc(50% - 4px), transparent calc(50% + 4px));
+      -webkit-mask-size: 200% 100%;
+      mask-size: 200% 100%;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+    }
+    .writing-pen {
+      position: absolute;
+      z-index: 2;
+      top: calc(1em - 32px);
+      left: -2px;
+      width: 36px;
+      height: 36px;
+      pointer-events: none;
+      filter: drop-shadow(1px 2px 2px #792e4928);
+      will-change: transform;
+    }
+    .pen-shape {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      transform-origin: 2px 36px;
+      animation: pen-scribble 240ms ease-in-out infinite;
+    }
+    .poem {
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid #e8bfce;
+      text-align: center;
+      transform-origin: center;
+    }
+    .poem .message-part {
+      margin-bottom: 0;
+      font-family: 'Caveat', Georgia, cursive;
+      font-size: 27px;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+    .poem .verse-space-before { margin-top: 1.3em; }
+    .heart-wrap {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: clamp(210px, 25vw, 280px);
+      height: clamp(210px, 25vw, 280px);
+      margin: 4px 0 0;
+      flex-shrink: 0;
+    }
+    .glow {
+      position: absolute;
+      inset: -22%;
+      border-radius: 50%;
+      background: radial-gradient(circle, #e75b9340, transparent 67%);
+    }
+    .heart {
+      width: 88%;
+      height: 88%;
+      filter: drop-shadow(0 15px 24px #bd3a6740);
+      transform-origin: center;
+    }
+    .is-enhanced .heart { animation: heartbeat 1.8s ease-in-out infinite; }
+    .is-enhanced .glow { animation: glow-pulse 1.8s ease-in-out infinite; }
+    .is-enhanced[data-phase="waiting"] .heart,
+    .is-enhanced[data-phase="waiting"] .glow,
+    .is-enhanced[data-phase="bursting"] .heart,
+    .is-enhanced[data-phase="bursting"] .glow { animation-duration: 0.55s; }
+    .heart-rain, .heart-burst {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .heart-rain { z-index: 0; }
+    .heart-burst { z-index: 4; }
+    .burst-heart {
+      position: absolute;
+      color: #e85488;
+      font-family: Georgia, serif;
+      line-height: 1;
+      will-change: transform, opacity;
+    }
+    .burst-ring {
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      margin: -55px;
+      border: 2px solid #e97da3;
+      border-radius: 50%;
+      box-shadow: 0 0 36px #ef8aad66;
+    }
+    .falling-heart {
+      position: absolute;
+      top: -100px;
+      color: var(--heart-color);
+      font-family: Georgia, serif;
+      font-size: var(--size);
+      line-height: 1;
+      opacity: 0;
+      animation: heart-fall var(--duration) linear var(--delay) infinite;
+    }
+    .controls {
+      position: fixed;
+      z-index: 5;
+      inset: auto 12px 18px;
+      display: flex;
+      justify-content: center;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .controls-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      max-width: 100%;
+      padding: 5px 10px;
+      border: 1px solid #ebc8d4;
+      border-radius: 24px;
+      background: #fff8fbf2;
+      box-shadow: 0 5px 25px #9b416218;
+    }
+    .count {
+      padding: 0 8px;
+      color: #875064;
+      font-size: 11px;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 1px;
+    }
+    .control {
+      min-height: 44px;
+      padding: 10px 14px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      color: #875064;
+      background: transparent;
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .control:hover { background: #f8e5ed; }
+    .control-primary { border-color: #e7c6d1; color: #923b56; }
+    .is-paused .heart, .is-paused .glow, .is-paused .falling-heart, .is-paused .pen-shape,
+    .is-away .heart, .is-away .glow, .is-away .falling-heart, .is-away .pen-shape { animation-play-state: paused; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+    @keyframes heartbeat {
+      0%, 60%, 100% { transform: scale(1); }
+      14% { transform: scale(1.12); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.18); }
+    }
+    @keyframes pen-scribble {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: translateY(-1px) rotate(2deg); }
+    }
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.5; transform: scale(0.9); }
+      42% { opacity: 1; transform: scale(1.1); }
+      60% { opacity: 0.6; transform: scale(0.95); }
+    }
+    @keyframes heart-fall {
+      0% { opacity: 0; transform: translate3d(0, -20px, 0) rotate(-15deg); }
+      10% { opacity: var(--opacity); }
+      85% { opacity: var(--opacity); }
+      100% { opacity: 0; transform: translate3d(var(--drift), calc(100vh + 140px), 0) rotate(35deg); }
+    }
+    @media (max-width: 520px) {
+      .stage { padding: 12px 12px 82px; }
+      .full-message { padding: 10px 12px; }
+      .message-part { font-size: 27px; line-height: 1.4; }
+      .poem .message-part { font-size: 25px; line-height: 1.3; }
+      .control { padding-inline: 10px; }
+      .count { padding-inline: 5px; }
+      .controls { bottom: max(12px, env(safe-area-inset-bottom)); }
+    }
+    @media (max-height: 600px) {
+      .heart-wrap { width: 140px; height: 140px; }
+      .stage { padding-top: 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; }
+      .heart-rain, .heart-burst, .writing-pen { display: none; }
+    }
+  </style>
 </head>
 <body>
+  <div class="heart-rain" id="heart-rain" aria-hidden="true"></div>
+  <div class="heart-burst" id="heart-burst" aria-hidden="true"></div>
+  <span class="writing-pen" id="writing-pen" aria-hidden="true" hidden><svg class="pen-shape" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M10 25 27 3a4 4 0 0 1 6 5L16 30Z" fill="#893c59"/><path d="m12 24 16-20 3 2-16 21Z" fill="#c67d97"/><path d="m10 25 6 5-14 7 3-11Z" fill="#e6bb75" stroke="#94652f" stroke-width="0.7"/><path d="m2 37 9-9" stroke="#79512d" stroke-width="1"/><circle cx="10" cy="29" r="1.3" fill="#79512d"/><path d="m26 5 6 5" stroke="#f2d59d" stroke-width="2"/></svg></span>
 
-  <div class="petals" id="petals"></div>
-  <div class="compliments" id="compliments"></div>
+  <main class="stage">
+    <article class="full-message" id="full-message" aria-label="Послание за Мише" tabindex="0">
+      <div class="message-content" id="message-content">
+        <!-- The prose reveals on each beat; the complete poem follows the heart burst. -->
+        <div class="prose">
+          <p class="message-part">Мише, пиша ти тук, защото виждам, че не отваряш чата.</p>
+          <p class="message-part">Знам, че мина много време, но не съм спирал да мисля за теб.</p>
+          <p class="message-part">Щом толкова дълго стоиш в сърцето ми, значи то просто не може да те забрави и все още те търси.</p>
+          <p class="message-part">И не мога да го спра.</p>
+          <p class="message-part">Единственото, което мога да направя, е да опитам всичко, за да бъда отново близо до теб.</p>
+        </div>
+        <div class="poem" id="poem">
+          <p class="message-part verse-space-before">С усмивката ти утрото се ражда,</p>
+          <p class="message-part">дарява нов живот в пепелта,</p>
+          <p class="message-part">на сърцето огъня подклажда,</p>
+          <p class="message-part">завръща се в душата радостта.</p>
+          <p class="message-part verse-space-before">Очите ти вселената побират,</p>
+          <p class="message-part">безброй звезди блестят в тях,</p>
+          <p class="message-part">само с поглед те изтръгват</p>
+          <p class="message-part">от най-дълбокия и тъмен мрак.</p>
+          <p class="message-part verse-space-before">Косите ти са северно сияние ,</p>
+          <p class="message-part">обагрило безкраен небосвод !</p>
+          <p class="message-part">Това си ти , божествено създание !</p>
+          <p class="message-part">На теб Мишенце бих посветил един живот !</p>
+        </div>
+      </div>
+    </article>
 
-  <div class="stage">
-    <h1>Сърцето ми бие още за теб, Мише! ❤</h1>
-
-    <div class="heart-wrap">
+    <div class="heart-wrap" aria-hidden="true">
       <div class="glow"></div>
       <svg class="heart" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="var(--heart-light)"/>
-            <stop offset="55%" stop-color="var(--heart-mid)"/>
-            <stop offset="100%" stop-color="var(--heart-dark)"/>
+          <linearGradient id="heart-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff9fbe"/>
+            <stop offset="55%" stop-color="#ed5d92"/>
+            <stop offset="100%" stop-color="#c32260"/>
           </linearGradient>
         </defs>
-        <path fill="url(#heartGrad)" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        <path fill="url(#heart-gradient)" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
       </svg>
     </div>
-  </div>
 
-<script>
-  const colors = ['var(--petal-1)','var(--petal-2)','var(--petal-3)'];
-  const field = document.getElementById('petals');
-  const COUNT = 28;
+    <div class="controls" id="controls" hidden>
+      <div class="controls-inner">
+        <span class="count" id="count" aria-label="Показани редове"></span>
+        <button class="control" id="pause" type="button">Пауза</button>
+        <button class="control control-primary" id="show-all" type="button">Цялото послание</button>
+        <button class="control control-primary" id="replay" type="button" hidden>Пусни отначало ↺</button>
+      </div>
+    </div>
+    <p class="sr-only" id="announcement" aria-live="polite" aria-atomic="true"></p>
+  </main>
 
-  for (let i = 0; i < COUNT; i++) {
-    const p = document.createElement('div');
-    p.className = 'petal';
+  <script>
+    (() => {
+      const prose = document.querySelector('.prose');
+      const paragraphs = [...prose.querySelectorAll('.message-part')];
+      const originalText = paragraphs.map(part => part.textContent);
+      const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const fullMessage = document.getElementById('full-message');
+      const poem = document.getElementById('poem');
+      const heart = document.querySelector('.heart');
+      const glow = document.querySelector('.glow');
+      const heartWrap = document.querySelector('.heart-wrap');
+      const burstLayer = document.getElementById('heart-burst');
+      const heartField = document.getElementById('heart-rain');
+      const controls = document.getElementById('controls');
+      const pauseButton = document.getElementById('pause');
+      const showAllButton = document.getElementById('show-all');
+      const replayButton = document.getElementById('replay');
+      const count = document.getElementById('count');
+      const announcement = document.getElementById('announcement');
+      const pen = document.getElementById('writing-pen');
+      const activeAnimations = new Map();
+      const colors = ['#e95d91', '#ef90b1', '#cf3d74', '#f3b0c8'];
+      let lines = [];
+      let revealed = 0;
+      let revealedCharacters = 0;
+      let phase = 'reading';
+      let paused = false;
+      let lineAnimation = null;
+      let penAnimation = null;
+      let delayTimer = null;
+      let delayDue = 0;
+      let delayRemaining = 0;
+      let followLatest = true;
+      let expectedScrollTop = null;
+      let resizeFrame = null;
+      let measuredProseWidth = 0;
 
-    const size = 12 + Math.random() * 14;
-    const left = Math.random() * 100;
-    const fallDur = 6 + Math.random() * 6;
-    const swayDur = 2 + Math.random() * 2;
-    const delay = -Math.random() * 12;
-    const rot = Math.random() * 360;
-    const sway = (Math.random() * 50 + 15) * (Math.random() < 0.5 ? -1 : 1);
-    const color = colors[Math.floor(Math.random() * colors.length)];
+      function setPhase(value) {
+        phase = value;
+        document.body.dataset.phase = value;
+      }
 
-    p.style.left = left + 'vw';
-    p.style.width = size + 'px';
-    p.style.height = (size * 1.25) + 'px';
-    p.style.background = color;
-    p.style.transform = `rotate(${rot}deg)`;
-    p.style.setProperty('--sway', sway + 'px');
-    p.style.animationDuration = `${fallDur}s, ${swayDur}s`;
-    p.style.animationDelay = `${delay}s, ${delay}s`;
+      function updateCount() {
+        count.textContent = String(revealed).padStart(2, '0') + ' / ' + String(lines.length).padStart(2, '0');
+      }
 
-    field.appendChild(p);
-  }
+      function finishAnimation(animation) {
+        if (!activeAnimations.has(animation)) return;
+        const onFinish = activeAnimations.get(animation);
+        activeAnimations.delete(animation);
+        animation.onfinish = null;
+        animation.cancel();
+        if (onFinish) onFinish();
+      }
 
-  const compliments = [
-    "Усмивката ти ме топли",
-    "Гласът ти ми липсваше",
-    "С тебе светът изглежда по-хубав",
-    "Мислите ми все при тебе са",
-    "Липсваше ми повече, отколкото показвах",
-    "С тебе времето спира",
-    "Сърцето ми те разпознава отдалеко",
-    "Всяка моя мисъл стига до тебе",
-    "Споменът за теб ме кара да се усмихвам",
-    "Ти си моят любим спомен"
-  ];
+      function animate(element, frames, options, onFinish) {
+        const animation = element.animate(frames, options);
+        activeAnimations.set(animation, onFinish);
+        animation.onfinish = () => finishAnimation(animation);
+        if (paused || document.hidden) animation.pause();
+        return animation;
+      }
 
-  const cField = document.getElementById('compliments');
+      function settleLine() {
+        if (lineAnimation) finishAnimation(lineAnimation);
+      }
 
-  compliments.forEach((text) => {
-    const c = document.createElement('div');
-    c.className = 'compliment';
-    c.textContent = text;
+      function hidePen() {
+        if (penAnimation) {
+          penAnimation.onfinish = null;
+          activeAnimations.delete(penAnimation);
+          penAnimation.cancel();
+          penAnimation = null;
+        }
+        pen.hidden = true;
+        pen.remove();
+      }
 
-    const left = 14 + Math.random() * 72;
-    const fallDur = 17 + Math.random() * 8;
-    const swayDur = 3 + Math.random() * 2.5;
-    const delay = -Math.random() * fallDur;
-    const swayAmt = (Math.random() * 22 + 14) * (Math.random() < 0.5 ? -1 : 1);
+      function stopDelay() {
+        if (delayTimer === null) return;
+        delayRemaining = Math.max(0, delayDue - performance.now());
+        window.clearTimeout(delayTimer);
+        delayTimer = null;
+      }
 
-    c.style.left = left + 'vw';
-    c.style.setProperty('--swayT', swayAmt + 'px');
-    c.style.animationDuration = `${fallDur}s, ${swayDur}s`;
-    c.style.animationDelay = `${delay}s, ${delay}s`;
+      function resumeDelay() {
+        if (phase !== 'waiting' || paused || document.hidden || delayTimer !== null) return;
+        delayDue = performance.now() + delayRemaining;
+        delayTimer = window.setTimeout(() => {
+          delayTimer = null;
+          explodeHeart();
+        }, delayRemaining);
+      }
 
-    cField.appendChild(c);
-  });
-</script>
+      function syncPlayback() {
+        document.body.classList.toggle('is-paused', paused);
+        document.body.classList.toggle('is-away', document.hidden);
+        pauseButton.textContent = paused ? 'Продължи' : 'Пауза';
+        for (const animation of activeAnimations.keys()) {
+          if (paused || document.hidden) animation.pause();
+          else animation.play();
+        }
+        if (paused || document.hidden) stopDelay();
+        else resumeDelay();
+      }
 
+      function waitForFinale() {
+        if (phase !== 'reading') return;
+        setPhase('waiting');
+        delayRemaining = 3200;
+        resumeDelay();
+      }
+
+      // Measure real wrapped lines, keeping the original text and punctuation.
+      // Each writing stroke follows one visual line on phones as well as desktop.
+      function buildLines() {
+        settleLine();
+        measuredProseWidth = prose.clientWidth;
+        const showEverything = phase !== 'reading';
+        lines = [];
+        let characterOffset = 0;
+        paragraphs.forEach((paragraph, index) => {
+          const text = originalText[index];
+          paragraph.textContent = text;
+          const textNode = paragraph.firstChild;
+          const range = document.createRange();
+          let lineStart = 0;
+          let lineTop = null;
+          const chunks = [];
+          for (const match of text.matchAll(/\S+/g)) {
+            range.setStart(textNode, match.index);
+            range.setEnd(textNode, match.index + match[0].length);
+            const top = range.getBoundingClientRect().top;
+            if (lineTop !== null && Math.abs(top - lineTop) > 2) {
+              chunks.push({ start: lineStart, end: match.index });
+              lineStart = match.index;
+            }
+            lineTop = top;
+          }
+          chunks.push({ start: lineStart, end: text.length });
+          paragraph.replaceChildren();
+          for (const chunk of chunks) {
+            const element = document.createElement('span');
+            element.className = 'message-line';
+            const ink = document.createElement('span');
+            ink.className = 'writing-ink';
+            ink.textContent = text.slice(chunk.start, chunk.end);
+            element.appendChild(ink);
+            const start = characterOffset + chunk.start;
+            const end = characterOffset + chunk.end;
+            if (!showEverything && start >= revealedCharacters) {
+              element.classList.add('is-unread');
+              element.setAttribute('aria-hidden', 'true');
+            }
+            paragraph.appendChild(element);
+            lines.push({ element, ink, start, end });
+          }
+          characterOffset += text.length + 1;
+        });
+        revealed = lines.filter(line => !line.element.classList.contains('is-unread')).length;
+        revealedCharacters = revealed ? lines[revealed - 1].end : 0;
+        updateCount();
+        if (phase === 'reading' && revealed === lines.length) waitForFinale();
+      }
+
+      function keepInView(element) {
+        if (!followLatest) return;
+        const board = fullMessage.getBoundingClientRect();
+        const rect = element.getBoundingClientRect();
+        if (rect.bottom > board.bottom - 16) {
+          fullMessage.scrollTop += rect.bottom - board.bottom + 16;
+          expectedScrollTop = fullMessage.scrollTop;
+        }
+      }
+
+      function revealLine() {
+        if (phase !== 'reading' || paused || document.hidden || lineAnimation) return;
+        const line = lines[revealed];
+        if (!line) return;
+        line.element.classList.remove('is-unread');
+        line.ink.classList.add('is-revealing');
+        line.element.removeAttribute('aria-hidden');
+        revealed += 1;
+        revealedCharacters = line.end;
+        updateCount();
+        keepInView(line.element);
+        announcement.textContent = line.ink.textContent;
+        // One uninterrupted stroke per line. The pen tip follows the same
+        // linear progress as the ink, and the next line waits for a heartbeat.
+        const duration = Math.min(5600, Math.max(3200, line.ink.textContent.trim().length * 60));
+        const width = line.ink.getBoundingClientRect().width;
+        line.element.appendChild(pen);
+        pen.hidden = false;
+        lineAnimation = animate(line.ink, [
+          { maskPosition: '100% 0%', webkitMaskPosition: '100% 0%', opacity: 0.65 },
+          { maskPosition: '0% 0%', webkitMaskPosition: '0% 0%', opacity: 1 }
+        ], { duration, easing: 'linear', fill: 'both' }, () => {
+          line.ink.classList.remove('is-revealing');
+          lineAnimation = null;
+          hidePen();
+          if (revealed === lines.length) waitForFinale();
+        });
+        penAnimation = animate(pen, [
+          { transform: 'translateX(0)' },
+          { transform: 'translateX(' + width + 'px)' }
+        ], { duration, easing: 'linear', fill: 'both' });
+      }
+
+      function onHeartbeat(event) {
+        if (event.target === heart && event.animationName === 'heartbeat') revealLine();
+      }
+      heart.addEventListener('animationstart', onHeartbeat);
+      heart.addEventListener('animationiteration', onHeartbeat);
+
+      function addFallingHeart(index, mini = false) {
+        const element = document.createElement('span');
+        element.className = mini ? 'falling-heart mini-heart' : 'falling-heart';
+        element.textContent = '♥';
+        element.style.left = (Math.random() * 100) + '%';
+        element.style.setProperty('--size', (mini ? 10 + Math.random() * 18 : 32 + Math.random() * 40) + 'px');
+        element.style.setProperty('--duration', (mini ? 6 + Math.random() * 6 : 9 + Math.random() * 9) + 's');
+        element.style.setProperty('--delay', (mini ? -Math.random() * 12 : -Math.random() * 18) + 's');
+        element.style.setProperty('--drift', ((Math.random() - 0.5) * 100) + 'px');
+        element.style.setProperty('--opacity', (mini ? 0.4 + Math.random() * 0.35 : 0.2 + Math.random() * 0.3).toFixed(2));
+        element.style.setProperty('--heart-color', colors[index % colors.length]);
+        heartField.appendChild(element);
+      }
+
+      function addMiniHearts() {
+        if (motionPreference.matches || heartField.querySelector('.mini-heart')) return;
+        for (let i = 0; i < 96; i += 1) addFallingHeart(i, true);
+      }
+
+      function burstHearts(origin) {
+        for (let i = 0; i < 46; i += 1) {
+          const particle = document.createElement('span');
+          particle.className = 'burst-heart';
+          particle.textContent = '♥';
+          particle.style.left = origin.x + 'px';
+          particle.style.top = origin.y + 'px';
+          particle.style.fontSize = (12 + Math.random() * 23) + 'px';
+          particle.style.color = colors[i % colors.length];
+          burstLayer.appendChild(particle);
+          const angle = Math.PI * 2 * i / 46;
+          const distance = 90 + Math.random() * 200;
+          const x = Math.cos(angle) * distance;
+          const y = Math.sin(angle) * distance;
+          animate(particle, [
+            { transform: 'translate(-50%, -50%) scale(0.2)', opacity: 0 },
+            { opacity: 1, offset: 0.08 },
+            { transform: 'translate(' + x * 0.75 + 'px, ' + y * 0.75 + 'px) rotate(25deg) scale(1)', opacity: 0.9, offset: 0.55 },
+            { transform: 'translate(' + x + 'px, ' + (y + 120) + 'px) rotate(70deg) scale(0.6)', opacity: 0 }
+          ], { duration: 1600 + Math.random() * 1100, easing: 'ease-out', fill: 'both' }, () => particle.remove());
+        }
+        const ring = document.createElement('span');
+        ring.className = 'burst-ring';
+        ring.style.left = origin.x + 'px';
+        ring.style.top = origin.y + 'px';
+        burstLayer.appendChild(ring);
+        animate(ring, [
+          { transform: 'scale(0.5)', opacity: 0.8 },
+          { transform: 'scale(4)', opacity: 0 }
+        ], { duration: 1300, easing: 'ease-out', fill: 'both' }, () => ring.remove());
+      }
+
+      function complete() {
+        setPhase('complete');
+        showAllButton.hidden = true;
+        replayButton.hidden = motionPreference.matches;
+      }
+
+      function revealPoem(origin) {
+        heartWrap.hidden = true;
+        poem.hidden = false;
+        setPhase('poem');
+        if (followLatest) {
+          const board = fullMessage.getBoundingClientRect();
+          const rect = poem.getBoundingClientRect();
+          if (rect.bottom > board.bottom - 12) {
+            fullMessage.scrollTop += rect.top - board.top - 12;
+            expectedScrollTop = fullMessage.scrollTop;
+          }
+        }
+        const rect = poem.getBoundingClientRect();
+        const x = origin.x - (rect.left + rect.width / 2);
+        const y = origin.y - (rect.top + rect.height / 2);
+        announcement.textContent = 'С усмивката ти утрото се ражда… Цялото стихотворение е пред теб.';
+        animate(poem, [
+          { opacity: 0, transform: 'translate(' + x + 'px, ' + y + 'px) scale(0.08)', filter: 'blur(4px)' },
+          { opacity: 1, transform: 'translate(0, 0) scale(1)', filter: 'blur(0)' }
+        ], { duration: 1450, easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)', fill: 'both' }, complete);
+      }
+
+      function explodeHeart() {
+        if (phase !== 'waiting' || paused || document.hidden) return;
+        setPhase('bursting');
+        const rect = heartWrap.getBoundingClientRect();
+        const origin = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+        burstHearts(origin);
+        addMiniHearts();
+        animate(glow, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(2.2)' }],
+          { duration: 650, easing: 'ease-out', fill: 'both' });
+        animate(heart, [
+          { opacity: 1, transform: 'scale(1)' },
+          { opacity: 1, transform: 'scale(1.22)', offset: 0.18 },
+          { opacity: 1, transform: 'scale(1.06)', offset: 0.34 },
+          { opacity: 1, transform: 'scale(1.32)', offset: 0.52 },
+          { opacity: 1, transform: 'scale(1.16)', offset: 0.64 },
+          { opacity: 0, transform: 'scale(1.7)' }
+        ], { duration: 650, easing: 'ease-out', fill: 'both' }, () => revealPoem(origin));
+      }
+
+      function cancelSequence() {
+        stopDelay();
+        hidePen();
+        for (const animation of activeAnimations.keys()) {
+          animation.onfinish = null;
+          animation.cancel();
+        }
+        activeAnimations.clear();
+        lineAnimation = null;
+        burstLayer.replaceChildren();
+        heartField.querySelectorAll('.mini-heart').forEach(element => element.remove());
+      }
+
+      function startReading() {
+        cancelSequence();
+        setPhase('reading');
+        revealed = 0;
+        revealedCharacters = 0;
+        paused = false;
+        followLatest = true;
+        expectedScrollTop = null;
+        heartWrap.hidden = false;
+        poem.hidden = true;
+        fullMessage.scrollTop = 0;
+        controls.hidden = false;
+        pauseButton.hidden = false;
+        showAllButton.hidden = false;
+        replayButton.hidden = true;
+        announcement.textContent = '';
+        document.body.classList.add('is-enhanced');
+        buildLines();
+        for (const element of [heart, glow]) {
+          for (const animation of element.getAnimations()) {
+            animation.cancel();
+            animation.play();
+          }
+        }
+        syncPlayback();
+      }
+
+      function showFullMessage() {
+        cancelSequence();
+        setPhase('complete');
+        heartWrap.hidden = true;
+        poem.hidden = false;
+        document.body.classList.add('is-enhanced');
+        buildLines();
+        complete();
+        pauseButton.hidden = motionPreference.matches;
+        controls.hidden = motionPreference.matches;
+        fullMessage.scrollTop = 0;
+        announcement.textContent = 'Цялото послание и стихотворението са показани.';
+        syncPlayback();
+      }
+
+      fullMessage.addEventListener('scroll', () => {
+        if (expectedScrollTop !== null && Math.abs(fullMessage.scrollTop - expectedScrollTop) < 1) {
+          expectedScrollTop = null;
+          return;
+        }
+        expectedScrollTop = null;
+        const latest = lines[Math.max(0, revealed - 1)];
+        if (latest) {
+          const rect = latest.element.getBoundingClientRect();
+          const board = fullMessage.getBoundingClientRect();
+          followLatest = rect.bottom <= board.bottom + 12 && rect.bottom > board.top;
+        }
+      }, { passive: true });
+      window.addEventListener('resize', () => {
+        if (resizeFrame !== null) cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(() => {
+          resizeFrame = null;
+          // Height changes (including mobile browser bars) must not end a stroke.
+          if (prose.clientWidth !== measuredProseWidth) buildLines();
+        });
+      });
+      document.fonts.ready.then(() => {
+        if (phase === 'reading' && revealed <= 1) {
+          const wasPaused = paused;
+          startReading();
+          paused = wasPaused;
+          syncPlayback();
+        } else buildLines();
+      });
+
+      pauseButton.addEventListener('click', () => {
+        paused = !paused;
+        syncPlayback();
+      });
+      showAllButton.addEventListener('click', () => {
+        showFullMessage();
+        fullMessage.focus({ preventScroll: true });
+      });
+      replayButton.addEventListener('click', () => {
+        startReading();
+        pauseButton.focus({ preventScroll: true });
+      });
+      document.addEventListener('visibilitychange', syncPlayback);
+      motionPreference.addEventListener('change', () => {
+        if (motionPreference.matches) {
+          const controlsHadFocus = controls.contains(document.activeElement);
+          paused = false;
+          showFullMessage();
+          if (controlsHadFocus) fullMessage.focus({ preventScroll: true });
+        } else {
+          controls.hidden = false;
+          pauseButton.hidden = false;
+          replayButton.hidden = false;
+        }
+      });
+
+      for (let i = 0; i < 30; i += 1) addFallingHeart(i);
+      if (motionPreference.matches) showFullMessage();
+      else startReading();
+    })();
+  </script>
 </body>
 </html>
