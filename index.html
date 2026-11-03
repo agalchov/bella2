@@ -3,28 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#1f0a22">
-  <meta name="description" content="Обичам те, Мише.">
-  <title>Обичам те, Мише ❤</title>
+  <meta name="theme-color" content="#0a0717">
+  <meta name="description" content="Нарисувах ти небе, Мише.">
+  <title>Небе за Мишето ✦</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@500;600&amp;family=Great+Vibes&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=Playfair+Display:ital,wght@1,400;1,500&amp;display=swap" rel="stylesheet">
   <script>document.documentElement.classList.add('js');</script>
   <style>
     :root {
       color-scheme: dark;
-      --night: #1f0a22;
-      --wine: #4f1236;
-      --rose: #a32a55;
-      --coral: #e0654f;
-      --dawn: #ffc27a;
-      --paper: #fff7ef;
-      --paper-shade: #f8e3d6;
-      --ink: #4f1330;
-      --crimson: #a3123f;
-      --gold: #bd8a3e;
-      --on-sky: #fff3e8;
+      --night: #0a0717;
+      --plum: #2a0f3a;
+      --rose: #c2416f;
+      --blush: #ff9fbf;
+      --gold: #ffd59e;
+      --text: #fbefe6;
+      --muted: #d6c3d8;
+      --glass: #ffffff0f;
+      --glass-edge: #ffffff24;
       --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     }
     * { box-sizing: border-box; }
@@ -34,231 +32,378 @@
       margin: 0;
       min-width: 280px;
       min-height: 100svh;
-      color: var(--ink);
-      background:
-        radial-gradient(ellipse 90% 34% at 50% 100%, #ffd79acc, transparent 72%),
-        linear-gradient(180deg, var(--night) 0%, var(--wine) 40%, var(--rose) 74%, var(--coral) 100%);
-      background-attachment: fixed;
-      font-family: 'Cormorant Infant', Georgia, 'Times New Roman', serif;
+      overflow-x: hidden;
+      color: var(--text);
+      background: radial-gradient(ellipse 120% 80% at 50% 0%, #1a0b2e 0%, var(--night) 60%);
+      font-family: 'Manrope', system-ui, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
-    ::selection { background: #f4c5d5; color: #4f1330; }
+    ::selection { background: var(--blush); color: var(--night); }
 
-    .sky, .bloom {
+    /* Slow aurora behind everything */
+    .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .aurora span {
+      position: absolute;
+      width: 70vmax;
+      height: 70vmax;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.55;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .aurora span:nth-child(1) { top: -30vmax; left: -20vmax; background: radial-gradient(circle, #7b2a8a, transparent 65%); }
+    .aurora span:nth-child(2) { top: 10vmax; right: -35vmax; background: radial-gradient(circle, var(--rose), transparent 65%); animation-duration: 22s; animation-delay: -6s; }
+    .aurora span:nth-child(3) { bottom: -45vmax; left: -10vmax; background: radial-gradient(circle, #3b1f7a, transparent 65%); animation-duration: 26s; animation-delay: -12s; }
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(6vmax, 4vmax) scale(1.12); }
+    }
+    .stars { position: fixed; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; }
+
+    /* Three.js hearts and petals, between the aurora and the star dust */
+    .hearts3d {
       position: fixed;
       inset: 0;
+      z-index: 1;
       width: 100%;
       height: 100%;
       pointer-events: none;
+      opacity: 0;
+      transition: opacity 2s ease;
+      /* Keep the middle quiet so the words stay easy to read. */
+      -webkit-mask-image: radial-gradient(ellipse 42% 46% at 50% 50%, #0004 30%, #000 100%);
+      mask-image: radial-gradient(ellipse 42% 46% at 50% 50%, #0004 30%, #000 100%);
     }
-    .sky { z-index: 0; }
-    .bloom { z-index: 3; }
+    .hearts3d.ready { opacity: 1; }
+    .js body.started .hearts3d.ready { opacity: 0.45; }
+    .js body.started .hearts3d.bright { opacity: 1; }
+    /* The mice who carry each gift run above everything, without catching taps. */
+    .couriers { position: fixed; inset: 0; z-index: 3; width: 100%; height: 100%; pointer-events: none; }
+    /* During the finale they slip behind the letter so the words stay clear. */
+    .couriers.behind { z-index: 1; }
 
-    .stage {
+    main {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       display: grid;
       grid-template-columns: minmax(0, 1fr);
       place-items: center;
       min-height: 100svh;
       padding: 32px 16px;
     }
-    .stage > * { grid-area: 1 / 1; }
+    main > section { grid-area: 1 / 1; }
 
-    /* Sealed envelope */
-    .envelope-wrap {
+    /* Intro */
+    .intro {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 28px;
-      width: min(440px, 100%);
-      transition: opacity 500ms ease 620ms, transform 700ms var(--ease-out) 620ms;
-    }
-    .envelope {
-      position: relative;
-      display: block;
-      width: 100%;
-      aspect-ratio: 3 / 2;
-      padding: 0;
-      border: 0;
-      border-radius: 10px;
-      background: none;
-      color: inherit;
-      font: inherit;
-      cursor: pointer;
-      perspective: 1200px;
-      filter: drop-shadow(0 24px 40px #14031a99);
-      transition: transform 240ms var(--ease-out);
-    }
-    .envelope:hover { transform: translateY(-4px) rotate(-1deg); }
-    .envelope:active { transform: scale(0.98); }
-    .envelope:focus-visible { outline: 3px solid var(--dawn); outline-offset: 8px; }
-    .envelope-back, .envelope-pocket, .envelope-flap { position: absolute; inset: 0; border-radius: 10px; }
-    .envelope-back { background: var(--paper-shade); }
-    .envelope-pocket {
-      background: linear-gradient(160deg, var(--paper), var(--paper-shade));
-      clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
-    }
-    .envelope-flap {
-      z-index: 1;
-      background: linear-gradient(180deg, #f9e2d5, #eebfae);
-      clip-path: polygon(0 0, 100% 0, 50% 60%);
-      transform-origin: top center;
-      transition: transform 620ms cubic-bezier(0.45, 0, 0.3, 1);
-    }
-    .envelope-name {
-      position: absolute;
-      right: 0;
-      bottom: 7%;
-      left: 0;
-      color: var(--crimson);
-      font-family: 'Great Vibes', 'Cormorant Infant', cursive;
-      font-size: clamp(32px, 10vw, 44px);
-      line-height: 1.1;
+      max-width: 560px;
       text-align: center;
+      transition: opacity 600ms ease, transform 800ms var(--ease-out);
     }
-    .seal {
-      position: absolute;
-      z-index: 2;
-      top: 60%;
-      left: 50%;
-      display: grid;
-      place-items: center;
-      width: 68px;
-      height: 68px;
-      margin: -46px 0 0 -34px;
-      border-radius: 47% 53% 50% 50% / 52% 48% 54% 46%;
-      background: radial-gradient(circle at 35% 30%, #d8345f, #8f0f38 70%);
-      box-shadow: 0 4px 10px #4f133066, inset 0 0 0 5px #7d0c30, inset 0 0 0 6px #d8345f99;
-      transition: transform 280ms ease, opacity 280ms ease;
-      animation: seal-beat 2.6s ease-in-out infinite;
-    }
-    .seal svg { width: 28px; height: 28px; fill: #ffd9e0; }
-    .hint, .tap-hint {
-      margin: 0;
-      padding: 6px 18px;
-      border-radius: 999px;
-      background: #1f0a22a6;
-      color: var(--on-sky);
-      font-size: 20px;
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--gold);
+      font-size: 14px;
       font-weight: 600;
-      text-align: center;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
     }
-
-    /* The letter, arched like a window opening onto the dawn */
-    .letter {
-      position: relative;
-      width: min(640px, 100%);
-      padding: clamp(88px, 15vw, 112px) clamp(30px, 8vw, 72px) clamp(44px, 8vw, 60px);
-      border-radius: 320px 320px 28px 28px;
-      background: linear-gradient(180deg, var(--paper), #fff1e6);
-      box-shadow: 0 30px 70px #14031a8c;
-      text-align: center;
-      outline: none;
-    }
-    .letter::before {
-      content: '';
-      position: absolute;
-      inset: 11px;
-      border: 1px solid #bd8a3e80;
-      border-radius: 310px 310px 20px 20px;
-      pointer-events: none;
-    }
-    .letter-heart {
-      position: absolute;
-      top: clamp(40px, 7vw, 54px);
-      left: 50%;
-      width: 28px;
-      height: 28px;
-      margin-left: -14px;
-      fill: var(--crimson);
-    }
-    .farewell {
+    .intro h1, .finale h2 {
       margin: 0;
-      color: var(--crimson);
-      font-family: 'Great Vibes', 'Cormorant Infant', cursive;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
       font-weight: 400;
-      line-height: 1.15;
+      line-height: 1.05;
       text-wrap: balance;
+      background: linear-gradient(100deg, var(--text) 10%, var(--blush) 55%, var(--gold) 95%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
-    .message-part {
-      margin: 22px 0 0;
-      font-size: clamp(22px, 5.4vw, 26px);
-      font-weight: 500;
-      line-height: 1.5;
+    .intro h1 { font-size: clamp(46px, 12vw, 84px); }
+    .lead {
+      margin: 22px 0 36px;
+      max-width: 34ch;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.6;
       text-wrap: pretty;
     }
-    .divider {
-      display: block;
-      width: 150px;
-      height: 16px;
-      margin: 30px auto 24px;
-      fill: none;
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 28px;
+      border: 1px solid #ffd59e66;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ffd59e26, #ff9fbf1f);
+      color: var(--text);
+      font: 600 17px/1 'Manrope', system-ui, sans-serif;
+      cursor: pointer;
+      box-shadow: 0 0 0 0 #ffd59e40, 0 10px 30px #0006;
+      transition: transform 200ms var(--ease-out), box-shadow 300ms ease, background 300ms ease;
+    }
+    .btn svg { width: 18px; height: 18px; fill: var(--gold); }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 0 0 6px #ffd59e1a, 0 14px 34px #0008; }
+    .btn:active { transform: scale(0.97); }
+    .btn:focus-visible, .star:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
+    /* Constellation */
+    .sky {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: min(560px, 100%);
+    }
+    .sky-title {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 500;
+      text-align: center;
+    }
+    .sky-title strong { color: var(--gold); font-weight: 600; }
+    .frame {
+      position: relative;
+      width: min(100%, 50svh, 480px);
+      aspect-ratio: 1;
+    }
+    .frame svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+    .link {
       stroke: var(--gold);
+      stroke-width: 0.3;
+      stroke-linecap: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      opacity: 0.75;
+      filter: drop-shadow(0 0 1px #ffd59e);
+      transition: stroke-dashoffset 900ms var(--ease-out);
     }
-    .divider path:last-child { fill: var(--gold); stroke: none; }
-    .farewell { font-size: clamp(42px, 11vw, 60px); }
-    .tap-hint { margin-top: 24px; }
-    .letter-wrap { width: min(640px, 100%); display: flex; flex-direction: column; align-items: center; }
-
-    /* Opening sequence: only when scripts can run, so the message never stays locked away */
-    .js body:not(.is-open) .letter-wrap { visibility: hidden; }
-    .js .letter-wrap { opacity: 0; transform: translateY(70px) scale(0.92); }
-    .js body.is-open .letter-wrap {
-      opacity: 1;
-      transform: none;
-      transition: opacity 700ms ease 760ms, transform 1100ms var(--ease-out) 760ms;
+    .link.on { stroke-dashoffset: 0; }
+    .heart-line {
+      fill: url(#heart-fill);
+      fill-opacity: 0;
+      stroke: url(#heart-stroke);
+      stroke-width: 0.55;
+      stroke-linejoin: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      filter: drop-shadow(0 0 2px #ff9fbf);
     }
-    .js .reveal { opacity: 0; transform: translateY(14px); }
-    .js body.is-open .reveal {
-      opacity: 1;
-      transform: none;
-      transition: opacity 800ms ease, transform 800ms var(--ease-out);
-      transition-delay: calc(1250ms + var(--step) * 420ms);
+    .complete .heart-line {
+      fill-opacity: 1;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 2200ms cubic-bezier(0.65, 0, 0.35, 1) 300ms, fill-opacity 1600ms ease 2000ms;
     }
-    body.is-open .seal { opacity: 0; transform: scale(1.4); animation: none; }
-    body.is-open .envelope-flap { transform: rotateX(180deg); }
-    body.is-open .envelope-wrap { opacity: 0; transform: translateY(90px) scale(0.94); pointer-events: none; }
-
-    @keyframes seal-beat {
+    .complete .heart-line { animation: heart-beat 2.4s ease-in-out 3.6s infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes heart-beat {
       0%, 100% { transform: scale(1); }
-      12% { transform: scale(1.07); }
-      24% { transform: scale(1); }
-      36% { transform: scale(1.05); }
-      48% { transform: scale(1); }
+      14% { transform: scale(1.04); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.03); }
     }
+
+    .star {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 72px;
+      height: 72px;
+      margin: -36px 0 0 -36px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: none;
+      cursor: pointer;
+    }
+    .star { filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 16px #ffffffbb); transition: filter 600ms ease; }
+    /* Soft halo that breathes behind each sparkle */
+    .star::before {
+      content: '';
+      grid-area: 1 / 1;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffffff40, #ffffff00 70%);
+      animation: halo 2.8s ease-in-out infinite;
+      animation-delay: var(--delay);
+      transition: background 600ms ease, width 600ms var(--ease-out), height 600ms var(--ease-out);
+    }
+    /* Four-pointed sparkle */
+    .glint {
+      grid-area: 1 / 1;
+      width: 46px;
+      height: 46px;
+      background: radial-gradient(circle, #fff 0 22%, #fff6ea 34%, #ffe6c4 70%);
+      clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+      animation: twinkle 2.8s ease-in-out infinite;
+      animation-delay: var(--delay);
+      transition: scale 500ms var(--ease-out), rotate 700ms var(--ease-out), background 500ms ease;
+    }
+    .star:hover .glint { scale: 1.35; rotate: 20deg; }
+    .star.lit { cursor: default; filter: drop-shadow(0 0 4px #ffd59e) drop-shadow(0 0 14px #ff9fbfaa); }
+    .star.lit .glint {
+      background: radial-gradient(circle, #fff 0 18%, var(--gold) 40%, var(--blush) 85%);
+      scale: 1.25;
+      rotate: 45deg;
+      animation: none;
+    }
+    .star.lit::before {
+      width: 92px;
+      height: 92px;
+      background: radial-gradient(circle, #ff9fbf55, #ff9fbf00 70%);
+    }
+    /* While a gift is on its way, the star pulses in anticipation. */
+    .star.waiting .glint { animation: waiting 0.7s ease-in-out infinite alternate; }
+    @keyframes halo {
+      0%, 100% { opacity: 0.6; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+    @keyframes waiting {
+      to { scale: 1.3; rotate: 30deg; }
+    }
+    .star.lit::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid var(--gold);
+      animation: ripple 900ms var(--ease-out) forwards;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.8); }
+    }
+    @keyframes ripple {
+      from { opacity: 0.9; transform: scale(0.3); }
+      to { opacity: 0; transform: scale(1.6); }
+    }
+
+    .card {
+      width: 100%;
+      min-height: 132px;
+      padding: 22px 26px;
+      border: 1px solid var(--glass-edge);
+      border-radius: 24px;
+      background: var(--glass);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      text-align: center;
+    }
+    .count {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+    }
+    .note {
+      margin: 0;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(22px, 5.6vw, 28px);
+      font-style: italic;
+      line-height: 1.35;
+      text-wrap: balance;
+    }
+    .note.fresh { animation: rise 700ms var(--ease-out); }
+    .sculpture {
+      position: absolute;
+      inset: -12%;
+      width: 124%;
+      height: 124%;
+      touch-action: pan-y;
+      cursor: grab;
+    }
+    .sculpture:active { cursor: grabbing; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); filter: blur(4px); }
+      to { opacity: 1; transform: none; filter: none; }
+    }
+
+    .finale { display: flex; flex-direction: column; align-items: center; outline: none; }
+    .finale h2 { font-size: clamp(40px, 10vw, 60px); padding: 0 0.1em 0.08em; }
+    .finale p { margin: 10px 0 0; color: var(--muted); font-size: 17px; line-height: 1.6; }
+    .finale .wish { margin-top: 18px; color: var(--gold); font-size: 14px; font-weight: 600; letter-spacing: 0.08em; }
+
+    /* Scene changes, only when scripts can run */
+    .js .sky { opacity: 0; visibility: hidden; transform: translateY(24px); }
+    .js body.started .intro { opacity: 0; transform: translateY(-24px) scale(0.98); pointer-events: none; }
+    .js body.started .sky {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition: opacity 900ms ease 400ms, transform 1000ms var(--ease-out) 400ms;
+    }
+    .finale.show { animation: rise 1200ms var(--ease-out) both; animation-delay: 2400ms; }
+
+    noscript p { max-width: 30ch; font-size: 22px; line-height: 1.5; text-align: center; }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
 <body>
-  <canvas class="sky" id="sky" aria-hidden="true"></canvas>
+  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+  <canvas class="hearts3d" id="hearts3d" aria-hidden="true"></canvas>
+  <canvas class="stars" id="stars" aria-hidden="true"></canvas>
 
-  <main class="stage">
-    <div class="envelope-wrap" id="envelope-wrap">
-      <button class="envelope" id="envelope" type="button" aria-label="Отвори писмото за Мишето">
-        <span class="envelope-back"></span>
-        <span class="envelope-pocket"></span>
-        <span class="envelope-name">За Мишето</span>
-        <span class="envelope-flap"></span>
-        <span class="seal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8.5-5.2-8.5-11.4A4.9 4.9 0 0 1 12 6.6a4.9 4.9 0 0 1 8.500 3C20.500 15.800 12 21 12 21z"/></svg></span>
+  <main>
+    <section class="intro" id="intro">
+      <p class="eyebrow">За Мишето</p>
+      <h1>Нарисувах ти небе.</h1>
+      <p class="lead">Пет звезди. Запали ги една по една.</p>
+      <button class="btn" id="start" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.6h7.6z"/></svg>
+        Запали звездите
       </button>
-      <p class="hint">Докосни, за да отвориш</p>
-    </div>
+      <noscript><p>Обичам те, Мише. Ти си най-красивото нещо в моето небе.</p></noscript>
+    </section>
 
-    <div class="letter-wrap">
-      <article class="letter" id="letter" aria-label="Писмо за Мишето" tabindex="-1">
-        <svg class="letter-heart reveal" style="--step: 0" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8.500-5.200-8.500-11.400A4.900 4.900 0 0 1 12 6.600a4.900 4.900 0 0 1 8.500 3C20.500 15.800 12 21 12 21z"/></svg>
-        <p class="message-part reveal" style="--step: 1">Всяка сутрин се събуждам с мисълта за теб и това ме кара да се усмихвам през целия ден.</p>
-        <p class="message-part reveal" style="--step: 2">А вечер заспивам с желанието да си до мен — и с надеждата да те срещна поне в съня си.</p>
-        <svg class="divider reveal" style="--step: 3" viewBox="0 0 150 16" aria-hidden="true"><path d="M0 8h62M88 8h62"/><path d="M75 15s-7-4.300-7-9.200A3.700 3.700 0 0 1 75 4a3.700 3.700 0 0 1 7 1.800C82 10.700 75 15 75 15z"/></svg>
-        <h1 class="farewell reveal" style="--step: 3">Обичам те, Мише!</h1>
-      </article>
-      <p class="tap-hint reveal" id="tap-hint" style="--step: 4" hidden>Докосни екрана за още сърца</p>
-    </div>
+    <section class="sky" id="sky" aria-labelledby="sky-title">
+      <p class="sky-title" id="sky-title">Докосни <strong>всяка звезда</strong></p>
+      <div class="frame" id="frame">
+        <canvas class="sculpture" id="sculpture" aria-hidden="true"></canvas>
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <defs>
+            <linearGradient id="heart-stroke" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ffd59e"/>
+              <stop offset="1" stop-color="#ff6f9c"/>
+            </linearGradient>
+            <linearGradient id="ink" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="64" y2="64">
+              <stop offset="0" stop-color="#ffd59e"/>
+              <stop offset="1" stop-color="#ff9fbf"/>
+            </linearGradient>
+            <linearGradient id="bloom" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ffd59e" stop-opacity="0.45"/>
+              <stop offset="1" stop-color="#ff6f9c" stop-opacity="0.55"/>
+            </linearGradient>
+            <radialGradient id="heart-fill" cx="0.5" cy="0.45" r="0.6">
+              <stop offset="0" stop-color="#ff6f9c" stop-opacity="0.38"/>
+              <stop offset="1" stop-color="#c2416f" stop-opacity="0.04"/>
+            </radialGradient>
+          </defs>
+          <g id="links"></g>
+          <path class="heart-line" id="heart" pathLength="1"/>
+        </svg>
+      </div>
+      <div class="card" id="card">
+        <div id="progress" aria-live="polite">
+          <p class="count" id="count">0 / 5</p>
+          <p class="note" id="note">Всяка звезда пази нещо за теб.</p>
+        </div>
+        <div class="finale" id="finale" tabindex="-1" hidden>
+          <h2>Обичам те, Мише.</h2>
+          <p>Ти си най-красивото нещо в моето небе.</p>
+        </div>
+      </div>
+    </section>
   </main>
-
-  <canvas class="bloom" id="bloom" aria-hidden="true"></canvas>
+  <canvas class="couriers" id="couriers" aria-hidden="true"></canvas>
 
   <script>
     (() => {
@@ -308,157 +453,1082 @@
 
   <script>
     (() => {
-      const skyCanvas = document.getElementById('sky');
-      const bloomCanvas = document.getElementById('bloom');
-      const sky = skyCanvas.getContext('2d');
-      const bloom = bloomCanvas.getContext('2d');
+      // Each star awakens a living 3D sculpture made of light.
+      const drawings = [
+        { label: 'Въздушна целувка', shape: flyingKiss },
+        { label: 'Прегръдка', shape: hug },
+        { label: 'Любов', shape: love },
+        { label: 'Безкрайност', shape: infinity },
+        { label: 'Сърце', shape: pierced }
+      ];
       const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const petalColors = ['#ff9ab8', '#ffb3c9', '#f0577f', '#ffc2d4'];
-      const heartColors = ['#ff4d7d', '#ff7aa2', '#ffd0dc', '#ffc27a'];
-      let width = 0, height = 0, stars = [], petals = [], hearts = [];
-
       const random = (min, max) => min + Math.random() * (max - min);
 
-      function newPetal(anywhere) {
-        const size = random(6, 13);
-        return {
-          x: random(0, width),
-          y: anywhere ? random(0, height) : -20,
-          size,
-          speed: size * 2.6 + random(6, 18),
-          sway: random(14, 38),
-          phase: random(0, Math.PI * 2),
-          spin: random(-1, 1),
-          color: petalColors[Math.floor(random(0, petalColors.length))],
-          isHeart: Math.random() < 0.3
-        };
+      // Classic heart curve, mapped into the 0–100 frame.
+      function heartPoint(t) {
+        const x = 16 * Math.sin(t) ** 3;
+        const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+        return [50 + x * 2.75, 50 + (y - 2.5) * 2.75];
       }
+
+      const frame = document.getElementById('frame');
+      const links = document.getElementById('links');
+      const heart = document.getElementById('heart');
+      const count = document.getElementById('count');
+      const note = document.getElementById('note');
+      const progress = document.getElementById('progress');
+      const finale = document.getElementById('finale');
+      const sky = document.getElementById('sky');
+
+      // Start at the bottom tip so five stars still trace a heart.
+      const points = drawings.map((_, i) => heartPoint(Math.PI + (i / drawings.length) * Math.PI * 2));
+      const lit = new Array(drawings.length).fill(false);
+      const opened = new Array(drawings.length).fill(false);
+      const lines = [];
+
+      heart.setAttribute('d', Array.from({ length: 121 }, (_, i) => {
+        const [x, y] = heartPoint((i / 120) * Math.PI * 2);
+        return (i ? 'L' : 'M') + x.toFixed(2) + ' ' + y.toFixed(2);
+      }).join('') + 'Z');
+
+      points.forEach(([x, y], i) => {
+        const [nx, ny] = points[(i + 1) % points.length];
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('class', 'link');
+        line.setAttribute('pathLength', '1');
+        line.setAttribute('x1', x); line.setAttribute('y1', y);
+        line.setAttribute('x2', nx); line.setAttribute('y2', ny);
+        links.appendChild(line);
+        lines.push(line);
+
+        const star = document.createElement('button');
+        star.type = 'button';
+        star.className = 'star';
+        star.innerHTML = '<span class="glint"></span>';
+        star.style.left = x + '%';
+        star.style.top = y + '%';
+        star.style.setProperty('--delay', (-i * 0.35) + 's');
+        star.setAttribute('aria-label', 'Звезда ' + (i + 1) + ' от ' + drawings.length);
+        star.addEventListener('click', () => light(i, star));
+        frame.appendChild(star);
+      });
+
+      // ---- Living 3D sculptures: thousands of glowing points ----
+      const TAU = Math.PI * 2;
+      const sculpture = document.getElementById('sculpture');
+      const sctx = sculpture.getContext('2d');
+      const COUNT = window.matchMedia('(max-width: 600px)').matches ? 2600 : 3800;
+      const seeds = Float32Array.from({ length: COUNT * 4 }, Math.random);
+      const shown = new Float32Array(COUNT * 5);
+      const from = new Float32Array(COUNT * 5);
+      const o = [0, 0, 0, 0, 1];
+      let shape = nebula, morphAt = -Infinity, spin = 0, dragX = null;
+      let viewRY = 0.35, viewRX = 0.18, dim = 1, dimTarget = 1, sway = 0.75;
+      let sculptW = 0, sculptH = 0, hx = 0, hy = 0;
+
+      function put(x, y, z, c, a) { o[0] = x; o[1] = y; o[2] = z; o[3] = c; o[4] = a; }
+
+      function rotateAround(px, py, angle) {
+        const dx = o[0] - px, dy = o[1] - py, cs = Math.cos(angle), sn = Math.sin(angle);
+        o[0] = px + dx * cs - dy * sn;
+        o[1] = py + dx * sn + dy * cs;
+      }
+
+      // Double "lub-dub" heartbeat used by every heart.
+      function beatAt(t) {
+        const p = (t % 1.3) / 1.3;
+        return 1 + 0.08 * Math.exp(-(((p - 0.1) / 0.05) ** 2)) + 0.05 * Math.exp(-(((p - 0.3) / 0.05) ** 2));
+      }
+
+      function heartAt(u) {
+        hx = 16 * Math.sin(u) ** 3 / 17;
+        hy = (13 * Math.cos(u) - 5 * Math.cos(2 * u) - 2 * Math.cos(3 * u) - Math.cos(4 * u) + 2) / 17;
+      }
+
+      // A plump heart: dense at the skin, thicker in the middle.
+      function puffy(a, b, c, scale, cx, cy, color) {
+        heartAt(a * TAU);
+        const r = Math.pow(b, 0.35);
+        const z = (c * 2 - 1) * 0.45 * Math.sqrt(Math.max(0, 1 - r * r * 0.9));
+        put(cx + hx * r * scale, cy + hy * r * scale, z * scale, color + (1 - r) * 0.25, 0.9);
+      }
+
+      function nebula(a, b, c, d, t) {
+        const r = 0.25 + Math.pow(a, 0.7) * 0.95;
+        const th = b * TAU + t * 0.25 / r;
+        put(Math.cos(th) * r, (c - 0.5) * 0.3 * (1.3 - r * 0.6) + 0.05 * Math.sin(t + a * 9), Math.sin(th) * r,
+          a * 1.1, 0.35 + 0.3 * Math.sin(t * 2 + d * 30));
+      }
+
+      function orbitDust(a, b, c, t) {
+        const r = 0.95 + a * 0.3;
+        const th = b * TAU + t * (0.12 + c * 0.1);
+        put(Math.cos(th) * r, (c - 0.5) * 0.3 + 0.06 * Math.sin(t + a * 6), Math.sin(th) * r,
+          2, 0.25 + 0.35 * (0.5 + 0.5 * Math.sin(t * 2.5 + a * 40)));
+      }
+
+      function hug(a, b, c, d, t) {
+        if (d < 0.9) {
+          // Two hearts lean into each other and squeeze tight every few seconds.
+          const side = a < 0.5 ? -1 : 1;
+          const squeeze = Math.exp(-((((t % 3) / 3 - 0.5) / 0.12) ** 2));
+          puffy((a * 2) % 1, b, c, 0.52 * beatAt(t), 0, 0, side < 0 ? 0.05 : 0.85);
+          rotateAround(0, 0, -side * (0.32 + 0.08 * squeeze));
+          o[0] += side * (0.27 - 0.07 * squeeze);
+          o[2] += side * 0.08;
+        } else {
+          const f = (t * 0.2 + (a < 0.5 ? 0 : 0.5)) % 1;
+          puffy((a * 2) % 1, b, c, 0.1, (a < 0.5 ? -0.12 : 0.12), 0.45 + f * 0.6, 1);
+          o[4] = Math.sin(Math.PI * f);
+        }
+      }
+
+      function flyingKiss(a, b, c, d, t) {
+        if (d < 0.62) {
+          // Puckered lips on the left blow a kiss every couple of seconds.
+          const pucker = 0.5 + 0.5 * Math.exp(-((((t % 2.4) / 2.4 - 0.2) / 0.1) ** 2));
+          const X = a * 2 - 1;
+          const edge = Math.pow(Math.max(0, 1 - X * X), 0.55);
+          const line = 0.02 * (1 - X * X);
+          const upper = b < 0.5;
+          const v = 1 - (1 - (upper ? b * 2 : (b - 0.5) * 2)) ** 2;
+          const bound = upper ? 0.34 * edge - 0.14 * Math.exp(-((X / 0.17) ** 2)) * edge : -0.36 * edge;
+          const front = Math.pow(Math.sin(Math.PI * Math.min(1, v)), 0.6) * 0.22 * edge;
+          put(-0.5 + X * 0.42 * (1 - 0.25 * pucker), 0.05 + (line + v * (bound - line)) * 0.62 * (1 + 0.15 * pucker),
+            (c < 0.25 ? -front * 0.3 : front) * 0.7 * (1 + 0.6 * pucker), v < 0.05 ? 2 : upper ? 0.75 : 1, 0.85);
+          // Tilted up towards where the kiss flies.
+          rotateAround(-0.5, 0.05, 0.25);
+        } else {
+          // Little hearts float away along an arc, growing as they go.
+          const f = (t * 0.32 + Math.floor(a * 4) / 4) % 1;
+          puffy((a * 4) % 1, b, c, 0.05 + f * 0.17, -0.2 + f * 1.15, 0.05 + Math.sin(Math.PI * f) * 0.45, 0.6 + f * 0.4);
+          o[2] += Math.sin(f * TAU) * 0.2;
+          o[4] = Math.min(1, f * 6) * Math.pow(1 - f, 0.4);
+        }
+      }
+
+      // "Любов" written in light, sampled once from the page's script font.
+      let loveDots = null;
+      function loveSamples() {
+        if (loveDots) return loveDots;
+        const text = document.createElement('canvas');
+        text.width = 420;
+        text.height = 180;
+        const g = text.getContext('2d', { willReadFrequently: true });
+        g.font = "italic 500 118px 'Playfair Display', Georgia, serif";
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.fillStyle = '#fff';
+        g.fillText('Любов', 210, 92);
+        const data = g.getImageData(0, 0, 420, 180).data;
+        loveDots = [];
+        for (let y = 0; y < 180; y += 2) {
+          for (let x = 0; x < 420; x += 2) {
+            if (data[(y * 420 + x) * 4 + 3] > 140) loveDots.push((x - 210) / 230, -(y - 90) / 230);
+          }
+        }
+        return loveDots;
+      }
+
+      function love(a, b, c, d, t) {
+        const dots = loveSamples();
+        if (d < 0.8 && dots.length) {
+          const k = Math.floor(a * dots.length / 2) * 2;
+          const x = dots[k], y = dots[k + 1];
+          // The word ripples like a ribbon of light.
+          put(x + (b - 0.5) * 0.012, y - 0.1 + 0.04 * Math.sin(t * 2 + x * 4) + (c - 0.5) * 0.012,
+            (c - 0.5) * 0.1 + 0.08 * Math.cos(t * 1.5 + x * 3), 0.3 + 0.6 * (x + 0.9) / 1.8, 0.9);
+        } else {
+          puffy(a, b, c, 0.2 * beatAt(t), 0, 0.5, 1);
+        }
+      }
+
+      function pierced(a, b, c, d, t) {
+        // Cupid's arrow runs through the heart from back to front.
+        const L = 0.95, dx = 0.954, dy = 0.3;
+        if (d < 0.72) {
+          puffy(a, b, c, 0.62 * beatAt(t), 0, 0.02, 0.2 + 0.8 * b);
+        } else if (d < 0.86) {
+          const s = (b * 2 - 1) * L;
+          const r = 0.012;
+          put(dx * s - dy * r * Math.cos(c * TAU), dy * s + dx * r * Math.cos(c * TAU), s * 0.25 + r * Math.sin(c * TAU), 0.05, 0.9);
+        } else if (d < 0.93) {
+          const along = L + b * 0.16, half = (1 - b) * 0.08 * (c * 2 - 1);
+          put(dx * along - dy * half, dy * along + dx * half, along * 0.25, 0.7, 1);
+        } else {
+          const side = c < 0.5 ? -1 : 1, w = (c * 2) % 1;
+          const along = -L - 0.05 + b * 0.2 - w * 0.06, spread = side * (0.02 + 0.07 * w);
+          put(dx * along - dy * spread, dy * along + dx * spread, along * 0.25, 0.15, 0.85);
+        }
+      }
+
+      function infinity(a, b, c, d, t) {
+        if (d < 0.82) {
+          const th = b * TAU + t * 0.55;
+          const sn = Math.sin(th), cs = Math.cos(th), den = 1 + sn * sn;
+          const ang = c * TAU;
+          // A bright comet chases its way around the loop.
+          const comet = Math.pow(Math.max(0, Math.cos(th - t * 1.6)), 12);
+          put(0.9 * cs / den + 0.035 * Math.cos(ang), 0.9 * sn * cs / den + 0.06 * Math.cos(ang),
+            0.22 * sn + 0.06 * Math.sin(ang), comet > 0.5 ? 2 : 0.5 + 0.5 * sn, 0.55 + 0.45 * comet);
+        } else {
+          puffy(a, b, c, 0.2 * beatAt(t), 0, 0.55, 1);
+        }
+      }
+
+      pierced.sway = 0.15;
+
+      function finaleHeart(a, b, c, d, t) {
+        if (d < 0.86) {
+          puffy(a, b, c, 0.95 * beatAt(t), 0, 0.04, 0.35 + 0.65 * b);
+        } else {
+          const f = (b + t * 0.15) % 1;
+          put((a - 0.5) * 1.4, -0.6 + f * 1.8, (c - 0.5) * 0.6, 2, Math.sin(Math.PI * f) * 0.6);
+        }
+      }
+      finaleHeart.sway = 0.15;
+
+      // Soft glowing dots, pre-rendered once per colour (gold → blush → rose, plus white).
+      function glowSprite(color) {
+        const sprite = document.createElement('canvas');
+        sprite.width = sprite.height = 32;
+        const g = sprite.getContext('2d');
+        const gradient = g.createRadialGradient(16, 16, 0, 16, 16, 16);
+        gradient.addColorStop(0, '#ffffff');
+        gradient.addColorStop(0.2, color);
+        gradient.addColorStop(0.45, color + '55');
+        gradient.addColorStop(1, color + '00');
+        g.fillStyle = gradient;
+        g.fillRect(0, 0, 32, 32);
+        return sprite;
+      }
+      function tone(k) {
+        const stops = [[255, 213, 158], [255, 159, 191], [255, 93, 143]];
+        const seg = k < 0.5 ? 0 : 1, f = k < 0.5 ? k * 2 : (k - 0.5) * 2;
+        return '#' + [0, 1, 2].map((ch) => Math.round(stops[seg][ch] + (stops[seg + 1][ch] - stops[seg][ch]) * f)
+          .toString(16).padStart(2, '0')).join('');
+      }
+      const tones = Array.from({ length: 8 }, (_, k) => glowSprite(tone(k / 7)));
+      const whiteSprite = glowSprite('#fff6ea');
+
+      function sizeSculpture() {
+        const box = sculpture.getBoundingClientRect();
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        sculptW = box.width;
+        sculptH = box.height;
+        sculpture.width = sculptW * ratio;
+        sculpture.height = sculptH * ratio;
+        sctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      }
+
+      function renderSculpture(now) {
+        const t = now / 1000;
+        const morph = (now - morphAt) / 1000;
+        const R = sculptW * 0.27, cx = sculptW / 2, cy = sculptH / 2;
+        // Hearts (shapes with their own small `sway`) settle facing her instead of turning side-on.
+        const swayTarget = shape.sway ?? 0.75;
+        sway = calm ? swayTarget : sway + (swayTarget - sway) * 0.03;
+        if (shape.sway !== undefined && dragX === null) spin *= 0.96;
+        const ry = (calm ? sway * 0.47 : sway * Math.sin(t * 0.35)) + spin;
+        const rx = 0.18 + (calm ? 0 : 0.08 * Math.sin(t * 0.4));
+        const cosY = Math.cos(ry), sinY = Math.sin(ry), cosX = Math.cos(rx), sinX = Math.sin(rx);
+        viewRY = ry;
+        viewRX = rx;
+        dim += (dimTarget - dim) * 0.06;
+        sctx.clearRect(0, 0, sculptW, sculptH);
+        sctx.globalCompositeOperation = 'lighter';
+        for (let i = 0; i < COUNT; i += 1) {
+          const a = seeds[i * 4], b = seeds[i * 4 + 1], c = seeds[i * 4 + 2], d = seeds[i * 4 + 3];
+          if (d > 0.93) orbitDust(a, b, c, t);
+          else shape(a, b, c, d / 0.93, t);
+          let [x, y, z, col, alpha] = o;
+          const j = i * 5;
+          if (morph < 2.2) {
+            // Points swirl outwards, then gather into the new shape.
+            const p = Math.min(1, Math.max(0, (morph - a * 0.6) / 1.4));
+            const e = p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2;
+            const burst = Math.sin(Math.PI * e) * 0.5;
+            x = from[j] + (x - from[j]) * e + (b - 0.5) * burst;
+            y = from[j + 1] + (y - from[j + 1]) * e + (c - 0.5) * burst;
+            z = from[j + 2] + (z - from[j + 2]) * e + (a - 0.5) * burst;
+            col = from[j + 3] + (col - from[j + 3]) * e;
+            alpha = from[j + 4] + (alpha - from[j + 4]) * e;
+          }
+          shown[j] = x; shown[j + 1] = y; shown[j + 2] = z; shown[j + 3] = col; shown[j + 4] = alpha;
+          if (alpha <= 0.02) continue;
+          const x1 = x * cosY + z * sinY;
+          const z1 = -x * sinY + z * cosY;
+          const y1 = y * cosX - z1 * sinX;
+          const z2 = y * sinX + z1 * cosX;
+          const persp = 3 / (3 - z2);
+          const size = (4.5 + 3 * b) * persp;
+          sctx.globalAlpha = Math.min(1, alpha * (0.3 + 0.32 * (z2 + 1.2))) * dim;
+          sctx.drawImage(col > 1.05 ? whiteSprite : tones[Math.max(0, Math.min(7, Math.round(col * 7)))],
+            cx + x1 * persp * R - size / 2, cy - y1 * persp * R - size / 2, size, size);
+        }
+        sctx.globalAlpha = 1;
+        sctx.globalCompositeOperation = 'source-over';
+      }
+
+      // px/py (canvas pixels) make the new shape pour out of that spot, e.g. an opened gift.
+      function morphTo(next, px, py) {
+        from.set(shown);
+        spin = Math.atan2(Math.sin(spin), Math.cos(spin));
+        if (px !== undefined) {
+          // Undo the current view rotation so the points start exactly under the gift.
+          const R = sculptW * 0.27;
+          const x1 = (px - sculptW / 2) / R, y1 = -(py - sculptH / 2) / R;
+          const cosY = Math.cos(viewRY), sinY = Math.sin(viewRY), cosX = Math.cos(viewRX), sinX = Math.sin(viewRX);
+          const y = y1 * cosX, z1 = -y1 * sinX;
+          const x = x1 * cosY - z1 * sinY, z = x1 * sinY + z1 * cosY;
+          for (let i = 0; i < COUNT; i += 1) {
+            const j = i * 5;
+            from[j] = x + (seeds[i * 4] - 0.5) * 0.14;
+            from[j + 1] = y + (seeds[i * 4 + 1] - 0.5) * 0.14;
+            from[j + 2] = z + (seeds[i * 4 + 2] - 0.5) * 0.14;
+            from[j + 3] = 2;
+            from[j + 4] = 1;
+          }
+        }
+        dimTarget = 1;
+        shape = next;
+        morphAt = calm ? -Infinity : performance.now();
+        if (calm) renderSculpture(performance.now());
+      }
+
+      function sculptLoop() {
+        // One clock for both the morph start and the frames.
+        renderSculpture(performance.now());
+        window.requestAnimationFrame(sculptLoop);
+      }
+
+      // Drag sideways to turn the sculpture.
+      sculpture.addEventListener('pointerdown', (event) => {
+        dragX = event.clientX;
+        sculpture.setPointerCapture(event.pointerId);
+      });
+      sculpture.addEventListener('pointermove', (event) => {
+        if (dragX === null) return;
+        spin += (event.clientX - dragX) * 0.012;
+        dragX = event.clientX;
+        if (calm) renderSculpture(performance.now());
+      });
+      for (const type of ['pointerup', 'pointercancel']) sculpture.addEventListener(type, () => { dragX = null; });
+
+      function light(i, star) {
+        if (lit[i]) return;
+        lit[i] = true;
+        star.classList.add('lit');
+        star.setAttribute('aria-pressed', 'true');
+
+        // A little mouse brings each gift to its star; without 3D the gift opens at once.
+        const box = star.getBoundingClientRect();
+        const x = box.left + box.width / 2, y = box.top + box.height / 2;
+        if (!calm && window.deliverGift) {
+          star.classList.add('waiting');
+          say('Едно мишле ти носи подарък…');
+          dimTarget = 0.15;
+          window.deliverGift(x, y).then(() => {
+            star.classList.remove('waiting');
+            unwrap(i, x, y);
+          });
+        } else {
+          unwrap(i);
+        }
+      }
+
+      function say(text) {
+        note.textContent = text;
+        note.classList.remove('fresh');
+        void note.offsetWidth;
+        note.classList.add('fresh');
+      }
+
+      function unwrap(i, x, y) {
+        opened[i] = true;
+        const total = opened.filter(Boolean).length;
+        count.textContent = total + ' / ' + drawings.length;
+        say(drawings[i].label);
+        if (x === undefined) {
+          morphTo(drawings[i].shape);
+        } else {
+          const area = sculpture.getBoundingClientRect();
+          morphTo(drawings[i].shape, x - area.left, y - area.top);
+        }
+
+        // A line appears once both of its gifts are open.
+        const previous = (i - 1 + drawings.length) % drawings.length;
+        if (opened[previous]) lines[previous].classList.add('on');
+        if (opened[(i + 1) % drawings.length]) lines[i].classList.add('on');
+
+        if (total === drawings.length) window.setTimeout(complete, calm ? 0 : 2600);
+      }
+
+      function complete() {
+        sky.classList.add('complete');
+        document.getElementById('sky-title').textContent = 'Виж какво нарисува';
+        progress.hidden = true;
+        finale.hidden = false;
+        morphTo(finaleHeart);
+        finale.classList.add('show');
+        finale.focus({ preventScroll: true });
+        wishing = true;
+        document.dispatchEvent(new Event('sky-complete'));
+        if (!calm) window.setTimeout(autoShoot, 3200);
+      }
+
+      document.getElementById('start').addEventListener('click', () => {
+        document.body.classList.add('started');
+        sizeSculpture();
+        morphTo(nebula);
+        document.fonts.ready.then(loveSamples);
+        if (!calm) window.requestAnimationFrame(sculptLoop);
+        window.setTimeout(() => frame.querySelector('.star').focus({ preventScroll: true }), calm ? 0 : 900);
+        window.setTimeout(() => { document.getElementById('intro').hidden = true; }, calm ? 0 : 800);
+      }, { once: true });
+
+      // Background stars and wish-making shooting stars.
+      const canvas = document.getElementById('stars');
+      const ctx = canvas.getContext('2d');
+      let width = 0, height = 0, dust = [], meteors = [], wishing = false;
 
       function resize() {
         const ratio = Math.min(window.devicePixelRatio || 1, 2);
         width = window.innerWidth;
         height = window.innerHeight;
-        for (const [canvas, context] of [[skyCanvas, sky], [bloomCanvas, bloom]]) {
-          canvas.width = width * ratio;
-          canvas.height = height * ratio;
-          context.setTransform(ratio, 0, 0, ratio, 0, 0);
-        }
-        stars = Array.from({ length: Math.round(width * height / 14000) }, () => ({
+        canvas.width = width * ratio;
+        canvas.height = height * ratio;
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        dust = Array.from({ length: Math.round(width * height / 5200) }, () => ({
           x: random(0, width),
-          y: random(0, height * 0.5),
-          size: random(0.5, 1.6),
-          phase: random(0, Math.PI * 2)
+          y: random(0, height),
+          size: random(0.4, 1.5),
+          phase: random(0, Math.PI * 2),
+          speed: random(0.6, 1.8)
         }));
-        petals = Array.from({ length: Math.min(44, Math.round(width * height / 24000)) }, () => newPetal(true));
       }
 
-      function drawHeart(context, x, y, size, angle) {
-        context.save();
-        context.translate(x, y);
-        context.rotate(angle);
-        context.scale(size / 16, size / 16);
-        context.beginPath();
-        context.moveTo(0, 6);
-        context.bezierCurveTo(-11, -2, -7, -11, 0, -5);
-        context.bezierCurveTo(7, -11, 11, -2, 0, 6);
-        context.fill();
-        context.restore();
+      function shoot(x, y) {
+        if (calm || meteors.length > 12) return;
+        const angle = random(0.45, 0.75) * Math.PI;
+        const speed = random(520, 760);
+        meteors.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 1 });
       }
 
-      function drawSky(seconds, step) {
-        sky.clearRect(0, 0, width, height);
-        sky.fillStyle = '#fff3e8';
-        for (const star of stars) {
-          // Stars fade as they near the horizon, where the dawn is brighter.
-          const fade = 1 - star.y / (height * 0.5);
-          sky.globalAlpha = fade * (0.45 + 0.45 * Math.sin(seconds * 1.3 + star.phase));
-          sky.fillRect(star.x, star.y, star.size, star.size);
-        }
-        for (const petal of petals) {
-          petal.y += petal.speed * step;
-          if (petal.y > height + 20) Object.assign(petal, newPetal(false));
-          const x = petal.x + Math.sin(seconds * 0.8 + petal.phase) * petal.sway;
-          const angle = seconds * petal.spin + petal.phase;
-          sky.globalAlpha = 0.72;
-          sky.fillStyle = petal.color;
-          if (petal.isHeart) {
-            drawHeart(sky, x, petal.y, petal.size * 1.5, Math.sin(angle) * 0.5);
-          } else {
-            sky.beginPath();
-            sky.ellipse(x, petal.y, petal.size, petal.size * 0.55, angle, 0, Math.PI * 2);
-            sky.fill();
-          }
-          sky.fillStyle = '#fff3e8';
-        }
-        sky.globalAlpha = 1;
+      function autoShoot() {
+        shoot(random(width * 0.3, width * 1.05), random(-20, height * 0.3));
+        window.setTimeout(autoShoot, random(2600, 5200));
       }
 
-      function drawBloom(step) {
-        bloom.clearRect(0, 0, width, height);
-        hearts = hearts.filter((heart) => heart.life > 0);
-        for (const heart of hearts) {
-          heart.life -= step / heart.duration;
-          heart.velocityY -= 26 * step;
-          heart.x += heart.velocityX * step;
-          heart.y += heart.velocityY * step;
-          bloom.globalAlpha = Math.min(1, heart.life * 2);
-          bloom.fillStyle = heart.color;
-          drawHeart(bloom, heart.x, heart.y, heart.size, heart.angle);
+      function draw(seconds, step) {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = '#fbefe6';
+        for (const star of dust) {
+          ctx.globalAlpha = 0.25 + 0.5 * (0.5 + 0.5 * Math.sin(seconds * star.speed + star.phase));
+          ctx.fillRect(star.x, star.y, star.size, star.size);
         }
-        bloom.globalAlpha = 1;
-      }
-
-      function burst(x, y, count) {
-        if (calm) return;
-        for (let i = 0; i < count && hearts.length < 90; i += 1) {
-          const direction = random(0, Math.PI * 2);
-          const force = random(30, 150);
-          hearts.push({
-            x,
-            y,
-            velocityX: Math.cos(direction) * force,
-            velocityY: Math.sin(direction) * force - 50,
-            size: random(12, 30),
-            angle: random(-0.4, 0.4),
-            color: heartColors[i % heartColors.length],
-            life: 1,
-            duration: random(1.1, 2)
-          });
+        meteors = meteors.filter((m) => m.life > 0);
+        for (const m of meteors) {
+          m.life -= step * 0.9;
+          m.x += m.vx * step;
+          m.y += m.vy * step;
+          const tail = 0.22;
+          const gradient = ctx.createLinearGradient(m.x, m.y, m.x - m.vx * tail, m.y - m.vy * tail);
+          gradient.addColorStop(0, '#fff6e6');
+          gradient.addColorStop(0.3, '#ffd59e99');
+          gradient.addColorStop(1, '#ff9fbf00');
+          ctx.globalAlpha = Math.min(1, m.life * 1.6);
+          ctx.strokeStyle = gradient;
+          ctx.lineWidth = 2;
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(m.x, m.y);
+          ctx.lineTo(m.x - m.vx * tail, m.y - m.vy * tail);
+          ctx.stroke();
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(m.x, m.y, 1.8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#fbefe6';
         }
+        ctx.globalAlpha = 1;
       }
 
       let previous = 0;
-      function frame(now) {
+      function frameLoop(now) {
         const step = Math.min((now - previous) / 1000, 0.05);
         previous = now;
-        drawSky(now / 1000, step);
-        drawBloom(step);
-        window.requestAnimationFrame(frame);
+        draw(now / 1000, step);
+        window.requestAnimationFrame(frameLoop);
       }
 
       resize();
       window.addEventListener('resize', () => {
         resize();
-        if (calm) drawSky(0, 0);
+        sizeSculpture();
+        if (calm) draw(0, 0);
       });
-      if (calm) drawSky(0, 0);
-      else window.requestAnimationFrame(frame);
+      if (calm) draw(0, 0);
+      else window.requestAnimationFrame(frameLoop);
 
-      const envelope = document.getElementById('envelope');
-      const envelopeWrap = document.getElementById('envelope-wrap');
-      const letter = document.getElementById('letter');
-      const tapHint = document.getElementById('tap-hint');
-
-      envelope.addEventListener('click', () => {
-        document.body.classList.add('is-open');
-        if (!calm) tapHint.hidden = false;
-        letter.focus({ preventScroll: true });
-        window.setTimeout(() => burst(width / 2, height / 2, 40), 500);
-        // Removed afterwards so only the letter sets the page height.
-        window.setTimeout(() => { envelopeWrap.hidden = true; }, calm ? 0 : 1400);
-        document.addEventListener('pointerdown', (event) => burst(event.clientX, event.clientY, 14));
-      }, { once: true });
+      document.addEventListener('pointerdown', (event) => {
+        if (wishing && !event.target.closest('button')) shoot(event.clientX, event.clientY);
+      });
     })();
+  </script>
+
+  <script type="module">
+    // Glossy 3D hearts rise and rose petals drift down behind the letter.
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
+
+    const canvas = document.getElementById('hearts3d');
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const small = window.matchMedia('(max-width: 600px)').matches;
+    const random = (min, max) => min + Math.random() * (max - min);
+
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
+    } catch {
+      // Without WebGL the 2D sky is still complete on its own.
+      canvas.remove();
+      throw new Error('WebGL unavailable');
+    }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+    renderer.setClearColor(0x000000, 0);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x0a0717, 8, 26);
+    const FOV = 50, CAM_Z = 10;
+    const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 60);
+    camera.position.z = CAM_Z;
+
+    scene.add(new THREE.AmbientLight(0xffe6f0, 0.55));
+    const goldLight = new THREE.PointLight(0xffd59e, 60, 40, 1.6);
+    goldLight.position.set(-6, 6, 6);
+    scene.add(goldLight);
+    const roseLight = new THREE.PointLight(0xff6f9c, 70, 40, 1.6);
+    roseLight.position.set(7, -4, 5);
+    scene.add(roseLight);
+
+    // Classic bezier heart, extruded with soft bevels and turned point-down.
+    const heartShape = new THREE.Shape();
+    heartShape.moveTo(5, 5);
+    heartShape.bezierCurveTo(5, 5, 4, 0, 0, 0);
+    heartShape.bezierCurveTo(-6, 0, -6, 7, -6, 7);
+    heartShape.bezierCurveTo(-6, 11, -3, 15.4, 5, 19);
+    heartShape.bezierCurveTo(12, 15.4, 16, 11, 16, 7);
+    heartShape.bezierCurveTo(16, 7, 16, 0, 10, 0);
+    heartShape.bezierCurveTo(7, 0, 5, 5, 5, 5);
+    const heartGeometry = new THREE.ExtrudeGeometry(heartShape, {
+      depth: 3.5, bevelEnabled: true, bevelSegments: 4, bevelSize: 1.6, bevelThickness: 1.6, curveSegments: 18
+    });
+    heartGeometry.center();
+    heartGeometry.scale(0.05, 0.05, 0.05);
+    heartGeometry.rotateZ(Math.PI);
+
+    // A cupped petal: a tapered plane bent along both axes.
+    const petalGeometry = new THREE.PlaneGeometry(0.7, 1, 8, 10);
+    const pos = petalGeometry.attributes.position;
+    for (let i = 0; i < pos.count; i += 1) {
+      const u = pos.getX(i) / 0.35, v = pos.getY(i) + 0.5;
+      const width = Math.pow(Math.sin(Math.PI * (0.06 + v * 0.86)), 0.7);
+      pos.setXYZ(i, u * 0.35 * width, v - 0.5, 0.2 * u * u * width - 0.12 * v * v);
+    }
+    petalGeometry.computeVertexNormals();
+    petalGeometry.scale(0.55, 0.55, 0.55);
+
+    const heartMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff, emissive: 0xc2416f, emissiveIntensity: 0.3,
+      roughness: 0.28, metalness: 0.15, transparent: true, opacity: 0.9
+    });
+    const petalMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff, emissive: 0x4a0b24, emissiveIntensity: 0.4,
+      roughness: 0.6, side: THREE.DoubleSide, transparent: true, opacity: 0.85
+    });
+
+    const heartColors = ['#ff6f9c', '#ff9fbf', '#c2416f', '#ffd59e', '#ff5d8f'].map((c) => new THREE.Color(c));
+    const petalColors = ['#c2416f', '#e0527f', '#ff9fbf', '#a3204f'].map((c) => new THREE.Color(c));
+
+    function makeSwarm(geometry, material, count, colors, rising) {
+      const mesh = new THREE.InstancedMesh(geometry, material, count);
+      mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      const items = Array.from({ length: count }, (_, i) => {
+        mesh.setColorAt(i, colors[i % colors.length]);
+        return {
+          x: 0, y: 0, z: random(-14, 1),
+          speed: random(0.25, 0.6) * (rising ? 1 : -1),
+          sway: random(0.2, 0.7), phase: random(0, Math.PI * 2),
+          rx: random(0, 6), ry: random(0, 6), rz: random(0, 6),
+          sx: random(-0.6, 0.6), sy: random(-0.9, 0.9), sz: random(-0.5, 0.5),
+          scale: random(0.5, 1.15), rising
+        };
+      });
+      scene.add(mesh);
+      return { mesh, items };
+    }
+
+    const hearts = makeSwarm(heartGeometry, heartMaterial, small ? 22 : 38, heartColors, true);
+    const petals = makeSwarm(petalGeometry, petalMaterial, small ? 36 : 64, petalColors, false);
+
+    // Visible half-extents of the view at a given depth.
+    const halfHeight = (z) => Math.tan(THREE.MathUtils.degToRad(FOV / 2)) * (CAM_Z - z);
+
+    function scatter(item, anywhere) {
+      const h = halfHeight(item.z), w = h * camera.aspect;
+      item.x = random(-w, w) * 1.1;
+      item.y = anywhere ? random(-h, h) : (item.rising ? -h - 1 : h + 1);
+    }
+
+    const dummy = new THREE.Object3D();
+    function step(swarm, t, dt, pace) {
+      swarm.items.forEach((item, i) => {
+        item.y += item.speed * dt * pace;
+        item.rx += item.sx * dt * pace;
+        item.ry += item.sy * dt * pace;
+        item.rz += item.sz * dt * pace;
+        const h = halfHeight(item.z) + 1.2;
+        if (item.rising ? item.y > h : item.y < -h) scatter(item, false);
+        // Petals flutter more than hearts as they fall.
+        const flutter = item.rising ? 1 : 1.8;
+        dummy.position.set(item.x + Math.sin(t * 0.6 + item.phase) * item.sway * flutter, item.y, item.z);
+        dummy.rotation.set(item.rx, item.ry, item.rz);
+        dummy.scale.setScalar(item.scale);
+        dummy.updateMatrix();
+        swarm.mesh.setMatrixAt(i, dummy.matrix);
+      });
+      swarm.mesh.instanceMatrix.needsUpdate = true;
+    }
+
+    function resize() {
+      const w = window.innerWidth, h = window.innerHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    for (const item of hearts.items.concat(petals.items)) scatter(item, true);
+
+    // The camera leans gently towards the pointer.
+    const lean = { x: 0, y: 0, tx: 0, ty: 0 };
+    window.addEventListener('pointermove', (event) => {
+      lean.tx = (event.clientX / window.innerWidth - 0.5) * 1.6;
+      lean.ty = (event.clientY / window.innerHeight - 0.5) * -1.0;
+    }, { passive: true });
+
+    // When the heart constellation is finished, the whole sky warms up.
+    let glow = 0, glowTarget = 0;
+    document.addEventListener('sky-complete', () => {
+      glowTarget = 1;
+      canvas.classList.add('bright');
+      if (calm) {
+        glow = 1;
+        render(0, 0);
+      }
+    });
+
+    function render(t, dt) {
+      glow += (glowTarget - glow) * Math.min(1, dt * 0.8);
+      const pace = 1 + glow * 0.8;
+      step(hearts, t, dt, pace);
+      step(petals, t, dt, pace);
+      heartMaterial.emissiveIntensity = 0.3 + glow * 0.45 + 0.05 * Math.sin(t * 2);
+      lean.x += (lean.tx - lean.x) * Math.min(1, dt * 2);
+      lean.y += (lean.ty - lean.y) * Math.min(1, dt * 2);
+      camera.position.set(lean.x, lean.y, CAM_Z);
+      camera.lookAt(0, 0, 0);
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      resize();
+      if (calm) render(0, 0);
+    });
+
+    if (calm) {
+      // One still, composed frame for people who prefer less motion.
+      render(0, 0);
+    } else {
+      const clock = new THREE.Clock();
+      renderer.setAnimationLoop(() => {
+        const dt = Math.min(clock.getDelta(), 0.05);
+        render(clock.elapsedTime, dt);
+      });
+    }
+    canvas.classList.add('ready');
+
+    // ---- Little mice who carry each gift to its star ----
+    // An orthographic camera in CSS pixels, so a mouse can run to any point on screen.
+    const courierCanvas = document.getElementById('couriers');
+    const courierRenderer = new THREE.WebGLRenderer({ canvas: courierCanvas, alpha: true, antialias: true });
+    courierRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    courierRenderer.setClearColor(0x000000, 0);
+    const stage = new THREE.Scene();
+    const view = new THREE.OrthographicCamera(0, 1, 0, -1, -500, 500);
+    stage.add(new THREE.HemisphereLight(0xfff3ea, 0x2a0f3a, 1.7));
+    const sun = new THREE.DirectionalLight(0xffe6d0, 2.2);
+    sun.position.set(-0.5, 1, 1.2);
+    stage.add(sun);
+    const rim = new THREE.DirectionalLight(0xff9fbf, 1.6);
+    rim.position.set(1, 0.3, -1);
+    stage.add(rim);
+
+    function sizeStage() {
+      courierRenderer.setSize(window.innerWidth, window.innerHeight, false);
+      view.right = window.innerWidth;
+      view.bottom = -window.innerHeight;
+      view.updateProjectionMatrix();
+    }
+    sizeStage();
+    window.addEventListener('resize', sizeStage);
+
+    const ball = new THREE.SphereGeometry(1, 24, 16);
+    const cube = new THREE.BoxGeometry(1, 1, 1);
+    const bowLoop = new THREE.TorusGeometry(5, 1.8, 8, 20);
+    const sparkGeometry = new THREE.OctahedronGeometry(3);
+    const shadowGeometry = new THREE.CircleGeometry(1, 24);
+    // The tail curls up behind the mouse; beads along it shrink towards the tip.
+    const tailCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, 0, 0), new THREE.Vector3(-14, -6, 0), new THREE.Vector3(-28, -2, 0),
+      new THREE.Vector3(-36, 12, 0), new THREE.Vector3(-30, 24, 0), new THREE.Vector3(-22, 26, 0)
+    ]);
+    const whiskerGeometry = new THREE.BufferGeometry().setFromPoints([
+      [19, -5, 8], [38, 0, 14], [19, -6, 8], [39, -7, 14], [19, -7, 8], [36, -14, 13],
+      [19, -5, -8], [36, 0, -14], [19, -7, -8], [36, -11, -14]
+    ].map(([x, y, z]) => new THREE.Vector3(x, y, z)));
+    const scarfGeometry = new THREE.TorusGeometry(12, 3.4, 10, 28);
+
+    const fur = new THREE.MeshStandardMaterial({ color: 0xd9ccd6, roughness: 0.8 });
+    const cream = new THREE.MeshStandardMaterial({ color: 0xfbf2f5, roughness: 0.85 });
+    const pink = new THREE.MeshStandardMaterial({ color: 0xffa9c6, roughness: 0.55 });
+    const noseMaterial = new THREE.MeshStandardMaterial({ color: 0xff5d8f, roughness: 0.25 });
+    const eyeMaterial = new THREE.MeshStandardMaterial({ color: 0x150b1a, roughness: 0.05, metalness: 0.4 });
+    const blush = new THREE.MeshBasicMaterial({ color: 0xff7fa8, transparent: true, opacity: 0.55, depthWrite: false });
+    const scarfMaterial = new THREE.MeshStandardMaterial({ color: 0xc2416f, roughness: 0.7 });
+    const shine = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const whiskerMaterial = new THREE.LineBasicMaterial({ color: 0xfbefe6, transparent: true, opacity: 0.6 });
+    const shadowMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25, depthWrite: false });
+    const sparkMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const carriedHeart = new THREE.MeshStandardMaterial({ color: 0xff6f9c, emissive: 0xc2416f, emissiveIntensity: 0.4, roughness: 0.3 });
+    const wrappings = [[0xc2416f, 0xffd59e], [0x7b2a8a, 0xffd59e], [0xffd59e, 0xc2416f], [0xff6f9c, 0xfff6ea]]
+      .map(([paper, ribbon]) => [
+        new THREE.MeshStandardMaterial({ color: paper, roughness: 0.45 }),
+        new THREE.MeshStandardMaterial({ color: ribbon, roughness: 0.3, metalness: 0.4 })
+      ]);
+    const sparkColors = ['#ffffff', '#ffd59e', '#ff9fbf', '#ff6f9c'].map((c) => new THREE.Color(c));
+
+    function part(geometry, material, x, y, z, sx, sy, sz) {
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(x, y, z);
+      mesh.scale.set(sx, sy, sz);
+      return mesh;
+    }
+
+    let giftCount = 0;
+    function makeGift() {
+      const [paper, ribbon] = wrappings[giftCount++ % wrappings.length];
+      const gift = new THREE.Group();
+      gift.add(part(cube, paper, 0, 0, 0, 24, 20, 24));
+      gift.add(part(cube, ribbon, 0, 0, 0, 5, 20.4, 24.4));
+      gift.add(part(cube, ribbon, 0, 0, 0, 24.4, 20.4, 5));
+      const lid = new THREE.Group();
+      lid.position.y = 10;
+      lid.add(part(cube, paper, 0, 3, 0, 27, 6, 27));
+      lid.add(part(cube, ribbon, 0, 3, 0, 5, 6.4, 27.4));
+      lid.add(part(cube, ribbon, 0, 3, 0, 27.4, 6.4, 5));
+      for (const side of [-1, 1]) {
+        const loop = part(bowLoop, ribbon, side * 5, 10, 0, 1, 1, 1);
+        loop.rotation.z = side * 0.6;
+        lid.add(loop);
+      }
+      lid.add(part(ball, ribbon, 0, 7.5, 0, 3, 3, 3));
+      gift.add(lid);
+      gift.userData.lid = lid;
+      return gift;
+    }
+
+    // A round, big-headed little mouse in a scarf, feet at the origin, facing +x.
+    function makeMouse() {
+      const mouse = new THREE.Group();
+      mouse.add(part(shadowGeometry, shadowMaterial, 0, 0, -60, 34, 5, 1));
+      const pose = new THREE.Group();
+      pose.rotation.set(0.15, -0.55, 0);
+      mouse.add(pose);
+      const body = new THREE.Group();
+      pose.add(body);
+      const trunk = new THREE.Group();
+      trunk.position.y = 4;
+      body.add(trunk);
+      trunk.add(part(ball, fur, 0, 16, 0, 24, 19, 19));
+      trunk.add(part(ball, cream, 13, 19, 0, 11, 12, 15));
+      const scarf = part(scarfGeometry, scarfMaterial, 14, 29, 0, 1, 1, 1);
+      scarf.rotation.set(Math.PI / 2, 0.35, 0);
+      body.add(scarf);
+      body.add(part(ball, scarfMaterial, 6, 22, 13, 4, 8, 3));
+
+      const head = new THREE.Group();
+      head.position.set(22, 44, 0);
+      body.add(head);
+      head.add(part(ball, fur, 0, 0, 0, 20, 19, 19));
+      head.add(part(ball, cream, 14, -6, 0, 10, 8, 10));
+      head.add(part(ball, noseMaterial, 23.5, -4, 0, 4.2, 3.6, 4.2));
+      const eyes = [];
+      for (const side of [-1, 1]) {
+        const eye = new THREE.Group();
+        eye.position.set(13, 3, side * 11);
+        eye.add(part(ball, eyeMaterial, 0, 0, 0, 4, 5, 3.4));
+        eye.add(part(ball, shine, 1.6, 2, side * 2.6, 1.4, 1.4, 1.4));
+        eye.add(part(ball, shine, 0.4, -1.8, side * 3, 0.7, 0.7, 0.7));
+        head.add(eye);
+        eyes.push(eye);
+        head.add(part(ball, blush, 11, -5, side * 14.5, 4.5, 2.8, 2));
+      }
+      head.add(new THREE.LineSegments(whiskerGeometry, whiskerMaterial));
+      const ears = [-1, 1].map((side) => {
+        const ear = new THREE.Group();
+        ear.position.set(-3, 17, side * 12);
+        ear.rotation.set(side * 0.35, 0, 0.2);
+        ear.add(part(ball, fur, 0, 0, 0, 13, 14, 3.5));
+        ear.add(part(ball, pink, 0.8, -0.8, 1.8, 9, 10, 2.2));
+        head.add(ear);
+        return ear;
+      });
+
+      const tail = new THREE.Group();
+      tail.position.set(-21, 18, 0);
+      for (let i = 0; i <= 48; i += 1) {
+        const p = tailCurve.getPoint(i / 48);
+        const r = 2.8 - i * 0.04;
+        tail.add(part(ball, pink, p.x, p.y, p.z, r, r, r));
+      }
+      body.add(tail);
+      const feet = [[12, 9], [12, -9], [-12, 9], [-12, -9]].map(([x, z]) => {
+        const foot = part(ball, pink, x, 3, z, 6.5, 3.5, 5.5);
+        pose.add(foot);
+        return foot;
+      });
+      mouse.userData = { pose, body, trunk, head, eyes, ears, tail, feet, stride: 0, wink: random(0, 3) };
+      return mouse;
+    }
+
+    // Legs, bounce, squash, tail and ears for a mouse that moved `dx` pixels this frame.
+    function scurry(mouse, dx, t) {
+      const parts = mouse.userData;
+      parts.stride += Math.abs(dx) * 0.11;
+      const s = parts.stride;
+      parts.feet.forEach((foot, i) => {
+        const phase = s + (i < 2 ? 0 : Math.PI) + (i % 2) * 0.6;
+        foot.position.x = (i < 2 ? 12 : -12) + Math.sin(phase) * 5;
+        foot.position.y = 3 + Math.max(0, Math.cos(phase)) * 3;
+      });
+      const bounce = Math.abs(Math.sin(s));
+      parts.body.position.y = bounce * 3.5;
+      parts.trunk.scale.set(1 + 0.05 * (1 - bounce), 1 - 0.05 * (1 - bounce), 1);
+      parts.head.rotation.z = Math.sin(s * 2) * 0.05;
+      parts.tail.rotation.z = Math.sin(t * 9) * 0.25;
+      parts.ears.forEach((ear, i) => { ear.rotation.z = 0.2 + Math.sin(t * 7 + i) * 0.12; });
+    }
+
+    // Every few seconds the mouse blinks.
+    function blink(mouse, t) {
+      const open = (t + mouse.userData.wink) % 3.2 < 0.12 ? 0.12 : 1;
+      mouse.userData.eyes.forEach((eye) => { eye.scale.y = open; });
+    }
+
+    const couriers = [];
+    const sparks = [];
+    const lids = [];
+    let lastTick = performance.now();
+
+    function burst(x, y) {
+      const count = 32;
+      const mesh = new THREE.InstancedMesh(sparkGeometry, sparkMaterial, count);
+      const motes = Array.from({ length: count }, (_, i) => {
+        mesh.setColorAt(i, sparkColors[i % sparkColors.length]);
+        const angle = random(0, Math.PI * 2), speed = random(120, 340);
+        return { x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed + 80, spin: random(-8, 8), size: random(0.7, 1.6) };
+      });
+      stage.add(mesh);
+      sparks.push({ mesh, motes, age: 0 });
+    }
+
+    const ease = (p) => 1 - (1 - p) ** 3;
+
+    function updateCourier(c, dt, t) {
+      const { mouse } = c;
+      const parts = mouse.userData;
+      c.time += dt;
+      const startX = mouse.position.x;
+      blink(mouse, t);
+
+      if (c.state === 'run') {
+        const p = Math.min(1, c.time / c.duration);
+        mouse.position.x = c.from + (c.to - c.from) * ease(p);
+        scurry(mouse, mouse.position.x - startX, t);
+        if (p === 1) {
+          c.state = 'toss';
+          c.time = 0;
+          stage.attach(c.gift);
+          c.giftFrom = c.gift.position.clone();
+        }
+      } else if (c.state === 'toss') {
+        // The mouse rears up and flings the present up to its star.
+        const p = Math.min(1, c.time / 0.5);
+        const e = ease(p);
+        c.gift.position.set(
+          c.giftFrom.x + (c.target.x - c.giftFrom.x) * e,
+          c.giftFrom.y + (c.target.y - c.giftFrom.y) * e + Math.sin(Math.PI * p) * 60,
+          40
+        );
+        c.gift.rotation.z = -c.facing * p * Math.PI * 2;
+        parts.pose.rotation.z = 0.3 * Math.sin(Math.PI * p);
+        if (p === 1) {
+          const lid = c.gift.userData.lid;
+          stage.attach(lid);
+          lids.push({ lid, vx: c.facing * random(40, 120), vy: random(240, 320), spin: random(-9, 9), age: 0 });
+          burst(c.target.x, c.target.y);
+          c.state = 'cheer';
+          c.time = 0;
+          c.resolve();
+        }
+      } else if (c.state === 'cheer') {
+        // A happy ear wiggle while the empty box shrinks away.
+        const p = Math.min(1, c.time / 0.8);
+        const k = Math.max(0, 1 - c.time / 0.3) * c.size;
+        c.gift.scale.set(c.facing * k, k, k);
+        parts.ears.forEach((ear, i) => { ear.rotation.z = 0.2 + Math.sin(t * 18 + i) * 0.3; });
+        parts.tail.rotation.z = Math.sin(t * 14) * 0.45;
+        if (p === 1) {
+          stage.remove(c.gift);
+          mouse.position.y = -c.ground;
+          c.state = 'turn';
+          c.time = 0;
+        }
+      } else if (c.state === 'turn') {
+        const p = Math.min(1, c.time / 0.2);
+        mouse.scale.x = c.facing * c.size * (1 - 2 * p);
+        if (p === 1) {
+          c.state = 'leave';
+          c.time = 0;
+        }
+      } else {
+        // 'leave' heads home; 'parade' trots across with a heart.
+        const direction = c.state === 'leave' ? -c.facing : c.facing;
+        const speed = c.state === 'leave' ? 200 + 900 * c.time : 230;
+        mouse.position.x += direction * speed * dt;
+        scurry(mouse, mouse.position.x - startX, t);
+        if (c.heart) c.heart.rotation.y += dt * 2.5;
+        if (mouse.position.x < -160 || mouse.position.x > window.innerWidth + 160) {
+          stage.remove(mouse);
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function tick(now) {
+      const dt = Math.min((now - lastTick) / 1000, 0.05);
+      lastTick = now;
+      const t = now / 1000;
+      for (let i = couriers.length - 1; i >= 0; i -= 1) {
+        if (!updateCourier(couriers[i], dt, t)) couriers.splice(i, 1);
+      }
+      for (let i = lids.length - 1; i >= 0; i -= 1) {
+        const l = lids[i];
+        l.age += dt;
+        l.vy -= 900 * dt;
+        l.lid.position.x += l.vx * dt;
+        l.lid.position.y += l.vy * dt;
+        l.lid.rotation.z += l.spin * dt;
+        const k = Math.max(0, 1 - Math.max(0, l.age - 0.4) / 0.4);
+        l.lid.scale.setScalar(k);
+        if (l.age > 0.8) {
+          stage.remove(l.lid);
+          lids.splice(i, 1);
+        }
+      }
+      for (let i = sparks.length - 1; i >= 0; i -= 1) {
+        const s = sparks[i];
+        s.age += dt;
+        const fade = Math.max(0, 1 - s.age / 1.1);
+        s.motes.forEach((m, j) => {
+          m.vy -= 300 * dt;
+          m.vx *= 0.98;
+          m.x += m.vx * dt;
+          m.y += m.vy * dt;
+          dummy.position.set(m.x, m.y, 60);
+          dummy.rotation.set(0, 0, s.age * m.spin);
+          dummy.scale.setScalar(m.size * fade);
+          dummy.updateMatrix();
+          s.mesh.setMatrixAt(j, dummy.matrix);
+        });
+        s.mesh.instanceMatrix.needsUpdate = true;
+        if (fade === 0) {
+          stage.remove(s.mesh);
+          s.mesh.dispose();
+          sparks.splice(i, 1);
+        }
+      }
+      courierRenderer.render(stage, view);
+      // Sleep while nobody is running around.
+      if (!couriers.length && !lids.length && !sparks.length) courierRenderer.setAnimationLoop(null);
+    }
+
+    function wake() {
+      lastTick = performance.now();
+      courierRenderer.setAnimationLoop(tick);
+    }
+
+    // Called by the star script; resolves the moment the gift pops open.
+    window.deliverGift = (x, y) => new Promise((resolve) => {
+      const size = small ? 0.95 : 1.15;
+      const facing = x < window.innerWidth / 2 ? 1 : -1;
+      // Stop below and beside the star so the mouse never hides it.
+      const ground = y + 86 * size;
+      const from = facing > 0 ? -120 : window.innerWidth + 120;
+      const to = x - facing * 86 * size;
+      const mouse = makeMouse();
+      mouse.position.set(from, -ground, 0);
+      mouse.scale.set(facing * size, size, size);
+      // The present rides on its back, inside the 3D pose so it turns with the mouse.
+      const gift = makeGift();
+      gift.position.set(-8, 52, 0);
+      mouse.userData.body.add(gift);
+      stage.add(mouse);
+      couriers.push({
+        mouse, gift, facing, size, ground, from, to, resolve,
+        target: new THREE.Vector3(x, -y, 40),
+        duration: Math.min(1.5, Math.max(0.7, Math.abs(to - from) / 600)),
+        state: 'run', time: 0
+      });
+      wake();
+    });
+
+    // At the finale a little parade of mice carries hearts along the bottom of the sky.
+    function parade() {
+      if (document.visibilityState !== 'visible') return;
+      const size = small ? 0.8 : 1;
+      for (let i = 0; i < 3; i += 1) {
+        const mouse = makeMouse();
+        mouse.position.set(-110 - i * 95 * size, -(window.innerHeight - 18), 0);
+        mouse.scale.set(size, size, size);
+        const heart = new THREE.Mesh(heartGeometry, carriedHeart);
+        heart.position.set(-6, 66, 30);
+        heart.scale.setScalar(20);
+        mouse.add(heart);
+        stage.add(mouse);
+        couriers.push({ mouse, heart, facing: 1, size, state: 'parade', time: 0 });
+      }
+      wake();
+    }
+    if (!calm) {
+      document.addEventListener('sky-complete', () => {
+        courierCanvas.classList.add('behind');
+        window.setTimeout(parade, 3200);
+        window.setInterval(parade, 16000);
+      });
+    }
   </script>
 </body>
 </html>
