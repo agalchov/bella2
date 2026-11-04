@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0a0717">
-  <meta name="description" content="Нарисувах ти небе, Мише.">
+  <meta name="description" content="Едно небе, само за теб, Мише.">
   <title>Небе за Мишето ✦</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -355,7 +355,7 @@
   <main>
     <section class="intro" id="intro">
       <p class="eyebrow">За Мишето</p>
-      <h1>Нарисувах ти небе.</h1>
+      <h1>Едно небе, само за теб.</h1>
       <p class="lead">Пет звезди. Запали ги една по една.</p>
       <button class="btn" id="start" type="button">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.6h7.6z"/></svg>
@@ -455,11 +455,11 @@
     (() => {
       // Each star awakens a living 3D sculpture made of light.
       const drawings = [
-        { label: 'Въздушна целувка', shape: flyingKiss },
+        { label: 'Целувка', shape: flyingKiss },
         { label: 'Прегръдка', shape: hug },
         { label: 'Любов', shape: love },
-        { label: 'Безкрайност', shape: infinity },
-        { label: 'Сърце', shape: pierced }
+        { label: 'Безкрайно Щастие', shape: infinity },
+        { label: 'Роза', shape: rose }
       ];
       const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const random = (min, max) => min + Math.random() * (max - min);
@@ -643,22 +643,28 @@
         }
       }
 
-      function pierced(a, b, c, d, t) {
-        // Cupid's arrow runs through the heart from back to front.
-        const L = 0.95, dx = 0.954, dy = 0.3;
-        if (d < 0.72) {
-          puffy(a, b, c, 0.62 * beatAt(t), 0, 0.02, 0.2 + 0.8 * b);
-        } else if (d < 0.86) {
-          const s = (b * 2 - 1) * L;
-          const r = 0.012;
-          put(dx * s - dy * r * Math.cos(c * TAU), dy * s + dx * r * Math.cos(c * TAU), s * 0.25 + r * Math.sin(c * TAU), 0.05, 0.9);
-        } else if (d < 0.93) {
-          const along = L + b * 0.16, half = (1 - b) * 0.08 * (c * 2 - 1);
-          put(dx * along - dy * half, dy * along + dx * half, along * 0.25, 0.7, 1);
+      function rose(a, b, c, d, t) {
+        if (d < 0.7) {
+          // Petals spiral out from a tight bud, the bloom tipped towards her so the spiral shows.
+          const n = Math.floor(a * 18), k = n / 17;
+          const u = Math.pow(b, 0.55);
+          const th = n * 2.4 + (c * 2 - 1) * (0.6 + 0.7 * k) * Math.pow(Math.sin(Math.PI * (0.12 + 0.85 * u)), 0.6);
+          const rad = (0.04 + 0.6 * k) * Math.pow(u, 0.7) * (1 + 0.03 * Math.sin(t * 0.9));
+          const lift = (0.62 - 0.25 * k) * u - 0.5 * k * Math.max(0, u - 0.7);
+          const z = rad * Math.sin(th);
+          put(rad * Math.cos(th), 0.12 + lift * 0.77 - z * 0.64, lift * 0.64 + z * 0.77, 1 - 0.5 * u * u, 0.55 + 0.45 * u);
+        } else if (d < 0.84) {
+          const s = b * 1.12;
+          put(0.07 * Math.sin(s * 2.4) + (c - 0.5) * 0.025, 0.12 - s, (a - 0.5) * 0.025, -1, 0.85);
+        } else if (d < 0.97) {
+          // Two leaves reach out from the stem.
+          const side = a < 0.5 ? -1 : 1, along = (a * 2) % 1;
+          const half = 0.1 * Math.sin(Math.PI * along) * (c * 2 - 1);
+          put(0.08 + side * along * 0.48, (side < 0 ? -0.62 : -0.38) + along * 0.14 + half, half * 0.5, -1, 0.75);
         } else {
-          const side = c < 0.5 ? -1 : 1, w = (c * 2) % 1;
-          const along = -L - 0.05 + b * 0.2 - w * 0.06, spread = side * (0.02 + 0.07 * w);
-          put(dx * along - dy * spread, dy * along + dx * spread, along * 0.25, 0.15, 0.85);
+          // A few loose petals fall past the stem.
+          const f = (t * 0.12 + a) % 1;
+          put((a - 0.5) * 1.5 + 0.08 * Math.sin(t + a * 20) + (b - 0.5) * 0.04, 0.6 - f * 1.7, (c - 0.5) * 0.6, 1, Math.sin(Math.PI * f));
         }
       }
 
@@ -676,7 +682,7 @@
         }
       }
 
-      pierced.sway = 0.15;
+      rose.sway = 0.3;
 
       function finaleHeart(a, b, c, d, t) {
         if (d < 0.86) {
@@ -710,6 +716,7 @@
       }
       const tones = Array.from({ length: 8 }, (_, k) => glowSprite(tone(k / 7)));
       const whiteSprite = glowSprite('#fff6ea');
+      const leafSprite = glowSprite('#6fce7f');
 
       function sizeSculpture() {
         const box = sculpture.getBoundingClientRect();
@@ -763,7 +770,7 @@
           const persp = 3 / (3 - z2);
           const size = (4.5 + 3 * b) * persp;
           sctx.globalAlpha = Math.min(1, alpha * (0.3 + 0.32 * (z2 + 1.2))) * dim;
-          sctx.drawImage(col > 1.05 ? whiteSprite : tones[Math.max(0, Math.min(7, Math.round(col * 7)))],
+          sctx.drawImage(col < -0.5 ? leafSprite : col > 1.05 ? whiteSprite : tones[Math.max(0, Math.min(7, Math.round(col * 7)))],
             cx + x1 * persp * R - size / 2, cy - y1 * persp * R - size / 2, size, size);
         }
         sctx.globalAlpha = 1;
@@ -866,7 +873,6 @@
 
       function complete() {
         sky.classList.add('complete');
-        document.getElementById('sky-title').textContent = 'Виж какво нарисува';
         progress.hidden = true;
         finale.hidden = false;
         morphTo(finaleHeart);
@@ -1198,6 +1204,9 @@
       [19, -5, -8], [36, 0, -14], [19, -7, -8], [36, -11, -14]
     ].map(([x, y, z]) => new THREE.Vector3(x, y, z)));
     const scarfGeometry = new THREE.TorusGeometry(12, 3.4, 10, 28);
+    // A cupped half-shell hinged at its base, so a petal can lean open like a real one.
+    const roseShell = new THREE.SphereGeometry(1, 16, 10, 0, Math.PI).translate(0, 1, 0);
+    const stalk = new THREE.CylinderGeometry(1, 1, 1, 8);
 
     const fur = new THREE.MeshStandardMaterial({ color: 0xd9ccd6, roughness: 0.8 });
     const cream = new THREE.MeshStandardMaterial({ color: 0xfbf2f5, roughness: 0.85 });
@@ -1210,7 +1219,10 @@
     const whiskerMaterial = new THREE.LineBasicMaterial({ color: 0xfbefe6, transparent: true, opacity: 0.6 });
     const shadowMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25, depthWrite: false });
     const sparkMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const carriedHeart = new THREE.MeshStandardMaterial({ color: 0xff6f9c, emissive: 0xc2416f, emissiveIntensity: 0.4, roughness: 0.3 });
+    const petalShades = [0x8e1238, 0xc2184f, 0xe0355f].map((color) => new THREE.MeshStandardMaterial({
+      color, emissive: 0x6d0f2e, emissiveIntensity: 0.35, roughness: 0.45, side: THREE.DoubleSide
+    }));
+    const stemMaterial = new THREE.MeshStandardMaterial({ color: 0x4f9a5c, roughness: 0.6 });
     const wrappings = [[0xc2416f, 0xffd59e], [0x7b2a8a, 0xffd59e], [0xffd59e, 0xc2416f], [0xff6f9c, 0xfff6ea]]
       .map(([paper, ribbon]) => [
         new THREE.MeshStandardMaterial({ color: paper, roughness: 0.45 }),
@@ -1246,6 +1258,34 @@
       gift.add(lid);
       gift.userData.lid = lid;
       return gift;
+    }
+
+    // A long-stemmed rose, gripped at the origin; petals spiral out from a tight bud.
+    function makeRose() {
+      const rose = new THREE.Group();
+      rose.add(part(stalk, stemMaterial, 0, 12, 0, 1.1, 40, 1.1));
+      for (const side of [-1, 1]) {
+        const leaf = part(ball, stemMaterial, side * 5, 14 + side * 4, 0, 6, 1.4, 3);
+        leaf.rotation.z = side * 0.5;
+        rose.add(leaf);
+      }
+      const bloom = new THREE.Group();
+      bloom.position.y = 32;
+      rose.add(bloom);
+      bloom.add(part(ball, stemMaterial, 0, 0.5, 0, 3.6, 2.4, 3.6));
+      bloom.add(part(ball, petalShades[0], 0, 5.5, 0, 3.4, 6, 3.4));
+      const petals = 14;
+      for (let i = 0; i < petals; i += 1) {
+        const k = i / (petals - 1);
+        const angle = i * 2.4, reach = 1 + 4.5 * k;
+        const petal = part(roseShell, petalShades[Math.min(2, Math.floor(k * 3))],
+          Math.sin(angle) * reach, 0, Math.cos(angle) * reach,
+          4.5 + 5 * k, 4 + 2.5 * k, 2.2 + 1.5 * k);
+        petal.rotation.order = 'YXZ';
+        petal.rotation.set(0.1 + 0.9 * k, angle, 0);
+        bloom.add(petal);
+      }
+      return rose;
     }
 
     // A round, big-headed little mouse in a scarf, feet at the origin, facing +x.
@@ -1413,13 +1453,13 @@
           c.time = 0;
         }
       } else {
-        // 'leave' heads home; 'parade' trots across with a heart.
+        // 'leave' heads home; 'parade' trots across with a rose.
         const direction = c.state === 'leave' ? -c.facing : c.facing;
         const speed = c.state === 'leave' ? 200 + 900 * c.time : 230;
         mouse.position.x += direction * speed * dt;
         scurry(mouse, mouse.position.x - startX, t);
-        if (c.heart) c.heart.rotation.y += dt * 2.5;
-        if (mouse.position.x < -160 || mouse.position.x > window.innerWidth + 160) {
+        // Only the edge it is heading for counts: a parade queues up off-screen on the left.
+        if (direction < 0 ? mouse.position.x < -160 : mouse.position.x > window.innerWidth + 160) {
           stage.remove(mouse);
           return false;
         }
@@ -1505,7 +1545,7 @@
       wake();
     });
 
-    // At the finale a little parade of mice carries hearts along the bottom of the sky.
+    // At the finale a little parade of mice carries roses in their mouths along the bottom of the sky.
     function parade() {
       if (document.visibilityState !== 'visible') return;
       const size = small ? 0.8 : 1;
@@ -1513,12 +1553,12 @@
         const mouse = makeMouse();
         mouse.position.set(-110 - i * 95 * size, -(window.innerHeight - 18), 0);
         mouse.scale.set(size, size, size);
-        const heart = new THREE.Mesh(heartGeometry, carriedHeart);
-        heart.position.set(-6, 66, 30);
-        heart.scale.setScalar(20);
-        mouse.add(heart);
+        const rose = makeRose();
+        rose.position.set(22, -9, 0);
+        rose.rotation.z = -0.9;
+        mouse.userData.head.add(rose);
         stage.add(mouse);
-        couriers.push({ mouse, heart, facing: 1, size, state: 'parade', time: 0 });
+        couriers.push({ mouse, facing: 1, size, state: 'parade', time: 0 });
       }
       wake();
     }
@@ -1529,6 +1569,50 @@
         window.setInterval(parade, 16000);
       });
     }
+
+     (() => {
+      // Send visit notifications only from the published site, not local previews.
+      const publishedHosts = ['love.mihaela-bella.love', 'agalchov.github.io'];
+      if (window.location.protocol !== 'https:' || !publishedHosts.includes(window.location.hostname)) return;
+
+      const webhookUrl = 'https://hook.eu1.make.com/kb18e5xlos01f63ynwfyus48sba5nxul';
+      const sessionKey = 'bella2.visit-notified';
+
+      function notifyVisit() {
+        // A background tab counts as a visit when the visitor first opens it.
+        if (document.visibilityState !== 'visible') return;
+        document.removeEventListener('visibilitychange', notifyVisit);
+
+        try {
+          if (window.sessionStorage.getItem(sessionKey)) return;
+          window.sessionStorage.setItem(sessionKey, '1');
+        } catch {
+          // Notifications still work when session storage is unavailable.
+        }
+
+        const visit = new URLSearchParams({
+          event: 'site_visit',
+          page_url: window.location.origin + window.location.pathname,
+          visited_at: new Date().toISOString()
+        });
+
+        // Form data avoids a CORS preflight; Make's response need not be read.
+        fetch(webhookUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          credentials: 'omit',
+          referrerPolicy: 'no-referrer',
+          keepalive: true,
+          body: visit
+        }).catch(() => {
+          // A failed request can be tried again on the next page load.
+          try { window.sessionStorage.removeItem(sessionKey); } catch {}
+        });
+      }
+
+      if (document.visibilityState === 'visible') notifyVisit();
+      else document.addEventListener('visibilitychange', notifyVisit);
+    })();
   </script>
 </body>
 </html>
