@@ -3,407 +3,457 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0a0717">
-  <meta name="description" content="Едно небе, само за теб, Мише.">
-  <title>Небе за Мишето ✦</title>
+  <meta name="theme-color" content="#070b22">
+  <meta name="description" content="Една приказка, само за теб, Мише.">
+  <title>Приказка ✦</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=Playfair+Display:ital,wght@1,400;1,500&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&amp;family=Playfair+Display:ital,wght@1,400;1,500&amp;display=swap" rel="stylesheet">
   <script>document.documentElement.classList.add('js');</script>
   <style>
     :root {
       color-scheme: dark;
-      --night: #0a0717;
-      --plum: #2a0f3a;
-      --rose: #c2416f;
-      --blush: #ff9fbf;
+      --night: #070b22;
+      --blush: #ffb3c7;
       --gold: #ffd59e;
-      --text: #fbefe6;
-      --muted: #d6c3d8;
-      --glass: #ffffff0f;
-      --glass-edge: #ffffff24;
+      --text: #fff4e8;
+      --muted: #d9d3e6;
       --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     }
     * { box-sizing: border-box; }
-    [hidden] { display: none !important; }
     html { min-height: 100%; background: var(--night); }
     body {
       margin: 0;
       min-width: 280px;
       min-height: 100svh;
-      overflow-x: hidden;
       color: var(--text);
-      background: radial-gradient(ellipse 120% 80% at 50% 0%, #1a0b2e 0%, var(--night) 60%);
-      font-family: 'Manrope', system-ui, sans-serif;
+      /* The painted lake takes over from this as soon as WebGL is running. */
+      background: linear-gradient(180deg, #070b22 0%, #11183f 55%, #1c2a55 74%, #060a1c 76%, #0b1230 100%) fixed;
+      font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
       -webkit-tap-highlight-color: transparent;
     }
+    .js body { height: 100svh; overflow: hidden; }
     ::selection { background: var(--blush); color: var(--night); }
 
-    /* Slow aurora behind everything */
-    .aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-    .aurora span {
-      position: absolute;
-      width: 70vmax;
-      height: 70vmax;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.55;
-      animation: drift 18s ease-in-out infinite alternate;
-    }
-    .aurora span:nth-child(1) { top: -30vmax; left: -20vmax; background: radial-gradient(circle, #7b2a8a, transparent 65%); }
-    .aurora span:nth-child(2) { top: 10vmax; right: -35vmax; background: radial-gradient(circle, var(--rose), transparent 65%); animation-duration: 22s; animation-delay: -6s; }
-    .aurora span:nth-child(3) { bottom: -45vmax; left: -10vmax; background: radial-gradient(circle, #3b1f7a, transparent 65%); animation-duration: 26s; animation-delay: -12s; }
-    @keyframes drift {
-      from { transform: translate(0, 0) scale(1); }
-      to { transform: translate(6vmax, 4vmax) scale(1.12); }
-    }
-    .stars { position: fixed; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; }
+    .scene { position: fixed; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1600ms ease; }
+    .scene.ready { opacity: 1; }
 
-    /* Three.js hearts and petals, between the aurora and the star dust */
-    .hearts3d {
+    /* Cover */
+    .cover {
       position: fixed;
       inset: 0;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 2s ease;
-      /* Keep the middle quiet so the words stay easy to read. */
-      -webkit-mask-image: radial-gradient(ellipse 42% 46% at 50% 50%, #0004 30%, #000 100%);
-      mask-image: radial-gradient(ellipse 42% 46% at 50% 50%, #0004 30%, #000 100%);
-    }
-    .hearts3d.ready { opacity: 1; }
-    .js body.started .hearts3d.ready { opacity: 0.45; }
-    .js body.started .hearts3d.bright { opacity: 1; }
-    /* The mice who carry each gift run above everything, without catching taps. */
-    .couriers { position: fixed; inset: 0; z-index: 3; width: 100%; height: 100%; pointer-events: none; }
-    /* During the finale they slip behind the letter so the words stay clear. */
-    .couriers.behind { z-index: 1; }
-
-    main {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      place-items: center;
-      min-height: 100svh;
-      padding: 32px 16px;
-    }
-    main > section { grid-area: 1 / 1; }
-
-    /* Intro */
-    .intro {
+      z-index: 3;
       display: flex;
       flex-direction: column;
       align-items: center;
-      max-width: 560px;
+      justify-content: center;
+      padding: 24svh 16px 32px;
       text-align: center;
-      transition: opacity 600ms ease, transform 800ms var(--ease-out);
+      transition: opacity 1200ms ease, transform 1600ms var(--ease-out), visibility 0s linear 1200ms;
     }
+    .cover > * { animation: rise 1400ms var(--ease-out) both; }
+    .cover > :nth-child(2) { animation-delay: 250ms; }
+    .cover > :nth-child(3) { animation-delay: 700ms; }
+    .cover > :nth-child(4) { animation-delay: 1200ms; }
+    .cover > :nth-child(5) { animation-delay: 1500ms; }
+    .cover > :nth-child(6) { animation-delay: 1700ms; }
+    .started .cover, .finished .cover { opacity: 0; transform: translateY(-18px) scale(0.985); visibility: hidden; }
     .eyebrow {
-      margin: 0 0 18px;
+      margin: 0 0 10px;
       color: var(--gold);
-      font-size: 14px;
+      font-size: 17px;
       font-weight: 600;
       letter-spacing: 0.32em;
       text-transform: uppercase;
+      text-shadow: 0 1px 14px #070b22;
     }
-    .intro h1, .finale h2 {
+    .cover h1 {
       margin: 0;
+      padding: 0 0.12em 0.12em;
       font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(60px, 15vw, 132px);
       font-style: italic;
       font-weight: 400;
       line-height: 1.05;
-      text-wrap: balance;
       background: linear-gradient(100deg, var(--text) 10%, var(--blush) 55%, var(--gold) 95%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      filter: drop-shadow(0 2px 22px #070b22cc);
     }
-    .intro h1 { font-size: clamp(46px, 12vw, 84px); }
     .lead {
-      margin: 22px 0 36px;
-      max-width: 34ch;
+      margin: 0 0 30px;
       color: var(--muted);
-      font-size: 18px;
-      line-height: 1.6;
-      text-wrap: pretty;
+      font-size: clamp(23px, 4.4vw, 29px);
+      font-style: italic;
+      font-weight: 500;
+      line-height: 1.3;
+      text-shadow: 0 1px 14px #070b22;
     }
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      min-height: 52px;
-      padding: 0 28px;
-      border: 1px solid #ffd59e66;
+      gap: 12px;
+      min-height: 54px;
+      padding: 0 30px;
+      border: 1px solid #ffd59e80;
       border-radius: 999px;
-      background: linear-gradient(135deg, #ffd59e26, #ff9fbf1f);
+      background: linear-gradient(135deg, #ffd59e2e, #ffb3c724), #070b2266;
       color: var(--text);
-      font: 600 17px/1 'Manrope', system-ui, sans-serif;
+      font: 600 21px/1 'Cormorant Garamond', Georgia, serif;
       cursor: pointer;
-      box-shadow: 0 0 0 0 #ffd59e40, 0 10px 30px #0006;
-      transition: transform 200ms var(--ease-out), box-shadow 300ms ease, background 300ms ease;
+      box-shadow: 0 10px 30px #0006;
+      transition: transform 200ms var(--ease-out), box-shadow 300ms ease;
     }
-    .btn svg { width: 18px; height: 18px; fill: var(--gold); }
+    .btn svg { flex: none; width: 16px; height: 16px; fill: var(--gold); }
     .btn:hover { transform: translateY(-2px); box-shadow: 0 0 0 6px #ffd59e1a, 0 14px 34px #0008; }
     .btn:active { transform: scale(0.97); }
-    .btn:focus-visible, .star:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
-
-    /* Constellation */
-    .sky {
+    .btn:focus-visible, .toggle:focus-visible, .seek:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .sound-hint, .volume-note {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 20px;
-      width: min(560px, 100%);
+      justify-content: center;
+      gap: 8px;
+      color: var(--text);
+      font-size: 19px;
+      font-weight: 600;
+      line-height: 1.2;
     }
-    .sky-title {
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
-      font-weight: 500;
-      text-align: center;
-    }
-    .sky-title strong { color: var(--gold); font-weight: 600; }
-    .frame {
-      position: relative;
-      width: min(100%, 50svh, 480px);
-      aspect-ratio: 1;
-    }
-    .frame svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-    .link {
+    .sound-hint svg, .volume-note svg {
+      flex: none;
+      width: 22px;
+      height: 22px;
+      fill: none;
       stroke: var(--gold);
-      stroke-width: 0.3;
+      stroke-width: 1.8;
       stroke-linecap: round;
-      stroke-dasharray: 1;
-      stroke-dashoffset: 1;
-      opacity: 0.75;
-      filter: drop-shadow(0 0 1px #ffd59e);
-      transition: stroke-dashoffset 900ms var(--ease-out);
-    }
-    .link.on { stroke-dashoffset: 0; }
-    .heart-line {
-      fill: url(#heart-fill);
-      fill-opacity: 0;
-      stroke: url(#heart-stroke);
-      stroke-width: 0.55;
       stroke-linejoin: round;
-      stroke-dasharray: 1;
-      stroke-dashoffset: 1;
-      filter: drop-shadow(0 0 2px #ff9fbf);
     }
-    .complete .heart-line {
-      fill-opacity: 1;
-      stroke-dashoffset: 0;
-      transition: stroke-dashoffset 2200ms cubic-bezier(0.65, 0, 0.35, 1) 300ms, fill-opacity 1600ms ease 2000ms;
+    .sound-hint .cone, .volume-note .cone { fill: var(--gold); }
+    .sound-hint { margin: 20px 0 0; text-shadow: 0 1px 12px #070b22; }
+    html:not(.js) .sound-hint { display: none; }
+    /* A reminder over the player for the first seconds of the song. */
+    .volume-note {
+      position: fixed;
+      left: 50%;
+      bottom: calc(max(14px, env(safe-area-inset-bottom)) + 60px);
+      z-index: 4;
+      margin: 0;
+      padding: 8px 16px;
+      border: 1px solid #ffd59e4d;
+      border-radius: 999px;
+      background: #070b22b3;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateX(-50%);
     }
-    .complete .heart-line { animation: heart-beat 2.4s ease-in-out 3.6s infinite; transform-box: fill-box; transform-origin: center; }
-    @keyframes heart-beat {
-      0%, 100% { transform: scale(1); }
-      14% { transform: scale(1.04); }
-      28% { transform: scale(1); }
-      42% { transform: scale(1.03); }
+    .started .volume-note { visibility: visible; animation: volume-note 9s ease both; }
+    .silent .volume-note { display: none; }
+    @keyframes volume-note {
+      0%, 100% { opacity: 0; }
+      10%, 85% { opacity: 1; }
     }
+    .credit { margin: 10px 0 0; color: var(--muted); font-size: 17px; font-weight: 500; text-shadow: 0 1px 12px #070b22; }
 
-    .star {
-      position: absolute;
+    /* The lines of the song arrive and leave in the open sky. */
+    .stage {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
       display: grid;
       place-items: center;
-      width: 72px;
-      height: 72px;
-      margin: -36px 0 0 -36px;
+      padding: 28svh 16px 28svh;
+      pointer-events: none;
+    }
+    .cue {
+      grid-area: 1 / 1;
+      width: 100%;
+      max-width: 1040px;
+      margin: 0;
+      text-align: center;
+      text-wrap: balance;
+      text-shadow: 0 2px 26px #070b22, 0 0 6px #070b2299;
+    }
+    .cue.verse {
+      font-size: clamp(31px, 5.4vw, 60px);
+      font-weight: 600;
+      line-height: 1.16;
+    }
+    .cue.chorus {
+      color: #fff0f0;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(30px, 5.2vw, 58px);
+      font-style: italic;
+      line-height: 1.2;
+    }
+    .cue.dedication {
+      color: var(--gold);
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .phrase { display: inline-block; }
+    .gold { color: var(--gold); font-style: italic; }
+    .ache { color: var(--blush); font-style: italic; }
+    .word {
+      display: inline-block;
+      animation: word-in 900ms var(--ease-out) both;
+      animation-delay: calc(var(--i) * var(--gap));
+    }
+    @keyframes word-in {
+      from { opacity: 0; filter: blur(10px); transform: translateY(0.4em) scale(0.97); }
+      to { opacity: 1; filter: none; transform: none; }
+    }
+    /* Lines leave the way breath leaves on a cold night: upward, softening, gone. */
+    .cue.off { animation: line-out 950ms ease-in forwards; }
+    @keyframes line-out {
+      to { opacity: 0; filter: blur(12px); transform: translateY(-0.7em) scale(1.02); }
+    }
+    .cue.ache-line .ache { animation: ache 2.6s ease-in-out 1200ms infinite; }
+    @keyframes ache {
+      0%, 100% { text-shadow: 0 0 10px #ffb3c766, 0 2px 26px #070b22; }
+      50% { text-shadow: 0 0 30px #ffb3c7dd, 0 0 70px #ff7fa066; }
+    }
+
+    /* A small heart keeps the place during the instrumental parts. */
+    .rest {
+      grid-area: 1 / 1;
+      width: 22px;
+      height: 22px;
+      color: var(--gold);
+      fill: currentColor;
+      opacity: 0;
+      filter: drop-shadow(0 0 10px #ffb3c7);
+      transition: opacity 400ms ease;
+    }
+    .resting .rest { opacity: 0.85; transition: opacity 1600ms ease 1200ms; animation: beat 2.8s ease-in-out infinite; }
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      14% { transform: scale(1.16); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.1); }
+    }
+
+    /* Player */
+    .player {
+      position: fixed;
+      left: 50%;
+      bottom: max(14px, env(safe-area-inset-bottom));
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: min(600px, calc(100% - 32px));
+      padding: 2px 16px 2px 4px;
+      border: 1px solid #ffffff1f;
+      border-radius: 999px;
+      background: #070b2299;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translate(-50%, 12px);
+      visibility: hidden;
+      transition: opacity 900ms ease 600ms, transform 900ms var(--ease-out) 600ms;
+    }
+    .started .player { opacity: 1; transform: translate(-50%, 0); visibility: visible; }
+    .toggle {
+      display: grid;
+      flex: none;
+      place-items: center;
+      width: 44px;
+      height: 44px;
       padding: 0;
       border: 0;
       border-radius: 50%;
       background: none;
       cursor: pointer;
     }
-    .star { filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 16px #ffffffbb); transition: filter 600ms ease; }
-    /* Soft halo that breathes behind each sparkle */
-    .star::before {
-      content: '';
-      grid-area: 1 / 1;
-      width: 70px;
-      height: 70px;
+    .toggle svg { width: 18px; height: 18px; fill: var(--gold); }
+    .toggle .play { display: none; }
+    .paused .toggle .play { display: block; }
+    .paused .toggle .pause { display: none; }
+    .buffering .toggle svg { animation: buffering 1s ease-in-out infinite alternate; }
+    @keyframes buffering { to { opacity: 0.3; } }
+    .seek {
+      --at: 0%;
+      flex: 1;
+      min-width: 0;
+      height: 44px;
+      margin: 0;
+      background: none;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .seek::-webkit-slider-runnable-track {
+      height: 3px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--gold) var(--at), #ffffff33 var(--at));
+    }
+    .seek::-moz-range-track { height: 3px; border-radius: 3px; background: #ffffff33; }
+    .seek::-moz-range-progress { height: 3px; border-radius: 3px; background: var(--gold); }
+    .seek::-webkit-slider-thumb {
+      width: 13px;
+      height: 13px;
+      margin-top: -5px;
       border-radius: 50%;
-      background: radial-gradient(circle, #ffffff40, #ffffff00 70%);
-      animation: halo 2.8s ease-in-out infinite;
-      animation-delay: var(--delay);
-      transition: background 600ms ease, width 600ms var(--ease-out), height 600ms var(--ease-out);
+      background: var(--text);
+      box-shadow: 0 0 10px #ffd59e;
+      -webkit-appearance: none;
+      appearance: none;
     }
-    /* Four-pointed sparkle */
-    .glint {
-      grid-area: 1 / 1;
-      width: 46px;
-      height: 46px;
-      background: radial-gradient(circle, #fff 0 22%, #fff6ea 34%, #ffe6c4 70%);
-      clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
-      animation: twinkle 2.8s ease-in-out infinite;
-      animation-delay: var(--delay);
-      transition: scale 500ms var(--ease-out), rotate 700ms var(--ease-out), background 500ms ease;
-    }
-    .star:hover .glint { scale: 1.35; rotate: 20deg; }
-    .star.lit { cursor: default; filter: drop-shadow(0 0 4px #ffd59e) drop-shadow(0 0 14px #ff9fbfaa); }
-    .star.lit .glint {
-      background: radial-gradient(circle, #fff 0 18%, var(--gold) 40%, var(--blush) 85%);
-      scale: 1.25;
-      rotate: 45deg;
-      animation: none;
-    }
-    .star.lit::before {
-      width: 92px;
-      height: 92px;
-      background: radial-gradient(circle, #ff9fbf55, #ff9fbf00 70%);
-    }
-    /* While a gift is on its way, the star pulses in anticipation. */
-    .star.waiting .glint { animation: waiting 0.7s ease-in-out infinite alternate; }
-    @keyframes halo {
-      0%, 100% { opacity: 0.6; transform: scale(0.85); }
-      50% { opacity: 1; transform: scale(1.15); }
-    }
-    @keyframes waiting {
-      to { scale: 1.3; rotate: 30deg; }
-    }
-    .star.lit::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 1px solid var(--gold);
-      animation: ripple 900ms var(--ease-out) forwards;
-    }
-    @keyframes twinkle {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.55; transform: scale(0.8); }
-    }
-    @keyframes ripple {
-      from { opacity: 0.9; transform: scale(0.3); }
-      to { opacity: 0; transform: scale(1.6); }
-    }
-
-    .card {
-      width: 100%;
-      min-height: 132px;
-      padding: 22px 26px;
-      border: 1px solid var(--glass-edge);
-      border-radius: 24px;
-      background: var(--glass);
-      -webkit-backdrop-filter: blur(14px);
-      backdrop-filter: blur(14px);
-      text-align: center;
-    }
-    .count {
-      margin: 0 0 8px;
-      color: var(--gold);
-      font-size: 13px;
+    .seek::-moz-range-thumb { width: 13px; height: 13px; border: 0; border-radius: 50%; background: var(--text); box-shadow: 0 0 10px #ffd59e; }
+    .clock {
+      flex: none;
+      color: var(--muted);
+      font-size: 17px;
       font-weight: 600;
-      letter-spacing: 0.24em;
+      font-variant-numeric: tabular-nums lining-nums;
     }
-    .note {
+    .now-playing { flex: none; color: var(--muted); font-size: 17px; font-weight: 500; font-style: italic; white-space: nowrap; }
+    @media (max-width: 520px) { .now-playing { display: none; } }
+
+    /* The last screen, in the dawn */
+    .finale {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 26px;
+      padding: 30svh 16px 20svh;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+    }
+    .finished .finale { opacity: 1; visibility: visible; transition: opacity 1800ms ease 600ms; }
+    .finale p {
       margin: 0;
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(22px, 5.6vw, 28px);
+      font-size: clamp(30px, 5.2vw, 52px);
       font-style: italic;
-      line-height: 1.35;
+      line-height: 1.2;
       text-wrap: balance;
+      text-shadow: 0 2px 26px #070b22, 0 0 6px #070b2299;
     }
-    .note.fresh { animation: rise 700ms var(--ease-out); }
-    .sculpture {
+
+    /* The whole song stays readable by screen readers, and by everyone without scripts. */
+    .lyrics { max-width: 720px; margin: 0 auto; padding: 32px 16px; font-size: 24px; line-height: 1.35; text-align: center; }
+    .lyrics section { margin-bottom: 32px; }
+    .lyrics p { margin: 0 0 8px; }
+    .js .lyrics {
       position: absolute;
-      inset: -12%;
-      width: 124%;
-      height: 124%;
-      touch-action: pan-y;
-      cursor: grab;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
-    .sculpture:active { cursor: grabbing; }
+    .fallback-audio { display: block; width: min(600px, calc(100% - 32px)); margin: 24px auto 0; }
+    .js .fallback-audio { display: none; }
+    html:not(.js) .scene, html:not(.js) .stage, html:not(.js) .player, html:not(.js) .finale, html:not(.js) #start { display: none; }
+    html:not(.js) .cover { position: static; padding-top: 48px; }
+
     @keyframes rise {
-      from { opacity: 0; transform: translateY(10px); filter: blur(4px); }
+      from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
       to { opacity: 1; transform: none; filter: none; }
     }
 
-    .finale { display: flex; flex-direction: column; align-items: center; outline: none; }
-    .finale h2 { font-size: clamp(40px, 10vw, 60px); padding: 0 0.1em 0.08em; }
-    .finale p { margin: 10px 0 0; color: var(--muted); font-size: 17px; line-height: 1.6; }
-    .finale .wish { margin-top: 18px; color: var(--gold); font-size: 14px; font-weight: 600; letter-spacing: 0.08em; }
-
-    /* Scene changes, only when scripts can run */
-    .js .sky { opacity: 0; visibility: hidden; transform: translateY(24px); }
-    .js body.started .intro { opacity: 0; transform: translateY(-24px) scale(0.98); pointer-events: none; }
-    .js body.started .sky {
-      opacity: 1;
-      visibility: visible;
-      transform: none;
-      transition: opacity 900ms ease 400ms, transform 1000ms var(--ease-out) 400ms;
-    }
-    .finale.show { animation: rise 1200ms var(--ease-out) both; animation-delay: 2400ms; }
-
-    noscript p { max-width: 30ch; font-size: 22px; line-height: 1.5; text-align: center; }
-
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
+      /* Lines simply fade in and out; nothing drifts or blurs. */
+      .cover > *, .cue.ache-line .ache, .resting .rest, .buffering .toggle svg { animation: none; }
+      .cover, .player { transform: none !important; }
+      .player { transform: translateX(-50%) !important; }
+      .word { animation: none; }
+      .cue { animation: calm-in 500ms ease both; }
+      .cue.off { animation: calm-out 500ms ease forwards; }
+      @keyframes calm-in { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes calm-out { to { opacity: 0; } }
     }
   </style>
 </head>
-<body>
-  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
-  <canvas class="hearts3d" id="hearts3d" aria-hidden="true"></canvas>
-  <canvas class="stars" id="stars" aria-hidden="true"></canvas>
+<body class="paused">
+  <canvas class="scene" id="scene" aria-hidden="true"></canvas>
 
   <main>
-    <section class="intro" id="intro">
+    <header class="cover" id="cover">
       <p class="eyebrow">За Мишето</p>
-      <h1>Едно небе, само за теб.</h1>
-      <p class="lead">Пет звезди. Запали ги една по една.</p>
+      <h1>Приказка</h1>
+      <p class="lead">Колко време мина?</p>
       <button class="btn" id="start" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6 4.6 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.6h7.6z"/></svg>
-        Запали звездите
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>
+        Пусни приказката
       </button>
-      <noscript><p>Обичам те, Мише. Ти си най-красивото нещо в моето небе.</p></noscript>
-    </section>
+      <p class="sound-hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="cone" d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.3a8 8 0 0 1 0 11.4"/></svg> Усили звука, за да чуеш песента</p>
+    </header>
 
-    <section class="sky" id="sky" aria-labelledby="sky-title">
-      <p class="sky-title" id="sky-title">Докосни <strong>всяка звезда</strong></p>
-      <div class="frame" id="frame">
-        <canvas class="sculpture" id="sculpture" aria-hidden="true"></canvas>
-        <svg viewBox="0 0 100 100" aria-hidden="true">
-          <defs>
-            <linearGradient id="heart-stroke" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#ffd59e"/>
-              <stop offset="1" stop-color="#ff6f9c"/>
-            </linearGradient>
-            <linearGradient id="ink" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="64" y2="64">
-              <stop offset="0" stop-color="#ffd59e"/>
-              <stop offset="1" stop-color="#ff9fbf"/>
-            </linearGradient>
-            <linearGradient id="bloom" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#ffd59e" stop-opacity="0.45"/>
-              <stop offset="1" stop-color="#ff6f9c" stop-opacity="0.55"/>
-            </linearGradient>
-            <radialGradient id="heart-fill" cx="0.5" cy="0.45" r="0.6">
-              <stop offset="0" stop-color="#ff6f9c" stop-opacity="0.38"/>
-              <stop offset="1" stop-color="#c2416f" stop-opacity="0.04"/>
-            </radialGradient>
-          </defs>
-          <g id="links"></g>
-          <path class="heart-line" id="heart" pathLength="1"/>
-        </svg>
-      </div>
-      <div class="card" id="card">
-        <div id="progress" aria-live="polite">
-          <p class="count" id="count">0 / 5</p>
-          <p class="note" id="note">Всяка звезда пази нещо за теб.</p>
-        </div>
-        <div class="finale" id="finale" tabindex="-1" hidden>
-          <h2>Обичам те, Мише.</h2>
-          <p>Ти си най-красивото нещо в моето небе.</p>
-        </div>
-      </div>
-    </section>
+    <div class="stage" id="stage" aria-hidden="true">
+      <svg class="rest" viewBox="0 0 24 24"><path d="M12 21s-8.5-5.2-8.5-11.2A4.8 4.8 0 0 1 12 6.9a4.8 4.8 0 0 1 8.5 2.9C20.5 15.8 12 21 12 21z"/></svg>
+    </div>
+
+    <div class="finale" id="finale">
+      <p>Приказката свърши, но чета я <span class="gold">пак и пак</span></p>
+      <button class="btn" id="again" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>
+        Чуй я пак
+      </button>
+    </div>
+
+    <audio class="fallback-audio" id="song-audio" src="./prikazka.mp3#t=21.6" preload="metadata" controls></audio>
+
+    <article class="lyrics" aria-label="Текст на песента">
+      <section aria-label="Куплет 1" data-kind="verse">
+        <p class="line" data-at="27.2" data-end="32.5">Имало едно време двама влюбени</p>
+        <p class="line" data-at="32.8" data-end="38.1">Приказката свърши лошо и ги раздели</p>
+        <p class="line" data-at="38.4" data-end="43.7"><span class="phrase">Мразя, като се разчувствам –</span> <span class="phrase">глупаво е, знам!</span></p>
+        <p class="line" data-at="44.0" data-end="49.8"><span class="phrase">И главата си блъскам,</span> <span class="phrase">и не излизаш пак оттам</span></p>
+      </section>
+      <section aria-label="Припев" data-kind="chorus">
+        <p class="line" data-at="55.1" data-end="60.4"><span class="phrase">Колко време мина?</span> <span class="phrase">Как си? С кой си, разкажи</span></p>
+        <p class="line" data-at="60.7" data-end="66.0"><span class="phrase">Колко време мина?</span> <span class="phrase">Аз ли как съм? <em class="ache">Липсваш ми</em></span></p>
+        <p class="line" data-at="66.3" data-end="71.3"><span class="phrase">Приказката свърши,</span> <span class="phrase">но чета я <em class="gold">пак и пак</em></span></p>
+        <p class="line" data-at="71.6" data-end="76.8">Друга да обичам аз след тебе не можах</p>
+      </section>
+      <section aria-label="Куплет 2" data-kind="verse">
+        <p class="line" data-at="99.9" data-end="105.2">Дай ми да си те прегърна и се наплачи</p>
+        <p class="line" data-at="105.5" data-end="110.8">Много искам да останеш, но сама реши</p>
+        <p class="line" data-at="111.1" data-end="116.4">Знам, че с друг отдавна пишеш друга приказка</p>
+        <p class="line" data-at="116.7" data-end="122.4"><span class="phrase">Но ако ме обичаш –</span> <em class="phrase gold">не си отивай никога!</em></p>
+      </section>
+      <section aria-label="Припев" data-kind="chorus">
+        <p class="line" data-at="127.7" data-end="132.9"><span class="phrase">Колко време мина?</span> <span class="phrase">Как си? С кой си, разкажи</span></p>
+        <p class="line" data-at="133.2" data-end="138.5"><span class="phrase">Колко време мина?</span> <span class="phrase">Аз ли как съм? <em class="ache">Липсваш ми</em></span></p>
+        <p class="line" data-at="138.8" data-end="143.3"><span class="phrase">Приказката свърши,</span> <span class="phrase">но чета я <em class="gold">пак и пак</em></span></p>
+        <p class="line" data-at="143.6" data-end="148.2">Друга да обичам аз след тебе не можах</p>
+      </section>
+      <section aria-label="Припев" data-kind="chorus">
+        <p class="line" data-at="172.0" data-end="177.3"><span class="phrase">Колко време мина?</span> <span class="phrase">Как си? С кой си, разкажи</span></p>
+        <p class="line" data-at="177.6" data-end="182.7"><span class="phrase">Колко време мина?</span> <span class="phrase">Аз ли как съм? <em class="ache">Липсваш ми</em></span></p>
+        <p class="line" data-at="183.0" data-end="188.3"><span class="phrase">Приказката свърши,</span> <span class="phrase">но чета я <em class="gold">пак и пак</em></span></p>
+        <p class="line" data-at="188.6" data-end="193.9">Друга да обичам аз след тебе не можах</p>
+        <p class="line" data-at="194.2" data-end="199.4">Друга да обичам аз след тебе не можах</p>
+      </section>
+    </article>
   </main>
-  <canvas class="couriers" id="couriers" aria-hidden="true"></canvas>
+
+  <p class="volume-note" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="cone" d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.3a8 8 0 0 1 0 11.4"/></svg> Усили звука</p>
+
+  <div class="player" id="player">
+    <button class="toggle" id="toggle" type="button" aria-label="Пауза">
+      <svg class="pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3.5v16H7zM13.5 4H17v16h-3.5z"/></svg>
+      <svg class="play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>
+    </button>
+    <input class="seek" id="seek" type="range" min="21.6" max="204.87" step="0.1" value="21.6" aria-label="Позиция в песента">
+    <span class="clock" id="clock">0:00</span>
+    <span class="now-playing">Меди · Приказка</span>
+  </div>
 
   <script>
     (() => {
@@ -453,1165 +503,457 @@
 
   <script>
     (() => {
-      // Each star awakens a living 3D sculpture made of light.
-      const drawings = [
-        { label: 'Целувка', shape: flyingKiss },
-        { label: 'Прегръдка', shape: hug },
-        { label: 'Любов', shape: love },
-        { label: 'Безкрайно Щастие', shape: infinity },
-        { label: 'Роза', shape: rose }
-      ];
       const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const random = (min, max) => min + Math.random() * (max - min);
+      const DURATION = 204.87;
+      // The long intro is skipped: the song starts one musical phrase before the first line.
+      const SONG_START = 21.6;
+      const FADE_IN = 1.5;
+      // How loud the song is, twice a second (0–9): the moon and the lake breathe with it.
+      const loudness = '32211232133544444454244444444444566656656546566665556654588775688865656688887467677667786476777766666776845655787577777645885667678556776767774578558776655686678676766756775767666657767666657577666576577676645675476767677845556658767658877686776778776665578968878866789677778976787887787668966887876555567668677656777688755567758785656776655345679778678877896779688868887987887689759888865887477876641100000000';
 
-      // Classic heart curve, mapped into the 0–100 frame.
-      function heartPoint(t) {
-        const x = 16 * Math.sin(t) ** 3;
-        const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-        return [50 + x * 2.75, 50 + (y - 2.5) * 2.75];
-      }
+      const root = document.documentElement;
+      const audio = document.getElementById('song-audio');
+      const stage = document.getElementById('stage');
+      const seek = document.getElementById('seek');
+      const clock = document.getElementById('clock');
+      const toggle = document.getElementById('toggle');
 
-      const frame = document.getElementById('frame');
-      const links = document.getElementById('links');
-      const heart = document.getElementById('heart');
-      const count = document.getElementById('count');
-      const note = document.getElementById('note');
-      const progress = document.getElementById('progress');
-      const finale = document.getElementById('finale');
-      const sky = document.getElementById('sky');
+      // ---- The timeline: each line knows when it is sung ----
+      const cues = [...document.querySelectorAll('.lyrics .line')].map((line) => ({
+        at: Number(line.dataset.at),
+        end: Number(line.dataset.end),
+        kind: line.closest('section').dataset.kind,
+        source: line
+      }));
+      cues.unshift({ at: SONG_START + 0.6, end: 26.6, kind: 'dedication', text: 'За Мишето' });
 
-      // Start at the bottom tip so five stars still trace a heart.
-      const points = drawings.map((_, i) => heartPoint(Math.PI + (i / drawings.length) * Math.PI * 2));
-      const lit = new Array(drawings.length).fill(false);
-      const opened = new Array(drawings.length).fill(false);
-      const lines = [];
-
-      heart.setAttribute('d', Array.from({ length: 121 }, (_, i) => {
-        const [x, y] = heartPoint((i / 120) * Math.PI * 2);
-        return (i ? 'L' : 'M') + x.toFixed(2) + ' ' + y.toFixed(2);
-      }).join('') + 'Z');
-
-      points.forEach(([x, y], i) => {
-        const [nx, ny] = points[(i + 1) % points.length];
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('class', 'link');
-        line.setAttribute('pathLength', '1');
-        line.setAttribute('x1', x); line.setAttribute('y1', y);
-        line.setAttribute('x2', nx); line.setAttribute('y2', ny);
-        links.appendChild(line);
-        lines.push(line);
-
-        const star = document.createElement('button');
-        star.type = 'button';
-        star.className = 'star';
-        star.innerHTML = '<span class="glint"></span>';
-        star.style.left = x + '%';
-        star.style.top = y + '%';
-        star.style.setProperty('--delay', (-i * 0.35) + 's');
-        star.setAttribute('aria-label', 'Звезда ' + (i + 1) + ' от ' + drawings.length);
-        star.addEventListener('click', () => light(i, star));
-        frame.appendChild(star);
-      });
-
-      // ---- Living 3D sculptures: thousands of glowing points ----
-      const TAU = Math.PI * 2;
-      const sculpture = document.getElementById('sculpture');
-      const sctx = sculpture.getContext('2d');
-      const COUNT = window.matchMedia('(max-width: 600px)').matches ? 2600 : 3800;
-      const seeds = Float32Array.from({ length: COUNT * 4 }, Math.random);
-      const shown = new Float32Array(COUNT * 5);
-      const from = new Float32Array(COUNT * 5);
-      const o = [0, 0, 0, 0, 1];
-      let shape = nebula, morphAt = -Infinity, spin = 0, dragX = null;
-      let viewRY = 0.35, viewRX = 0.18, dim = 1, dimTarget = 1, sway = 0.75;
-      let sculptW = 0, sculptH = 0, hx = 0, hy = 0;
-
-      function put(x, y, z, c, a) { o[0] = x; o[1] = y; o[2] = z; o[3] = c; o[4] = a; }
-
-      function rotateAround(px, py, angle) {
-        const dx = o[0] - px, dy = o[1] - py, cs = Math.cos(angle), sn = Math.sin(angle);
-        o[0] = px + dx * cs - dy * sn;
-        o[1] = py + dx * sn + dy * cs;
-      }
-
-      // Double "lub-dub" heartbeat used by every heart.
-      function beatAt(t) {
-        const p = (t % 1.3) / 1.3;
-        return 1 + 0.08 * Math.exp(-(((p - 0.1) / 0.05) ** 2)) + 0.05 * Math.exp(-(((p - 0.3) / 0.05) ** 2));
-      }
-
-      function heartAt(u) {
-        hx = 16 * Math.sin(u) ** 3 / 17;
-        hy = (13 * Math.cos(u) - 5 * Math.cos(2 * u) - 2 * Math.cos(3 * u) - Math.cos(4 * u) + 2) / 17;
-      }
-
-      // A plump heart: dense at the skin, thicker in the middle.
-      function puffy(a, b, c, scale, cx, cy, color) {
-        heartAt(a * TAU);
-        const r = Math.pow(b, 0.35);
-        const z = (c * 2 - 1) * 0.45 * Math.sqrt(Math.max(0, 1 - r * r * 0.9));
-        put(cx + hx * r * scale, cy + hy * r * scale, z * scale, color + (1 - r) * 0.25, 0.9);
-      }
-
-      function nebula(a, b, c, d, t) {
-        const r = 0.25 + Math.pow(a, 0.7) * 0.95;
-        const th = b * TAU + t * 0.25 / r;
-        put(Math.cos(th) * r, (c - 0.5) * 0.3 * (1.3 - r * 0.6) + 0.05 * Math.sin(t + a * 9), Math.sin(th) * r,
-          a * 1.1, 0.35 + 0.3 * Math.sin(t * 2 + d * 30));
-      }
-
-      function orbitDust(a, b, c, t) {
-        const r = 0.95 + a * 0.3;
-        const th = b * TAU + t * (0.12 + c * 0.1);
-        put(Math.cos(th) * r, (c - 0.5) * 0.3 + 0.06 * Math.sin(t + a * 6), Math.sin(th) * r,
-          2, 0.25 + 0.35 * (0.5 + 0.5 * Math.sin(t * 2.5 + a * 40)));
-      }
-
-      function hug(a, b, c, d, t) {
-        if (d < 0.9) {
-          // Two hearts lean into each other and squeeze tight every few seconds.
-          const side = a < 0.5 ? -1 : 1;
-          const squeeze = Math.exp(-((((t % 3) / 3 - 0.5) / 0.12) ** 2));
-          puffy((a * 2) % 1, b, c, 0.52 * beatAt(t), 0, 0, side < 0 ? 0.05 : 0.85);
-          rotateAround(0, 0, -side * (0.32 + 0.08 * squeeze));
-          o[0] += side * (0.27 - 0.07 * squeeze);
-          o[2] += side * 0.08;
-        } else {
-          const f = (t * 0.2 + (a < 0.5 ? 0 : 0.5)) % 1;
-          puffy((a * 2) % 1, b, c, 0.1, (a < 0.5 ? -0.12 : 0.12), 0.45 + f * 0.6, 1);
-          o[4] = Math.sin(Math.PI * f);
-        }
-      }
-
-      function flyingKiss(a, b, c, d, t) {
-        if (d < 0.62) {
-          // Puckered lips on the left blow a kiss every couple of seconds.
-          const pucker = 0.5 + 0.5 * Math.exp(-((((t % 2.4) / 2.4 - 0.2) / 0.1) ** 2));
-          const X = a * 2 - 1;
-          const edge = Math.pow(Math.max(0, 1 - X * X), 0.55);
-          const line = 0.02 * (1 - X * X);
-          const upper = b < 0.5;
-          const v = 1 - (1 - (upper ? b * 2 : (b - 0.5) * 2)) ** 2;
-          const bound = upper ? 0.34 * edge - 0.14 * Math.exp(-((X / 0.17) ** 2)) * edge : -0.36 * edge;
-          const front = Math.pow(Math.sin(Math.PI * Math.min(1, v)), 0.6) * 0.22 * edge;
-          put(-0.5 + X * 0.42 * (1 - 0.25 * pucker), 0.05 + (line + v * (bound - line)) * 0.62 * (1 + 0.15 * pucker),
-            (c < 0.25 ? -front * 0.3 : front) * 0.7 * (1 + 0.6 * pucker), v < 0.05 ? 2 : upper ? 0.75 : 1, 0.85);
-          // Tilted up towards where the kiss flies.
-          rotateAround(-0.5, 0.05, 0.25);
-        } else {
-          // Little hearts float away along an arc, growing as they go.
-          const f = (t * 0.32 + Math.floor(a * 4) / 4) % 1;
-          puffy((a * 4) % 1, b, c, 0.05 + f * 0.17, -0.2 + f * 1.15, 0.05 + Math.sin(Math.PI * f) * 0.45, 0.6 + f * 0.4);
-          o[2] += Math.sin(f * TAU) * 0.2;
-          o[4] = Math.min(1, f * 6) * Math.pow(1 - f, 0.4);
-        }
-      }
-
-      // "Любов" written in light, sampled once from the page's script font.
-      let loveDots = null;
-      function loveSamples() {
-        if (loveDots) return loveDots;
-        const text = document.createElement('canvas');
-        text.width = 420;
-        text.height = 180;
-        const g = text.getContext('2d', { willReadFrequently: true });
-        g.font = "italic 500 118px 'Playfair Display', Georgia, serif";
-        g.textAlign = 'center';
-        g.textBaseline = 'middle';
-        g.fillStyle = '#fff';
-        g.fillText('Любов', 210, 92);
-        const data = g.getImageData(0, 0, 420, 180).data;
-        loveDots = [];
-        for (let y = 0; y < 180; y += 2) {
-          for (let x = 0; x < 420; x += 2) {
-            if (data[(y * 420 + x) * 4 + 3] > 140) loveDots.push((x - 210) / 230, -(y - 90) / 230);
+      const wrapWords = (node, counter) => {
+        for (const child of [...node.childNodes]) {
+          if (child.nodeType !== Node.TEXT_NODE) {
+            wrapWords(child, counter);
+            continue;
           }
-        }
-        return loveDots;
-      }
-
-      function love(a, b, c, d, t) {
-        const dots = loveSamples();
-        if (d < 0.8 && dots.length) {
-          const k = Math.floor(a * dots.length / 2) * 2;
-          const x = dots[k], y = dots[k + 1];
-          // The word ripples like a ribbon of light.
-          put(x + (b - 0.5) * 0.012, y - 0.1 + 0.04 * Math.sin(t * 2 + x * 4) + (c - 0.5) * 0.012,
-            (c - 0.5) * 0.1 + 0.08 * Math.cos(t * 1.5 + x * 3), 0.3 + 0.6 * (x + 0.9) / 1.8, 0.9);
-        } else {
-          puffy(a, b, c, 0.2 * beatAt(t), 0, 0.5, 1);
-        }
-      }
-
-      function rose(a, b, c, d, t) {
-        if (d < 0.7) {
-          // Petals spiral out from a tight bud, the bloom tipped towards her so the spiral shows.
-          const n = Math.floor(a * 18), k = n / 17;
-          const u = Math.pow(b, 0.55);
-          const th = n * 2.4 + (c * 2 - 1) * (0.6 + 0.7 * k) * Math.pow(Math.sin(Math.PI * (0.12 + 0.85 * u)), 0.6);
-          const rad = (0.04 + 0.6 * k) * Math.pow(u, 0.7) * (1 + 0.03 * Math.sin(t * 0.9));
-          const lift = (0.62 - 0.25 * k) * u - 0.5 * k * Math.max(0, u - 0.7);
-          const z = rad * Math.sin(th);
-          put(rad * Math.cos(th), 0.12 + lift * 0.77 - z * 0.64, lift * 0.64 + z * 0.77, 1 - 0.5 * u * u, 0.55 + 0.45 * u);
-        } else if (d < 0.84) {
-          const s = b * 1.12;
-          put(0.07 * Math.sin(s * 2.4) + (c - 0.5) * 0.025, 0.12 - s, (a - 0.5) * 0.025, -1, 0.85);
-        } else if (d < 0.97) {
-          // Two leaves reach out from the stem.
-          const side = a < 0.5 ? -1 : 1, along = (a * 2) % 1;
-          const half = 0.1 * Math.sin(Math.PI * along) * (c * 2 - 1);
-          put(0.08 + side * along * 0.48, (side < 0 ? -0.62 : -0.38) + along * 0.14 + half, half * 0.5, -1, 0.75);
-        } else {
-          // A few loose petals fall past the stem.
-          const f = (t * 0.12 + a) % 1;
-          put((a - 0.5) * 1.5 + 0.08 * Math.sin(t + a * 20) + (b - 0.5) * 0.04, 0.6 - f * 1.7, (c - 0.5) * 0.6, 1, Math.sin(Math.PI * f));
-        }
-      }
-
-      function infinity(a, b, c, d, t) {
-        if (d < 0.82) {
-          const th = b * TAU + t * 0.55;
-          const sn = Math.sin(th), cs = Math.cos(th), den = 1 + sn * sn;
-          const ang = c * TAU;
-          // A bright comet chases its way around the loop.
-          const comet = Math.pow(Math.max(0, Math.cos(th - t * 1.6)), 12);
-          put(0.9 * cs / den + 0.035 * Math.cos(ang), 0.9 * sn * cs / den + 0.06 * Math.cos(ang),
-            0.22 * sn + 0.06 * Math.sin(ang), comet > 0.5 ? 2 : 0.5 + 0.5 * sn, 0.55 + 0.45 * comet);
-        } else {
-          puffy(a, b, c, 0.2 * beatAt(t), 0, 0.55, 1);
-        }
-      }
-
-      rose.sway = 0.3;
-
-      function finaleHeart(a, b, c, d, t) {
-        if (d < 0.86) {
-          puffy(a, b, c, 0.95 * beatAt(t), 0, 0.04, 0.35 + 0.65 * b);
-        } else {
-          const f = (b + t * 0.15) % 1;
-          put((a - 0.5) * 1.4, -0.6 + f * 1.8, (c - 0.5) * 0.6, 2, Math.sin(Math.PI * f) * 0.6);
-        }
-      }
-      finaleHeart.sway = 0.15;
-
-      // Soft glowing dots, pre-rendered once per colour (gold → blush → rose, plus white).
-      function glowSprite(color) {
-        const sprite = document.createElement('canvas');
-        sprite.width = sprite.height = 32;
-        const g = sprite.getContext('2d');
-        const gradient = g.createRadialGradient(16, 16, 0, 16, 16, 16);
-        gradient.addColorStop(0, '#ffffff');
-        gradient.addColorStop(0.2, color);
-        gradient.addColorStop(0.45, color + '55');
-        gradient.addColorStop(1, color + '00');
-        g.fillStyle = gradient;
-        g.fillRect(0, 0, 32, 32);
-        return sprite;
-      }
-      function tone(k) {
-        const stops = [[255, 213, 158], [255, 159, 191], [255, 93, 143]];
-        const seg = k < 0.5 ? 0 : 1, f = k < 0.5 ? k * 2 : (k - 0.5) * 2;
-        return '#' + [0, 1, 2].map((ch) => Math.round(stops[seg][ch] + (stops[seg + 1][ch] - stops[seg][ch]) * f)
-          .toString(16).padStart(2, '0')).join('');
-      }
-      const tones = Array.from({ length: 8 }, (_, k) => glowSprite(tone(k / 7)));
-      const whiteSprite = glowSprite('#fff6ea');
-      const leafSprite = glowSprite('#6fce7f');
-
-      function sizeSculpture() {
-        const box = sculpture.getBoundingClientRect();
-        const ratio = Math.min(window.devicePixelRatio || 1, 2);
-        sculptW = box.width;
-        sculptH = box.height;
-        sculpture.width = sculptW * ratio;
-        sculpture.height = sculptH * ratio;
-        sctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-      }
-
-      function renderSculpture(now) {
-        const t = now / 1000;
-        const morph = (now - morphAt) / 1000;
-        const R = sculptW * 0.27, cx = sculptW / 2, cy = sculptH / 2;
-        // Hearts (shapes with their own small `sway`) settle facing her instead of turning side-on.
-        const swayTarget = shape.sway ?? 0.75;
-        sway = calm ? swayTarget : sway + (swayTarget - sway) * 0.03;
-        if (shape.sway !== undefined && dragX === null) spin *= 0.96;
-        const ry = (calm ? sway * 0.47 : sway * Math.sin(t * 0.35)) + spin;
-        const rx = 0.18 + (calm ? 0 : 0.08 * Math.sin(t * 0.4));
-        const cosY = Math.cos(ry), sinY = Math.sin(ry), cosX = Math.cos(rx), sinX = Math.sin(rx);
-        viewRY = ry;
-        viewRX = rx;
-        dim += (dimTarget - dim) * 0.06;
-        sctx.clearRect(0, 0, sculptW, sculptH);
-        sctx.globalCompositeOperation = 'lighter';
-        for (let i = 0; i < COUNT; i += 1) {
-          const a = seeds[i * 4], b = seeds[i * 4 + 1], c = seeds[i * 4 + 2], d = seeds[i * 4 + 3];
-          if (d > 0.93) orbitDust(a, b, c, t);
-          else shape(a, b, c, d / 0.93, t);
-          let [x, y, z, col, alpha] = o;
-          const j = i * 5;
-          if (morph < 2.2) {
-            // Points swirl outwards, then gather into the new shape.
-            const p = Math.min(1, Math.max(0, (morph - a * 0.6) / 1.4));
-            const e = p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2;
-            const burst = Math.sin(Math.PI * e) * 0.5;
-            x = from[j] + (x - from[j]) * e + (b - 0.5) * burst;
-            y = from[j + 1] + (y - from[j + 1]) * e + (c - 0.5) * burst;
-            z = from[j + 2] + (z - from[j + 2]) * e + (a - 0.5) * burst;
-            col = from[j + 3] + (col - from[j + 3]) * e;
-            alpha = from[j + 4] + (alpha - from[j + 4]) * e;
+          const pieces = document.createDocumentFragment();
+          for (const part of child.textContent.split(/(\s+)/)) {
+            if (!part) continue;
+            if (!part.trim()) {
+              pieces.append(' ');
+              continue;
+            }
+            const word = document.createElement('span');
+            word.className = 'word';
+            word.textContent = part;
+            word.style.setProperty('--i', counter.count++);
+            pieces.append(word);
           }
-          shown[j] = x; shown[j + 1] = y; shown[j + 2] = z; shown[j + 3] = col; shown[j + 4] = alpha;
-          if (alpha <= 0.02) continue;
-          const x1 = x * cosY + z * sinY;
-          const z1 = -x * sinY + z * cosY;
-          const y1 = y * cosX - z1 * sinX;
-          const z2 = y * sinX + z1 * cosX;
-          const persp = 3 / (3 - z2);
-          const size = (4.5 + 3 * b) * persp;
-          sctx.globalAlpha = Math.min(1, alpha * (0.3 + 0.32 * (z2 + 1.2))) * dim;
-          sctx.drawImage(col < -0.5 ? leafSprite : col > 1.05 ? whiteSprite : tones[Math.max(0, Math.min(7, Math.round(col * 7)))],
-            cx + x1 * persp * R - size / 2, cy - y1 * persp * R - size / 2, size, size);
+          child.replaceWith(pieces);
         }
-        sctx.globalAlpha = 1;
-        sctx.globalCompositeOperation = 'source-over';
+      };
+
+      function enter(cue) {
+        const line = document.createElement('p');
+        line.className = `cue ${cue.kind}`;
+        if (cue.source) line.innerHTML = cue.source.innerHTML;
+        else line.textContent = cue.text;
+        if (line.querySelector('.ache')) line.classList.add('ache-line');
+        const counter = { count: 0 };
+        wrapWords(line, counter);
+        // The words arrive at about the pace they are sung.
+        const gap = (cue.end - cue.at) * 1000 * 0.72 / Math.max(counter.count, 1);
+        line.style.setProperty('--gap', `${Math.round(gap)}ms`);
+        stage.append(line);
       }
 
-      // px/py (canvas pixels) make the new shape pour out of that spot, e.g. an opened gift.
-      function morphTo(next, px, py) {
-        from.set(shown);
-        spin = Math.atan2(Math.sin(spin), Math.cos(spin));
-        if (px !== undefined) {
-          // Undo the current view rotation so the points start exactly under the gift.
-          const R = sculptW * 0.27;
-          const x1 = (px - sculptW / 2) / R, y1 = -(py - sculptH / 2) / R;
-          const cosY = Math.cos(viewRY), sinY = Math.sin(viewRY), cosX = Math.cos(viewRX), sinX = Math.sin(viewRX);
-          const y = y1 * cosX, z1 = -y1 * sinX;
-          const x = x1 * cosY - z1 * sinY, z = x1 * sinY + z1 * cosY;
-          for (let i = 0; i < COUNT; i += 1) {
-            const j = i * 5;
-            from[j] = x + (seeds[i * 4] - 0.5) * 0.14;
-            from[j + 1] = y + (seeds[i * 4 + 1] - 0.5) * 0.14;
-            from[j + 2] = z + (seeds[i * 4 + 2] - 0.5) * 0.14;
-            from[j + 3] = 2;
-            from[j + 4] = 1;
-          }
+      function leave(line) {
+        line.classList.remove('on');
+        line.classList.add('off');
+        line.addEventListener('animationend', (event) => { if (event.target === line) line.remove(); });
+      }
+
+      let current = -2;
+      function showCue(index) {
+        if (index === current) return;
+        current = index;
+        stage.querySelectorAll('.cue:not(.off)').forEach(leave);
+        const singing = index >= 0;
+        if (singing) enter(cues[index]);
+        document.body.classList.toggle('resting', !singing && started());
+      }
+
+      // Words appear a touch before they are sung, so the eye arrives with the voice.
+      const LEAD = 0.15;
+      function cueAt(t) {
+        for (let i = cues.length - 1; i >= 0; i -= 1) {
+          if (t + LEAD >= cues[i].at) return t + LEAD < cues[i].end ? i : -1;
         }
-        dimTarget = 1;
-        shape = next;
-        morphAt = calm ? -Infinity : performance.now();
-        if (calm) renderSculpture(performance.now());
+        return -1;
       }
 
-      function sculptLoop() {
-        // One clock for both the morph start and the frames.
-        renderSculpture(performance.now());
-        window.requestAnimationFrame(sculptLoop);
-      }
+      // ---- Playback: the music leads; a silent clock stands in if it cannot load ----
+      let silent = false, clockFrom = SONG_START, clockStart = null;
+      const started = () => document.body.classList.contains('started');
+      const time = () => {
+        if (!silent) return Math.max(SONG_START, audio.currentTime);
+        return clockStart === null ? clockFrom : clockFrom + (performance.now() - clockStart) / 1000;
+      };
+      const paused = () => (silent ? clockStart === null : audio.paused);
 
-      // Drag sideways to turn the sculpture.
-      sculpture.addEventListener('pointerdown', (event) => {
-        dragX = event.clientX;
-        sculpture.setPointerCapture(event.pointerId);
-      });
-      sculpture.addEventListener('pointermove', (event) => {
-        if (dragX === null) return;
-        spin += (event.clientX - dragX) * 0.012;
-        dragX = event.clientX;
-        if (calm) renderSculpture(performance.now());
-      });
-      for (const type of ['pointerup', 'pointercancel']) sculpture.addEventListener(type, () => { dragX = null; });
-
-      function light(i, star) {
-        if (lit[i]) return;
-        lit[i] = true;
-        star.classList.add('lit');
-        star.setAttribute('aria-pressed', 'true');
-
-        // A little mouse brings each gift to its star; without 3D the gift opens at once.
-        const box = star.getBoundingClientRect();
-        const x = box.left + box.width / 2, y = box.top + box.height / 2;
-        if (!calm && window.deliverGift) {
-          star.classList.add('waiting');
-          say('Едно мишле ти носи подарък…');
-          dimTarget = 0.15;
-          window.deliverGift(x, y).then(() => {
-            star.classList.remove('waiting');
-            unwrap(i, x, y);
-          });
-        } else {
-          unwrap(i);
-        }
-      }
-
-      function say(text) {
-        note.textContent = text;
-        note.classList.remove('fresh');
-        void note.offsetWidth;
-        note.classList.add('fresh');
-      }
-
-      function unwrap(i, x, y) {
-        opened[i] = true;
-        const total = opened.filter(Boolean).length;
-        count.textContent = total + ' / ' + drawings.length;
-        say(drawings[i].label);
-        if (x === undefined) {
-          morphTo(drawings[i].shape);
-        } else {
-          const area = sculpture.getBoundingClientRect();
-          morphTo(drawings[i].shape, x - area.left, y - area.top);
-        }
-
-        // A line appears once both of its gifts are open.
-        const previous = (i - 1 + drawings.length) % drawings.length;
-        if (opened[previous]) lines[previous].classList.add('on');
-        if (opened[(i + 1) % drawings.length]) lines[i].classList.add('on');
-
-        if (total === drawings.length) window.setTimeout(complete, calm ? 0 : 2600);
-      }
-
-      function complete() {
-        sky.classList.add('complete');
-        progress.hidden = true;
-        finale.hidden = false;
-        morphTo(finaleHeart);
-        finale.classList.add('show');
-        finale.focus({ preventScroll: true });
-        wishing = true;
-        document.dispatchEvent(new Event('sky-complete'));
-        if (!calm) window.setTimeout(autoShoot, 3200);
-      }
-
-      document.getElementById('start').addEventListener('click', () => {
+      function begin() {
+        document.body.classList.remove('finished');
         document.body.classList.add('started');
-        sizeSculpture();
-        morphTo(nebula);
-        document.fonts.ready.then(loveSamples);
-        if (!calm) window.requestAnimationFrame(sculptLoop);
-        window.setTimeout(() => frame.querySelector('.star').focus({ preventScroll: true }), calm ? 0 : 900);
-        window.setTimeout(() => { document.getElementById('intro').hidden = true; }, calm ? 0 : 800);
-      }, { once: true });
-
-      // Background stars and wish-making shooting stars.
-      const canvas = document.getElementById('stars');
-      const ctx = canvas.getContext('2d');
-      let width = 0, height = 0, dust = [], meteors = [], wishing = false;
-
-      function resize() {
-        const ratio = Math.min(window.devicePixelRatio || 1, 2);
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width * ratio;
-        canvas.height = height * ratio;
-        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-        dust = Array.from({ length: Math.round(width * height / 5200) }, () => ({
-          x: random(0, width),
-          y: random(0, height),
-          size: random(0.4, 1.5),
-          phase: random(0, Math.PI * 2),
-          speed: random(0.6, 1.8)
-        }));
+        play();
+        toggle.focus({ preventScroll: true });
       }
-
-      function shoot(x, y) {
-        if (calm || meteors.length > 12) return;
-        const angle = random(0.45, 0.75) * Math.PI;
-        const speed = random(520, 760);
-        meteors.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 1 });
-      }
-
-      function autoShoot() {
-        shoot(random(width * 0.3, width * 1.05), random(-20, height * 0.3));
-        window.setTimeout(autoShoot, random(2600, 5200));
-      }
-
-      function draw(seconds, step) {
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = '#fbefe6';
-        for (const star of dust) {
-          ctx.globalAlpha = 0.25 + 0.5 * (0.5 + 0.5 * Math.sin(seconds * star.speed + star.phase));
-          ctx.fillRect(star.x, star.y, star.size, star.size);
+      function play() {
+        if (silent) {
+          if (clockStart === null) clockStart = performance.now();
+          syncPaused();
+          return;
         }
-        meteors = meteors.filter((m) => m.life > 0);
-        for (const m of meteors) {
-          m.life -= step * 0.9;
-          m.x += m.vx * step;
-          m.y += m.vy * step;
-          const tail = 0.22;
-          const gradient = ctx.createLinearGradient(m.x, m.y, m.x - m.vx * tail, m.y - m.vy * tail);
-          gradient.addColorStop(0, '#fff6e6');
-          gradient.addColorStop(0.3, '#ffd59e99');
-          gradient.addColorStop(1, '#ff9fbf00');
-          ctx.globalAlpha = Math.min(1, m.life * 1.6);
-          ctx.strokeStyle = gradient;
-          ctx.lineWidth = 2;
-          ctx.lineCap = 'round';
-          ctx.beginPath();
-          ctx.moveTo(m.x, m.y);
-          ctx.lineTo(m.x - m.vx * tail, m.y - m.vy * tail);
-          ctx.stroke();
-          ctx.fillStyle = '#ffffff';
-          ctx.beginPath();
-          ctx.arc(m.x, m.y, 1.8, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = '#fbefe6';
+        audio.play().catch(() => goSilent());
+        syncPaused();
+      }
+      function pause() {
+        if (silent) {
+          clockFrom = time();
+          clockStart = null;
+        } else {
+          audio.pause();
         }
-        ctx.globalAlpha = 1;
+        syncPaused();
+      }
+      function goSilent() {
+        if (silent || !started()) return;
+        silent = true;
+        document.body.classList.add('silent');
+        clockFrom = time();
+        clockStart = performance.now();
+        document.body.classList.remove('buffering');
+        syncPaused();
+      }
+      function syncPaused() {
+        const isPaused = paused();
+        document.body.classList.toggle('paused', isPaused);
+        toggle.setAttribute('aria-label', isPaused ? 'Пусни' : 'Пауза');
+      }
+      function finish() {
+        document.body.classList.remove('started', 'resting', 'buffering');
+        document.body.classList.add('finished');
+        clockFrom = SONG_START;
+        clockStart = null;
+        syncPaused();
+        document.getElementById('again').focus({ preventScroll: true });
       }
 
-      let previous = 0;
-      function frameLoop(now) {
-        const step = Math.min((now - previous) / 1000, 0.05);
-        previous = now;
-        draw(now / 1000, step);
-        window.requestAnimationFrame(frameLoop);
+      document.getElementById('start').addEventListener('click', begin);
+      document.getElementById('again').addEventListener('click', () => {
+        if (silent) clockFrom = SONG_START;
+        else audio.currentTime = SONG_START;
+        begin();
+      });
+      toggle.addEventListener('click', () => (paused() ? play() : pause()));
+      seek.addEventListener('input', () => {
+        const to = Number(seek.value);
+        if (silent) {
+          clockFrom = to;
+          if (clockStart !== null) clockStart = performance.now();
+        } else {
+          audio.currentTime = to;
+        }
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.code !== 'Space' || event.target.closest('button, input') || !started()) return;
+        event.preventDefault();
+        toggle.click();
+      });
+      // Coming in mid-phrase, the music fades up instead of starting abruptly.
+      // timeupdate keeps this going in a background tab, where frames stop.
+      function shapeSound() {
+        if (silent) return;
+        if (started() && !audio.seeking && audio.readyState > 0 && audio.currentTime < SONG_START - 0.5) audio.currentTime = SONG_START;
+        audio.volume = Math.min(1, Math.max(0, (audio.currentTime - SONG_START) / FADE_IN));
+      }
+      audio.addEventListener('timeupdate', shapeSound);
+      audio.addEventListener('ended', finish);
+      audio.addEventListener('error', goSilent);
+      for (const type of ['play', 'pause']) audio.addEventListener(type, syncPaused);
+      for (const type of ['waiting', 'stalled']) audio.addEventListener(type, () => document.body.classList.add('buffering'));
+      for (const type of ['playing', 'canplay', 'pause']) audio.addEventListener(type, () => document.body.classList.remove('buffering'));
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({ title: 'Приказка', artist: 'Меди' });
       }
 
-      resize();
-      window.addEventListener('resize', () => {
-        resize();
-        sizeSculpture();
-        if (calm) draw(0, 0);
-      });
-      if (calm) draw(0, 0);
-      else window.requestAnimationFrame(frameLoop);
+      const mmss = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+      let shownSecond = -1;
+      function updatePlayer(t) {
+        if (document.activeElement !== seek || paused()) seek.value = t;
+        seek.style.setProperty('--at', `${((t - SONG_START) / (DURATION - SONG_START)) * 100}%`);
+        const second = Math.floor(t - SONG_START);
+        if (second !== shownSecond) {
+          shownSecond = second;
+          clock.textContent = mmss(t - SONG_START);
+        }
+      }
 
-      document.addEventListener('pointerdown', (event) => {
-        if (wishing && !event.target.closest('button')) shoot(event.clientX, event.clientY);
-      });
-    })();
-  </script>
+      // ---- The painted lake ----
+      const canvas = document.getElementById('scene');
+      const frag = `precision highp float;
+      uniform vec2 uRes;
+      uniform float uT, uWarm, uDawn, uPulse, uWake;
+      const float HORIZON = -0.22;
+      const vec2 MOON = vec2(0.0, 0.3);
 
-  <script type="module">
-    // Glossy 3D hearts rise and rose petals drift down behind the letter.
-    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
+      float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+      }
+      float noise(vec2 p) {
+        vec2 i = floor(p), f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y);
+      }
+      float fbm(vec2 p) {
+        float v = 0.0, a = 0.5;
+        for (int i = 0; i < 4; i++) {
+          v += a * noise(p);
+          p = p * 2.03 + vec2(1.7, 9.2);
+          a *= 0.5;
+        }
+        return v;
+      }
 
-    const canvas = document.getElementById('hearts3d');
-    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const small = window.matchMedia('(max-width: 600px)').matches;
-    const random = (min, max) => min + Math.random() * (max - min);
+      // One tower of the distant castle: a shaft under a pointed roof.
+      float tower(vec2 p, float x, float w, float h, float roof) {
+        p.x -= x;
+        float shaft = max(abs(p.x) - w, p.y - h);
+        float cone = max(abs(p.x) - w * 1.35 * (1.0 - (p.y - h) / roof), max(h - p.y, p.y - h - roof));
+        return min(shaft, cone);
+      }
+      float castle(vec2 p) {
+        float d = max(abs(p.x) - 0.05, p.y - 0.022);
+        d = min(d, tower(p, -0.05, 0.009, 0.046, 0.03));
+        d = min(d, tower(p, 0.052, 0.008, 0.038, 0.026));
+        d = min(d, tower(p, -0.012, 0.012, 0.066, 0.04));
+        d = min(d, tower(p, 0.022, 0.007, 0.05, 0.024));
+        return d;
+      }
 
-    let renderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
-    } catch {
-      // Without WebGL the 2D sky is still complete on its own.
-      canvas.remove();
-      throw new Error('WebGL unavailable');
-    }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
-    renderer.setClearColor(0x000000, 0);
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      vec3 above(vec2 p, float halfW) {
+        float h = clamp((p.y - HORIZON) / (0.5 - HORIZON), 0.0, 1.0);
+        vec3 top = mix(mix(vec3(0.018, 0.028, 0.085), vec3(0.07, 0.03, 0.13), uWarm), vec3(0.15, 0.11, 0.28), uDawn);
+        vec3 mid = mix(mix(vec3(0.05, 0.09, 0.21), vec3(0.2, 0.07, 0.2), uWarm), vec3(0.42, 0.2, 0.33), uDawn);
+        vec3 low = mix(mix(vec3(0.1, 0.17, 0.3), vec3(0.42, 0.15, 0.27), uWarm), vec3(0.74, 0.4, 0.34), uDawn);
+        vec3 col = mix(low, mid, smoothstep(0.0, 0.38, h));
+        col = mix(col, top, smoothstep(0.28, 1.0, h));
 
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x0a0717, 8, 26);
-    const FOV = 50, CAM_Z = 10;
-    const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 60);
-    camera.position.z = CAM_Z;
+        // Stars thin out towards the horizon and the morning.
+        vec2 grid = p * 62.0;
+        vec2 id = floor(grid);
+        float seed = hash(id);
+        if (seed > 0.72) {
+          vec2 spot = vec2(hash(id + 3.1), hash(id + 7.7)) - 0.5;
+          float d = length(fract(grid) - 0.5 - spot * 0.7);
+          float twinkle = 0.55 + 0.45 * sin(uT * (0.7 + seed * 2.2) + seed * 80.0);
+          col += vec3(1.0, 0.94, 0.86) * smoothstep(0.1, 0.0, d) * twinkle
+            * smoothstep(0.04, 0.34, h) * (1.0 - uDawn * 0.92) * (seed - 0.6) * 2.6;
+        }
 
-    scene.add(new THREE.AmbientLight(0xffe6f0, 0.55));
-    const goldLight = new THREE.PointLight(0xffd59e, 60, 40, 1.6);
-    goldLight.position.set(-6, 6, 6);
-    scene.add(goldLight);
-    const roseLight = new THREE.PointLight(0xff6f9c, 70, 40, 1.6);
-    roseLight.position.set(7, -4, 5);
-    scene.add(roseLight);
+        // The moon, warming with the chorus and breathing with the music.
+        vec3 moonTint = mix(vec3(1.0, 0.96, 0.84), vec3(1.0, 0.76, 0.62), clamp(uWarm * 0.75 + uDawn * 0.5, 0.0, 1.0));
+        float d = length(p - MOON);
+        float swell = 0.085 + uPulse * 0.002;
+        col += moonTint * (0.2 + uPulse * 0.14) * exp(-d * 5.2);
+        col += moonTint * 0.2 * exp(-d * d * 150.0);
+        float disc = smoothstep(swell, swell - 0.0035, d);
+        float seas = fbm((p - MOON) * 19.0 + 4.0);
+        col = mix(col, moonTint * (0.8 + 0.3 * smoothstep(0.3, 0.68, seas)), disc * (1.0 - uDawn * 0.3));
 
-    // Classic bezier heart, extruded with soft bevels and turned point-down.
-    const heartShape = new THREE.Shape();
-    heartShape.moveTo(5, 5);
-    heartShape.bezierCurveTo(5, 5, 4, 0, 0, 0);
-    heartShape.bezierCurveTo(-6, 0, -6, 7, -6, 7);
-    heartShape.bezierCurveTo(-6, 11, -3, 15.4, 5, 19);
-    heartShape.bezierCurveTo(12, 15.4, 16, 11, 16, 7);
-    heartShape.bezierCurveTo(16, 7, 16, 0, 10, 0);
-    heartShape.bezierCurveTo(7, 0, 5, 5, 5, 5);
-    const heartGeometry = new THREE.ExtrudeGeometry(heartShape, {
-      depth: 3.5, bevelEnabled: true, bevelSegments: 4, bevelSize: 1.6, bevelThickness: 1.6, curveSegments: 18
-    });
-    heartGeometry.center();
-    heartGeometry.scale(0.05, 0.05, 0.05);
-    heartGeometry.rotateZ(Math.PI);
+        // Clouds drift across, lit from the side nearest the moon.
+        float wisp = fbm(vec2(p.x * 2.3 + uT * 0.011, p.y * 7.0 + 2.0 + uT * 0.003));
+        float cloud = smoothstep(0.5, 0.8, wisp) * smoothstep(-0.14, 0.04, p.y);
+        vec3 cloudTint = mix(mid * 0.72, moonTint * 0.62, exp(-d * 3.4));
+        col = mix(col, cloudTint, cloud * 0.62);
 
-    // A cupped petal: a tapered plane bent along both axes.
-    const petalGeometry = new THREE.PlaneGeometry(0.7, 1, 8, 10);
-    const pos = petalGeometry.attributes.position;
-    for (let i = 0; i < pos.count; i += 1) {
-      const u = pos.getX(i) / 0.35, v = pos.getY(i) + 0.5;
-      const width = Math.pow(Math.sin(Math.PI * (0.06 + v * 0.86)), 0.7);
-      pos.setXYZ(i, u * 0.35 * width, v - 0.5, 0.2 * u * u * width - 0.12 * v * v);
-    }
-    petalGeometry.computeVertexNormals();
-    petalGeometry.scale(0.55, 0.55, 0.55);
+        // Far ridge carrying the castle, then the dark near hills.
+        float far = HORIZON + 0.04 + 0.036 * noise(vec2(p.x * 2.1 + 3.0, 1.0)) + 0.011 * noise(vec2(p.x * 8.0, 4.0));
+        vec3 farTint = mix(low, vec3(0.03, 0.05, 0.12), 0.74);
+        col = mix(col, farTint, smoothstep(far + 0.0015, far - 0.0015, p.y));
 
-    const heartMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffffff, emissive: 0xc2416f, emissiveIntensity: 0.3,
-      roughness: 0.28, metalness: 0.15, transparent: true, opacity: 0.9
-    });
-    const petalMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffffff, emissive: 0x4a0b24, emissiveIntensity: 0.4,
-      roughness: 0.6, side: THREE.DoubleSide, transparent: true, opacity: 0.85
-    });
+        float scale = clamp(halfW * 1.25, 0.72, 1.25);
+        float cx = halfW * 0.72;
+        float base = HORIZON + 0.04 + 0.036 * noise(vec2(cx * 2.1 + 3.0, 1.0)) - 0.004;
+        vec2 q = (p - vec2(cx, base)) / scale;
+        float keep = castle(q);
+        col = mix(col, farTint * 0.78, smoothstep(0.0012, -0.0012, keep));
+        // A single window stays lit.
+        vec2 w = q - vec2(-0.012, 0.05);
+        float lit = smoothstep(0.0016, 0.0, max(abs(w.x) - 0.0024, abs(w.y) - 0.005));
+        col += vec3(1.0, 0.72, 0.38) * lit * (1.0 + uWarm * 0.7);
+        col += vec3(1.0, 0.6, 0.3) * 0.09 * exp(-dot(w, w) * 2600.0);
 
-    const heartColors = ['#ff6f9c', '#ff9fbf', '#c2416f', '#ffd59e', '#ff5d8f'].map((c) => new THREE.Color(c));
-    const petalColors = ['#c2416f', '#e0527f', '#ff9fbf', '#a3204f'].map((c) => new THREE.Color(c));
+        float near = HORIZON + 0.012 + 0.03 * noise(vec2(p.x * 1.3 + 9.0, 7.0)) + 0.012 * noise(vec2(p.x * 42.0, 2.0));
+        col = mix(col, vec3(0.012, 0.02, 0.05) + low * 0.05, smoothstep(near + 0.0015, near - 0.0015, p.y));
+        return col;
+      }
 
-    function makeSwarm(geometry, material, count, colors, rising) {
-      const mesh = new THREE.InstancedMesh(geometry, material, count);
-      mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-      const items = Array.from({ length: count }, (_, i) => {
-        mesh.setColorAt(i, colors[i % colors.length]);
-        return {
-          x: 0, y: 0, z: random(-14, 1),
-          speed: random(0.25, 0.6) * (rising ? 1 : -1),
-          sway: random(0.2, 0.7), phase: random(0, Math.PI * 2),
-          rx: random(0, 6), ry: random(0, 6), rz: random(0, 6),
-          sx: random(-0.6, 0.6), sy: random(-0.9, 0.9), sz: random(-0.5, 0.5),
-          scale: random(0.5, 1.15), rising
+      void main() {
+        vec2 p = (gl_FragCoord.xy - 0.5 * uRes) / uRes.y;
+        float halfW = 0.5 * uRes.x / uRes.y;
+        vec3 col;
+        if (p.y > HORIZON) {
+          col = above(p, halfW);
+          // Now and then a shooting star.
+          float k = floor(uT / 13.0), f = fract(uT / 13.0);
+          if (f < 0.07) {
+            vec2 from = vec2(mix(-halfW, halfW, 0.25 + 0.75 * hash(vec2(k, 1.0))), 0.44 - 0.1 * hash(vec2(k, 2.0)));
+            vec2 dir = normalize(vec2(-0.92, -0.38));
+            vec2 rel = p - (from + dir * f / 0.07 * 0.6);
+            float along = dot(rel, dir);
+            float off = length(rel - dir * along);
+            float tail = smoothstep(-0.17, 0.0, along) * step(along, 0.0);
+            col += vec3(1.0, 0.92, 0.8) * tail * tail * smoothstep(0.0018, 0.0, off) * sin(f / 0.07 * 3.14159);
+          }
+        } else {
+          // The lake mirrors the sky; ripples grow finer towards the far shore.
+          float depth = HORIZON - p.y;
+          float ripple = noise(vec2(p.x * 15.0 / (depth + 0.07), depth * 120.0 / (depth * 2.6 + 0.3) - uT * 0.75)) - 0.5;
+          ripple += 0.5 * (noise(vec2(p.x * 34.0 / (depth + 0.07), depth * 260.0 / (depth * 2.6 + 0.3) + uT * 0.5)) - 0.5);
+          float strength = 0.002 + depth * 0.17;
+          col = above(vec2(p.x + ripple * strength, HORIZON + depth * 1.5 + ripple * strength * 0.6), halfW) * 0.58;
+          col *= mix(0.95, 0.42, smoothstep(0.0, 0.28, depth));
+          // Moonlight scatters on the water in a long glittering path.
+          float path = exp(-pow(p.x / (0.035 + depth * 0.34), 2.0));
+          float rowY = depth * 520.0 / (depth * 2.6 + 0.3);
+          float glitter = pow(noise(vec2(p.x * 42.0 / (depth + 0.12) + uT * 0.15, rowY - uT * 1.2)), 3.0)
+            * noise(vec2(p.x * 90.0 / (depth + 0.12) - uT * 0.3, rowY * 0.6 + uT * 0.8)) * 1.6;
+          vec3 moonTint = mix(vec3(1.0, 0.93, 0.8), vec3(1.0, 0.7, 0.55), clamp(uWarm * 0.75 + uDawn * 0.5, 0.0, 1.0));
+          col += moonTint * path * (0.08 + glitter * (1.5 + uPulse * 1.5)) * mix(0.28, 1.0, uWake);
+        }
+
+        // Fireflies wander over the shore; the music wakes them.
+        for (int i = 0; i < 2; i++) {
+          float layer = float(i);
+          vec2 g = p * (6.0 + layer * 3.5) + vec2(layer * 13.0 + uT * 0.02, -uT * (0.05 + layer * 0.02));
+          vec2 cell = floor(g);
+          float s = hash(cell + layer);
+          vec2 spot = 0.5 + 0.34 * vec2(sin(uT * 0.5 + s * 40.0), cos(uT * 0.37 + s * 90.0));
+          vec2 rel = fract(g) - spot;
+          float fade = smoothstep(0.08, -0.14, p.y) * smoothstep(-0.5, -0.36, p.y);
+          float blink = 0.5 + 0.5 * sin(uT * (0.9 + s * 1.3) + s * 30.0);
+          col += vec3(1.0, 0.78, 0.42) * step(0.62, s) * exp(-dot(rel, rel) * 620.0) * blink * fade * (0.5 + uPulse + uWarm * 0.5);
+        }
+
+        col *= 1.0 - 0.75 * dot(p, p) / (0.25 + halfW * halfW);
+        col *= mix(0.62, 1.0, uWake);
+        // A whisper of grain keeps the dark gradients from banding.
+        col += (fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) - 0.5) / 160.0;
+        gl_FragColor = vec4(col, 1.0);
+      }`;
+      const vert = 'attribute vec2 a; void main() { gl_Position = vec4(a, 0.0, 1.0); }';
+      const gl = canvas.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'low-power' });
+      let uniforms = null, resolution = 1;
+
+      if (gl) {
+        const compile = (type, source) => {
+          const shader = gl.createShader(type);
+          gl.shaderSource(shader, source);
+          gl.compileShader(shader);
+          return shader;
         };
-      });
-      scene.add(mesh);
-      return { mesh, items };
-    }
-
-    const hearts = makeSwarm(heartGeometry, heartMaterial, small ? 22 : 38, heartColors, true);
-    const petals = makeSwarm(petalGeometry, petalMaterial, small ? 36 : 64, petalColors, false);
-
-    // Visible half-extents of the view at a given depth.
-    const halfHeight = (z) => Math.tan(THREE.MathUtils.degToRad(FOV / 2)) * (CAM_Z - z);
-
-    function scatter(item, anywhere) {
-      const h = halfHeight(item.z), w = h * camera.aspect;
-      item.x = random(-w, w) * 1.1;
-      item.y = anywhere ? random(-h, h) : (item.rising ? -h - 1 : h + 1);
-    }
-
-    const dummy = new THREE.Object3D();
-    function step(swarm, t, dt, pace) {
-      swarm.items.forEach((item, i) => {
-        item.y += item.speed * dt * pace;
-        item.rx += item.sx * dt * pace;
-        item.ry += item.sy * dt * pace;
-        item.rz += item.sz * dt * pace;
-        const h = halfHeight(item.z) + 1.2;
-        if (item.rising ? item.y > h : item.y < -h) scatter(item, false);
-        // Petals flutter more than hearts as they fall.
-        const flutter = item.rising ? 1 : 1.8;
-        dummy.position.set(item.x + Math.sin(t * 0.6 + item.phase) * item.sway * flutter, item.y, item.z);
-        dummy.rotation.set(item.rx, item.ry, item.rz);
-        dummy.scale.setScalar(item.scale);
-        dummy.updateMatrix();
-        swarm.mesh.setMatrixAt(i, dummy.matrix);
-      });
-      swarm.mesh.instanceMatrix.needsUpdate = true;
-    }
-
-    function resize() {
-      const w = window.innerWidth, h = window.innerHeight;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    }
-    resize();
-    for (const item of hearts.items.concat(petals.items)) scatter(item, true);
-
-    // The camera leans gently towards the pointer.
-    const lean = { x: 0, y: 0, tx: 0, ty: 0 };
-    window.addEventListener('pointermove', (event) => {
-      lean.tx = (event.clientX / window.innerWidth - 0.5) * 1.6;
-      lean.ty = (event.clientY / window.innerHeight - 0.5) * -1.0;
-    }, { passive: true });
-
-    // When the heart constellation is finished, the whole sky warms up.
-    let glow = 0, glowTarget = 0;
-    document.addEventListener('sky-complete', () => {
-      glowTarget = 1;
-      canvas.classList.add('bright');
-      if (calm) {
-        glow = 1;
-        render(0, 0);
-      }
-    });
-
-    function render(t, dt) {
-      glow += (glowTarget - glow) * Math.min(1, dt * 0.8);
-      const pace = 1 + glow * 0.8;
-      step(hearts, t, dt, pace);
-      step(petals, t, dt, pace);
-      heartMaterial.emissiveIntensity = 0.3 + glow * 0.45 + 0.05 * Math.sin(t * 2);
-      lean.x += (lean.tx - lean.x) * Math.min(1, dt * 2);
-      lean.y += (lean.ty - lean.y) * Math.min(1, dt * 2);
-      camera.position.set(lean.x, lean.y, CAM_Z);
-      camera.lookAt(0, 0, 0);
-      renderer.render(scene, camera);
-    }
-
-    window.addEventListener('resize', () => {
-      resize();
-      if (calm) render(0, 0);
-    });
-
-    if (calm) {
-      // One still, composed frame for people who prefer less motion.
-      render(0, 0);
-    } else {
-      const clock = new THREE.Clock();
-      renderer.setAnimationLoop(() => {
-        const dt = Math.min(clock.getDelta(), 0.05);
-        render(clock.elapsedTime, dt);
-      });
-    }
-    canvas.classList.add('ready');
-
-    // ---- Little mice who carry each gift to its star ----
-    // An orthographic camera in CSS pixels, so a mouse can run to any point on screen.
-    const courierCanvas = document.getElementById('couriers');
-    const courierRenderer = new THREE.WebGLRenderer({ canvas: courierCanvas, alpha: true, antialias: true });
-    courierRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    courierRenderer.setClearColor(0x000000, 0);
-    const stage = new THREE.Scene();
-    const view = new THREE.OrthographicCamera(0, 1, 0, -1, -500, 500);
-    stage.add(new THREE.HemisphereLight(0xfff3ea, 0x2a0f3a, 1.7));
-    const sun = new THREE.DirectionalLight(0xffe6d0, 2.2);
-    sun.position.set(-0.5, 1, 1.2);
-    stage.add(sun);
-    const rim = new THREE.DirectionalLight(0xff9fbf, 1.6);
-    rim.position.set(1, 0.3, -1);
-    stage.add(rim);
-
-    function sizeStage() {
-      courierRenderer.setSize(window.innerWidth, window.innerHeight, false);
-      view.right = window.innerWidth;
-      view.bottom = -window.innerHeight;
-      view.updateProjectionMatrix();
-    }
-    sizeStage();
-    window.addEventListener('resize', sizeStage);
-
-    const ball = new THREE.SphereGeometry(1, 24, 16);
-    const cube = new THREE.BoxGeometry(1, 1, 1);
-    const bowLoop = new THREE.TorusGeometry(5, 1.8, 8, 20);
-    const sparkGeometry = new THREE.OctahedronGeometry(3);
-    const shadowGeometry = new THREE.CircleGeometry(1, 24);
-    // The tail curls up behind the mouse; beads along it shrink towards the tip.
-    const tailCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0, 0, 0), new THREE.Vector3(-14, -6, 0), new THREE.Vector3(-28, -2, 0),
-      new THREE.Vector3(-36, 12, 0), new THREE.Vector3(-30, 24, 0), new THREE.Vector3(-22, 26, 0)
-    ]);
-    const whiskerGeometry = new THREE.BufferGeometry().setFromPoints([
-      [19, -5, 8], [38, 0, 14], [19, -6, 8], [39, -7, 14], [19, -7, 8], [36, -14, 13],
-      [19, -5, -8], [36, 0, -14], [19, -7, -8], [36, -11, -14]
-    ].map(([x, y, z]) => new THREE.Vector3(x, y, z)));
-    const scarfGeometry = new THREE.TorusGeometry(12, 3.4, 10, 28);
-    // A cupped half-shell hinged at its base, so a petal can lean open like a real one.
-    const roseShell = new THREE.SphereGeometry(1, 16, 10, 0, Math.PI).translate(0, 1, 0);
-    const stalk = new THREE.CylinderGeometry(1, 1, 1, 8);
-
-    const fur = new THREE.MeshStandardMaterial({ color: 0xd9ccd6, roughness: 0.8 });
-    const cream = new THREE.MeshStandardMaterial({ color: 0xfbf2f5, roughness: 0.85 });
-    const pink = new THREE.MeshStandardMaterial({ color: 0xffa9c6, roughness: 0.55 });
-    const noseMaterial = new THREE.MeshStandardMaterial({ color: 0xff5d8f, roughness: 0.25 });
-    const eyeMaterial = new THREE.MeshStandardMaterial({ color: 0x150b1a, roughness: 0.05, metalness: 0.4 });
-    const blush = new THREE.MeshBasicMaterial({ color: 0xff7fa8, transparent: true, opacity: 0.55, depthWrite: false });
-    const scarfMaterial = new THREE.MeshStandardMaterial({ color: 0xc2416f, roughness: 0.7 });
-    const shine = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const whiskerMaterial = new THREE.LineBasicMaterial({ color: 0xfbefe6, transparent: true, opacity: 0.6 });
-    const shadowMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25, depthWrite: false });
-    const sparkMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const petalShades = [0x8e1238, 0xc2184f, 0xe0355f].map((color) => new THREE.MeshStandardMaterial({
-      color, emissive: 0x6d0f2e, emissiveIntensity: 0.35, roughness: 0.45, side: THREE.DoubleSide
-    }));
-    const stemMaterial = new THREE.MeshStandardMaterial({ color: 0x4f9a5c, roughness: 0.6 });
-    const wrappings = [[0xc2416f, 0xffd59e], [0x7b2a8a, 0xffd59e], [0xffd59e, 0xc2416f], [0xff6f9c, 0xfff6ea]]
-      .map(([paper, ribbon]) => [
-        new THREE.MeshStandardMaterial({ color: paper, roughness: 0.45 }),
-        new THREE.MeshStandardMaterial({ color: ribbon, roughness: 0.3, metalness: 0.4 })
-      ]);
-    const sparkColors = ['#ffffff', '#ffd59e', '#ff9fbf', '#ff6f9c'].map((c) => new THREE.Color(c));
-
-    function part(geometry, material, x, y, z, sx, sy, sz) {
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.position.set(x, y, z);
-      mesh.scale.set(sx, sy, sz);
-      return mesh;
-    }
-
-    let giftCount = 0;
-    function makeGift() {
-      const [paper, ribbon] = wrappings[giftCount++ % wrappings.length];
-      const gift = new THREE.Group();
-      gift.add(part(cube, paper, 0, 0, 0, 24, 20, 24));
-      gift.add(part(cube, ribbon, 0, 0, 0, 5, 20.4, 24.4));
-      gift.add(part(cube, ribbon, 0, 0, 0, 24.4, 20.4, 5));
-      const lid = new THREE.Group();
-      lid.position.y = 10;
-      lid.add(part(cube, paper, 0, 3, 0, 27, 6, 27));
-      lid.add(part(cube, ribbon, 0, 3, 0, 5, 6.4, 27.4));
-      lid.add(part(cube, ribbon, 0, 3, 0, 27.4, 6.4, 5));
-      for (const side of [-1, 1]) {
-        const loop = part(bowLoop, ribbon, side * 5, 10, 0, 1, 1, 1);
-        loop.rotation.z = side * 0.6;
-        lid.add(loop);
-      }
-      lid.add(part(ball, ribbon, 0, 7.5, 0, 3, 3, 3));
-      gift.add(lid);
-      gift.userData.lid = lid;
-      return gift;
-    }
-
-    // A long-stemmed rose, gripped at the origin; petals spiral out from a tight bud.
-    function makeRose() {
-      const rose = new THREE.Group();
-      rose.add(part(stalk, stemMaterial, 0, 12, 0, 1.1, 40, 1.1));
-      for (const side of [-1, 1]) {
-        const leaf = part(ball, stemMaterial, side * 5, 14 + side * 4, 0, 6, 1.4, 3);
-        leaf.rotation.z = side * 0.5;
-        rose.add(leaf);
-      }
-      const bloom = new THREE.Group();
-      bloom.position.y = 32;
-      rose.add(bloom);
-      bloom.add(part(ball, stemMaterial, 0, 0.5, 0, 3.6, 2.4, 3.6));
-      bloom.add(part(ball, petalShades[0], 0, 5.5, 0, 3.4, 6, 3.4));
-      const petals = 14;
-      for (let i = 0; i < petals; i += 1) {
-        const k = i / (petals - 1);
-        const angle = i * 2.4, reach = 1 + 4.5 * k;
-        const petal = part(roseShell, petalShades[Math.min(2, Math.floor(k * 3))],
-          Math.sin(angle) * reach, 0, Math.cos(angle) * reach,
-          4.5 + 5 * k, 4 + 2.5 * k, 2.2 + 1.5 * k);
-        petal.rotation.order = 'YXZ';
-        petal.rotation.set(0.1 + 0.9 * k, angle, 0);
-        bloom.add(petal);
-      }
-      return rose;
-    }
-
-    // A round, big-headed little mouse in a scarf, feet at the origin, facing +x.
-    function makeMouse() {
-      const mouse = new THREE.Group();
-      mouse.add(part(shadowGeometry, shadowMaterial, 0, 0, -60, 34, 5, 1));
-      const pose = new THREE.Group();
-      pose.rotation.set(0.15, -0.55, 0);
-      mouse.add(pose);
-      const body = new THREE.Group();
-      pose.add(body);
-      const trunk = new THREE.Group();
-      trunk.position.y = 4;
-      body.add(trunk);
-      trunk.add(part(ball, fur, 0, 16, 0, 24, 19, 19));
-      trunk.add(part(ball, cream, 13, 19, 0, 11, 12, 15));
-      const scarf = part(scarfGeometry, scarfMaterial, 14, 29, 0, 1, 1, 1);
-      scarf.rotation.set(Math.PI / 2, 0.35, 0);
-      body.add(scarf);
-      body.add(part(ball, scarfMaterial, 6, 22, 13, 4, 8, 3));
-
-      const head = new THREE.Group();
-      head.position.set(22, 44, 0);
-      body.add(head);
-      head.add(part(ball, fur, 0, 0, 0, 20, 19, 19));
-      head.add(part(ball, cream, 14, -6, 0, 10, 8, 10));
-      head.add(part(ball, noseMaterial, 23.5, -4, 0, 4.2, 3.6, 4.2));
-      const eyes = [];
-      for (const side of [-1, 1]) {
-        const eye = new THREE.Group();
-        eye.position.set(13, 3, side * 11);
-        eye.add(part(ball, eyeMaterial, 0, 0, 0, 4, 5, 3.4));
-        eye.add(part(ball, shine, 1.6, 2, side * 2.6, 1.4, 1.4, 1.4));
-        eye.add(part(ball, shine, 0.4, -1.8, side * 3, 0.7, 0.7, 0.7));
-        head.add(eye);
-        eyes.push(eye);
-        head.add(part(ball, blush, 11, -5, side * 14.5, 4.5, 2.8, 2));
-      }
-      head.add(new THREE.LineSegments(whiskerGeometry, whiskerMaterial));
-      const ears = [-1, 1].map((side) => {
-        const ear = new THREE.Group();
-        ear.position.set(-3, 17, side * 12);
-        ear.rotation.set(side * 0.35, 0, 0.2);
-        ear.add(part(ball, fur, 0, 0, 0, 13, 14, 3.5));
-        ear.add(part(ball, pink, 0.8, -0.8, 1.8, 9, 10, 2.2));
-        head.add(ear);
-        return ear;
-      });
-
-      const tail = new THREE.Group();
-      tail.position.set(-21, 18, 0);
-      for (let i = 0; i <= 48; i += 1) {
-        const p = tailCurve.getPoint(i / 48);
-        const r = 2.8 - i * 0.04;
-        tail.add(part(ball, pink, p.x, p.y, p.z, r, r, r));
-      }
-      body.add(tail);
-      const feet = [[12, 9], [12, -9], [-12, 9], [-12, -9]].map(([x, z]) => {
-        const foot = part(ball, pink, x, 3, z, 6.5, 3.5, 5.5);
-        pose.add(foot);
-        return foot;
-      });
-      mouse.userData = { pose, body, trunk, head, eyes, ears, tail, feet, stride: 0, wink: random(0, 3) };
-      return mouse;
-    }
-
-    // Legs, bounce, squash, tail and ears for a mouse that moved `dx` pixels this frame.
-    function scurry(mouse, dx, t) {
-      const parts = mouse.userData;
-      parts.stride += Math.abs(dx) * 0.11;
-      const s = parts.stride;
-      parts.feet.forEach((foot, i) => {
-        const phase = s + (i < 2 ? 0 : Math.PI) + (i % 2) * 0.6;
-        foot.position.x = (i < 2 ? 12 : -12) + Math.sin(phase) * 5;
-        foot.position.y = 3 + Math.max(0, Math.cos(phase)) * 3;
-      });
-      const bounce = Math.abs(Math.sin(s));
-      parts.body.position.y = bounce * 3.5;
-      parts.trunk.scale.set(1 + 0.05 * (1 - bounce), 1 - 0.05 * (1 - bounce), 1);
-      parts.head.rotation.z = Math.sin(s * 2) * 0.05;
-      parts.tail.rotation.z = Math.sin(t * 9) * 0.25;
-      parts.ears.forEach((ear, i) => { ear.rotation.z = 0.2 + Math.sin(t * 7 + i) * 0.12; });
-    }
-
-    // Every few seconds the mouse blinks.
-    function blink(mouse, t) {
-      const open = (t + mouse.userData.wink) % 3.2 < 0.12 ? 0.12 : 1;
-      mouse.userData.eyes.forEach((eye) => { eye.scale.y = open; });
-    }
-
-    const couriers = [];
-    const sparks = [];
-    const lids = [];
-    let lastTick = performance.now();
-
-    function burst(x, y) {
-      const count = 32;
-      const mesh = new THREE.InstancedMesh(sparkGeometry, sparkMaterial, count);
-      const motes = Array.from({ length: count }, (_, i) => {
-        mesh.setColorAt(i, sparkColors[i % sparkColors.length]);
-        const angle = random(0, Math.PI * 2), speed = random(120, 340);
-        return { x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed + 80, spin: random(-8, 8), size: random(0.7, 1.6) };
-      });
-      stage.add(mesh);
-      sparks.push({ mesh, motes, age: 0 });
-    }
-
-    const ease = (p) => 1 - (1 - p) ** 3;
-
-    function updateCourier(c, dt, t) {
-      const { mouse } = c;
-      const parts = mouse.userData;
-      c.time += dt;
-      const startX = mouse.position.x;
-      blink(mouse, t);
-
-      if (c.state === 'run') {
-        const p = Math.min(1, c.time / c.duration);
-        mouse.position.x = c.from + (c.to - c.from) * ease(p);
-        scurry(mouse, mouse.position.x - startX, t);
-        if (p === 1) {
-          c.state = 'toss';
-          c.time = 0;
-          stage.attach(c.gift);
-          c.giftFrom = c.gift.position.clone();
-        }
-      } else if (c.state === 'toss') {
-        // The mouse rears up and flings the present up to its star.
-        const p = Math.min(1, c.time / 0.5);
-        const e = ease(p);
-        c.gift.position.set(
-          c.giftFrom.x + (c.target.x - c.giftFrom.x) * e,
-          c.giftFrom.y + (c.target.y - c.giftFrom.y) * e + Math.sin(Math.PI * p) * 60,
-          40
-        );
-        c.gift.rotation.z = -c.facing * p * Math.PI * 2;
-        parts.pose.rotation.z = 0.3 * Math.sin(Math.PI * p);
-        if (p === 1) {
-          const lid = c.gift.userData.lid;
-          stage.attach(lid);
-          lids.push({ lid, vx: c.facing * random(40, 120), vy: random(240, 320), spin: random(-9, 9), age: 0 });
-          burst(c.target.x, c.target.y);
-          c.state = 'cheer';
-          c.time = 0;
-          c.resolve();
-        }
-      } else if (c.state === 'cheer') {
-        // A happy ear wiggle while the empty box shrinks away.
-        const p = Math.min(1, c.time / 0.8);
-        const k = Math.max(0, 1 - c.time / 0.3) * c.size;
-        c.gift.scale.set(c.facing * k, k, k);
-        parts.ears.forEach((ear, i) => { ear.rotation.z = 0.2 + Math.sin(t * 18 + i) * 0.3; });
-        parts.tail.rotation.z = Math.sin(t * 14) * 0.45;
-        if (p === 1) {
-          stage.remove(c.gift);
-          mouse.position.y = -c.ground;
-          c.state = 'turn';
-          c.time = 0;
-        }
-      } else if (c.state === 'turn') {
-        const p = Math.min(1, c.time / 0.2);
-        mouse.scale.x = c.facing * c.size * (1 - 2 * p);
-        if (p === 1) {
-          c.state = 'leave';
-          c.time = 0;
+        const program = gl.createProgram();
+        gl.attachShader(program, compile(gl.VERTEX_SHADER, vert));
+        gl.attachShader(program, compile(gl.FRAGMENT_SHADER, frag));
+        gl.bindAttribLocation(program, 0, 'a');
+        gl.linkProgram(program);
+        if (gl.getProgramParameter(program, gl.LINK_STATUS)) {
+          gl.useProgram(program);
+          gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+          gl.enableVertexAttribArray(0);
+          gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+          uniforms = {};
+          for (const name of ['uRes', 'uT', 'uWarm', 'uDawn', 'uPulse', 'uWake']) uniforms[name] = gl.getUniformLocation(program, name);
+        } else {
+          // Without the shader the soft gradient on the page is the sky.
+          canvas.remove();
         }
       } else {
-        // 'leave' heads home; 'parade' trots across with a rose.
-        const direction = c.state === 'leave' ? -c.facing : c.facing;
-        const speed = c.state === 'leave' ? 200 + 900 * c.time : 230;
-        mouse.position.x += direction * speed * dt;
-        scurry(mouse, mouse.position.x - startX, t);
-        // Only the edge it is heading for counts: a parade queues up off-screen on the left.
-        if (direction < 0 ? mouse.position.x < -160 : mouse.position.x > window.innerWidth + 160) {
-          stage.remove(mouse);
-          return false;
-        }
+        canvas.remove();
       }
-      return true;
-    }
 
-    function tick(now) {
-      const dt = Math.min((now - lastTick) / 1000, 0.05);
-      lastTick = now;
-      const t = now / 1000;
-      for (let i = couriers.length - 1; i >= 0; i -= 1) {
-        if (!updateCourier(couriers[i], dt, t)) couriers.splice(i, 1);
+      function sizeScene() {
+        if (!uniforms) return;
+        const ratio = Math.min(window.devicePixelRatio || 1, 1.5) * resolution;
+        canvas.width = Math.max(2, Math.round(window.innerWidth * ratio));
+        canvas.height = Math.max(2, Math.round(window.innerHeight * ratio));
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.uniform2f(uniforms.uRes, canvas.width, canvas.height);
       }
-      for (let i = lids.length - 1; i >= 0; i -= 1) {
-        const l = lids[i];
-        l.age += dt;
-        l.vy -= 900 * dt;
-        l.lid.position.x += l.vx * dt;
-        l.lid.position.y += l.vy * dt;
-        l.lid.rotation.z += l.spin * dt;
-        const k = Math.max(0, 1 - Math.max(0, l.age - 0.4) / 0.4);
-        l.lid.scale.setScalar(k);
-        if (l.age > 0.8) {
-          stage.remove(l.lid);
-          lids.splice(i, 1);
-        }
+      sizeScene();
+      window.addEventListener('resize', sizeScene);
+
+      function loudnessAt(t) {
+        const x = Math.max(0, t * 2);
+        const i = Math.floor(x), f = x - i;
+        const a = Number(loudness[i] || 0), b = Number(loudness[i + 1] || 0);
+        return (a + (b - a) * f) / 9;
       }
-      for (let i = sparks.length - 1; i >= 0; i -= 1) {
-        const s = sparks[i];
-        s.age += dt;
-        const fade = Math.max(0, 1 - s.age / 1.1);
-        s.motes.forEach((m, j) => {
-          m.vy -= 300 * dt;
-          m.vx *= 0.98;
-          m.x += m.vx * dt;
-          m.y += m.vy * dt;
-          dummy.position.set(m.x, m.y, 60);
-          dummy.rotation.set(0, 0, s.age * m.spin);
-          dummy.scale.setScalar(m.size * fade);
-          dummy.updateMatrix();
-          s.mesh.setMatrixAt(j, dummy.matrix);
-        });
-        s.mesh.instanceMatrix.needsUpdate = true;
-        if (fade === 0) {
-          stage.remove(s.mesh);
-          s.mesh.dispose();
-          sparks.splice(i, 1);
-        }
-      }
-      courierRenderer.render(stage, view);
-      // Sleep while nobody is running around.
-      if (!couriers.length && !lids.length && !sparks.length) courierRenderer.setAnimationLoop(null);
-    }
 
-    function wake() {
-      lastTick = performance.now();
-      courierRenderer.setAnimationLoop(tick);
-    }
+      const ease = (value, target, rate, dt) => value + (target - value) * Math.min(1, dt * rate);
+      const smooth = (a, b, x) => {
+        const k = Math.min(1, Math.max(0, (x - a) / (b - a)));
+        return k * k * (3 - 2 * k);
+      };
 
-    // Called by the star script; resolves the moment the gift pops open.
-    window.deliverGift = (x, y) => new Promise((resolve) => {
-      const size = small ? 0.95 : 1.15;
-      const facing = x < window.innerWidth / 2 ? 1 : -1;
-      // Stop below and beside the star so the mouse never hides it.
-      const ground = y + 86 * size;
-      const from = facing > 0 ? -120 : window.innerWidth + 120;
-      const to = x - facing * 86 * size;
-      const mouse = makeMouse();
-      mouse.position.set(from, -ground, 0);
-      mouse.scale.set(facing * size, size, size);
-      // The present rides on its back, inside the 3D pose so it turns with the mouse.
-      const gift = makeGift();
-      gift.position.set(-8, 52, 0);
-      mouse.userData.body.add(gift);
-      stage.add(mouse);
-      couriers.push({
-        mouse, gift, facing, size, ground, from, to, resolve,
-        target: new THREE.Vector3(x, -y, 40),
-        duration: Math.min(1.5, Math.max(0.7, Math.abs(to - from) / 600)),
-        state: 'run', time: 0
-      });
-      wake();
-    });
+      let warm = 0, wake = 0, pulse = 0, dawn = 0, last = performance.now(), slowFrames = 0, frames = 0;
+      function frame(now) {
+        const dt = Math.min((now - last) / 1000, 0.1);
+        const spent = now - last;
+        last = now;
+        const finished = document.body.classList.contains('finished');
+        const t = finished ? DURATION : time();
 
-    // At the finale a little parade of mice carries roses in their mouths along the bottom of the sky.
-    function parade() {
-      if (document.visibilityState !== 'visible') return;
-      const size = small ? 0.8 : 1;
-      for (let i = 0; i < 3; i += 1) {
-        const mouse = makeMouse();
-        mouse.position.set(-110 - i * 95 * size, -(window.innerHeight - 18), 0);
-        mouse.scale.set(size, size, size);
-        const rose = makeRose();
-        rose.position.set(22, -9, 0);
-        rose.rotation.z = -0.9;
-        mouse.userData.head.add(rose);
-        stage.add(mouse);
-        couriers.push({ mouse, facing: 1, size, state: 'parade', time: 0 });
-      }
-      wake();
-    }
-    if (!calm) {
-      document.addEventListener('sky-complete', () => {
-        courierCanvas.classList.add('behind');
-        window.setTimeout(parade, 3200);
-        window.setInterval(parade, 16000);
-      });
-    }
-
-     (() => {
-      // Send visit notifications only from the published site, not local previews.
-      const publishedHosts = ['love.mihaela-bella.love', 'agalchov.github.io'];
-      if (window.location.protocol !== 'https:' || !publishedHosts.includes(window.location.hostname)) return;
-
-      const webhookUrl = 'https://hook.eu1.make.com/kb18e5xlos01f63ynwfyus48sba5nxul';
-      const sessionKey = 'bella2.visit-notified';
-
-      function notifyVisit() {
-        // A background tab counts as a visit when the visitor first opens it.
-        if (document.visibilityState !== 'visible') return;
-        document.removeEventListener('visibilitychange', notifyVisit);
-
-        try {
-          if (window.sessionStorage.getItem(sessionKey)) return;
-          window.sessionStorage.setItem(sessionKey, '1');
-        } catch {
-          // Notifications still work when session storage is unavailable.
+        if (started()) {
+          shapeSound();
+          showCue(cueAt(t));
+          updatePlayer(t);
+          if (silent && t >= DURATION) finish();
+        } else if (finished) {
+          showCue(-1);
+          updatePlayer(DURATION);
         }
 
-        const visit = new URLSearchParams({
-          event: 'site_visit',
-          page_url: window.location.origin + window.location.pathname,
-          visited_at: new Date().toISOString()
-        });
+        const singing = current >= 0 && cues[current].kind === 'chorus';
+        warm = ease(warm, singing ? 1 : 0, 0.8, dt);
+        wake = ease(wake, started() || finished ? 1 : 0, 0.6, dt);
+        pulse = ease(pulse, started() && !paused() ? loudnessAt(t) : 0.2, 5, dt);
+        // Night gives way to morning across the last part of the song.
+        dawn = ease(dawn, smooth(DURATION * 0.72, DURATION, t), 1, dt);
 
-        // Form data avoids a CORS preflight; Make's response need not be read.
-        fetch(webhookUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          credentials: 'omit',
-          referrerPolicy: 'no-referrer',
-          keepalive: true,
-          body: visit
-        }).catch(() => {
-          // A failed request can be tried again on the next page load.
-          try { window.sessionStorage.removeItem(sessionKey); } catch {}
-        });
+        if (uniforms) {
+          gl.uniform1f(uniforms.uT, calm ? 40 : now / 1000);
+          gl.uniform1f(uniforms.uWarm, warm);
+          gl.uniform1f(uniforms.uDawn, dawn);
+          gl.uniform1f(uniforms.uPulse, calm ? 0.3 : pulse);
+          gl.uniform1f(uniforms.uWake, wake);
+          gl.drawArrays(gl.TRIANGLES, 0, 3);
+          canvas.classList.add('ready');
+
+          // Slower devices get a softer picture rather than a stuttering one.
+          frames += 1;
+          if (spent > 34) slowFrames += 1;
+          if (frames === 90) {
+            if (slowFrames > 45 && resolution > 0.45) {
+              resolution *= 0.75;
+              sizeScene();
+            }
+            frames = 0;
+            slowFrames = 0;
+          }
+        }
+        window.requestAnimationFrame(frame);
       }
-
-      if (document.visibilityState === 'visible') notifyVisit();
-      else document.addEventListener('visibilitychange', notifyVisit);
+      syncPaused();
+      window.requestAnimationFrame(frame);
     })();
   </script>
 </body>
