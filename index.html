@@ -44,11 +44,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 max(28px, 8vw);
+      padding: 0 16px;
     }
     main {
       width: 100%;
-      max-width: 26em;
       padding: 1.2em 0;
       font-size: 22px;
       text-align: center;
@@ -57,9 +56,9 @@
     .stanza { margin: 0; }
     .stanza p {
       margin: 0;
-      line-height: 1.4;
+      line-height: var(--lh, 1.4);
       font-weight: 500;
-      text-wrap: balance;
+      white-space: nowrap;
       text-shadow: 0 1px 18px #070b22;
     }
     .stanza:nth-of-type(2) p:nth-child(3),
@@ -124,7 +123,8 @@
   </div>
 
   <script>
-    // Find the largest font size at which the whole poem fits on one screen.
+    // Find the largest font size at which the whole poem fits on one screen
+    // with every line kept on a single row.
     (function () {
       const main = document.querySelector('main');
       const stage = document.querySelector('.stage');
@@ -133,9 +133,20 @@
         for (let i = 0; i < 14; i++) {
           const mid = (lo + hi) / 2;
           main.style.fontSize = mid + 'px';
-          if (main.offsetHeight <= stage.clientHeight) lo = mid; else hi = mid;
+          main.style.setProperty('--lh', 1.4);
+          const fits = main.offsetHeight <= stage.clientHeight && main.scrollWidth <= main.clientWidth;
+          if (fits) lo = mid; else hi = mid;
         }
         main.style.fontSize = lo + 'px';
+        // On narrow screens the width limits the size, so spread the rows out
+        // to use the height that is left over.
+        let a = 1.4, b = 2.4;
+        for (let i = 0; i < 10; i++) {
+          const mid = (a + b) / 2;
+          main.style.setProperty('--lh', mid);
+          if (main.offsetHeight <= stage.clientHeight * 0.9) a = mid; else b = mid;
+        }
+        main.style.setProperty('--lh', a);
       }
       fit();
       addEventListener('resize', fit);
