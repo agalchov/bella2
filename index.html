@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#070b22">
-  <meta name="description" content="Една приказка, само за теб, Мише.">
-  <title>Приказка ✦</title>
+  <meta name="description" content="Поредната нощ, в която не мога да заспя.">
+  <title>Поредната нощ ✦</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg?v=3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&amp;family=Playfair+Display:ital,wght@1,400;1,500&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&amp;display=swap" rel="stylesheet">
   <script>document.documentElement.classList.add('js');</script>
   <style>
     :root {
@@ -22,938 +22,189 @@
       --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     }
     * { box-sizing: border-box; }
-    html { min-height: 100%; background: var(--night); }
+    html { background: var(--night); }
     body {
       margin: 0;
-      min-width: 280px;
       min-height: 100svh;
       color: var(--text);
-      /* The painted lake takes over from this as soon as WebGL is running. */
-      background: linear-gradient(180deg, #070b22 0%, #11183f 55%, #1c2a55 74%, #060a1c 76%, #0b1230 100%) fixed;
+      background: radial-gradient(120% 80% at 50% 110%, #1c2a55 0%, #11183f 45%, #070b22 80%) fixed;
       font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
       -webkit-tap-highlight-color: transparent;
     }
-    .js body { height: 100svh; overflow: hidden; }
     ::selection { background: var(--blush); color: var(--night); }
 
-    .scene { position: fixed; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1600ms ease; }
-    .scene.ready { opacity: 1; }
+    .sky { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 
-    /* Cover */
-    .cover {
-      position: fixed;
-      inset: 0;
-      z-index: 3;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24svh 16px 32px;
-      text-align: center;
-      transition: opacity 1200ms ease, transform 1600ms var(--ease-out), visibility 0s linear 1200ms;
-    }
-    .cover > * { animation: rise 1400ms var(--ease-out) both; }
-    .cover > :nth-child(2) { animation-delay: 250ms; }
-    .cover > :nth-child(3) { animation-delay: 700ms; }
-    .cover > :nth-child(4) { animation-delay: 1200ms; }
-    .cover > :nth-child(5) { animation-delay: 1500ms; }
-    .cover > :nth-child(6) { animation-delay: 1700ms; }
-    .started .cover, .finished .cover { opacity: 0; transform: translateY(-18px) scale(0.985); visibility: hidden; }
-    .eyebrow {
-      margin: 0 0 10px;
-      color: var(--gold);
-      font-size: 17px;
-      font-weight: 600;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      text-shadow: 0 1px 14px #070b22;
-    }
-    .cover h1 {
-      margin: 0;
-      padding: 0 0.12em 0.12em;
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(60px, 15vw, 132px);
-      font-style: italic;
-      font-weight: 400;
-      line-height: 1.05;
-      background: linear-gradient(100deg, var(--text) 10%, var(--blush) 55%, var(--gold) 95%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      filter: drop-shadow(0 2px 22px #070b22cc);
-    }
-    .lead {
-      margin: 0 0 30px;
-      color: var(--muted);
-      font-size: clamp(23px, 4.4vw, 29px);
-      font-style: italic;
-      font-weight: 500;
-      line-height: 1.3;
-      text-shadow: 0 1px 14px #070b22;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      min-height: 54px;
-      padding: 0 30px;
-      border: 1px solid #ffd59e80;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #ffd59e2e, #ffb3c724), #070b2266;
-      color: var(--text);
-      font: 600 21px/1 'Cormorant Garamond', Georgia, serif;
-      cursor: pointer;
-      box-shadow: 0 10px 30px #0006;
-      transition: transform 200ms var(--ease-out), box-shadow 300ms ease;
-    }
-    .btn svg { flex: none; width: 16px; height: 16px; fill: var(--gold); }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 0 0 6px #ffd59e1a, 0 14px 34px #0008; }
-    .btn:active { transform: scale(0.97); }
-    .btn:focus-visible, .toggle:focus-visible, .seek:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-    .sound-hint, .volume-note {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      color: var(--text);
-      font-size: 19px;
-      font-weight: 600;
-      line-height: 1.2;
-    }
-    .sound-hint svg, .volume-note svg {
-      flex: none;
-      width: 22px;
-      height: 22px;
-      fill: none;
-      stroke: var(--gold);
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .sound-hint .cone, .volume-note .cone { fill: var(--gold); }
-    .sound-hint { margin: 20px 0 0; text-shadow: 0 1px 12px #070b22; }
-    html:not(.js) .sound-hint { display: none; }
-    /* A reminder over the player for the first seconds of the song. */
-    .volume-note {
-      position: fixed;
-      left: 50%;
-      bottom: calc(max(14px, env(safe-area-inset-bottom)) + 60px);
-      z-index: 4;
-      margin: 0;
-      padding: 8px 16px;
-      border: 1px solid #ffd59e4d;
-      border-radius: 999px;
-      background: #070b22b3;
-      white-space: nowrap;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transform: translateX(-50%);
-    }
-    .started .volume-note { visibility: visible; animation: volume-note 9s ease both; }
-    .silent .volume-note { display: none; }
-    @keyframes volume-note {
-      0%, 100% { opacity: 0; }
-      10%, 85% { opacity: 1; }
-    }
-    .credit { margin: 10px 0 0; color: var(--muted); font-size: 17px; font-weight: 500; text-shadow: 0 1px 12px #070b22; }
-
-    /* The lines of the song arrive and leave in the open sky. */
+    /* Everything is sized in em off main's font-size, which the fit script
+       grows or shrinks so the whole poem fills exactly one screen. */
+    body { height: 100svh; overflow: hidden; }
     .stage {
-      position: fixed;
-      inset: 0;
-      z-index: 2;
-      display: grid;
-      place-items: center;
-      padding: 28svh 16px 28svh;
-      pointer-events: none;
-    }
-    .cue {
-      grid-area: 1 / 1;
-      width: 100%;
-      max-width: 1040px;
-      margin: 0;
-      text-align: center;
-      text-wrap: balance;
-      text-shadow: 0 2px 26px #070b22, 0 0 6px #070b2299;
-    }
-    .cue.verse {
-      font-size: clamp(31px, 5.4vw, 60px);
-      font-weight: 600;
-      line-height: 1.16;
-    }
-    .cue.chorus {
-      color: #fff0f0;
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(30px, 5.2vw, 58px);
-      font-style: italic;
-      line-height: 1.2;
-    }
-    .cue.dedication {
-      color: var(--gold);
-      font-size: clamp(20px, 3vw, 26px);
-      font-weight: 600;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-    }
-    .phrase { display: inline-block; }
-    .gold { color: var(--gold); font-style: italic; }
-    .ache { color: var(--blush); font-style: italic; }
-    .word {
-      display: inline-block;
-      animation: word-in 900ms var(--ease-out) both;
-      animation-delay: calc(var(--i) * var(--gap));
-    }
-    @keyframes word-in {
-      from { opacity: 0; filter: blur(10px); transform: translateY(0.4em) scale(0.97); }
-      to { opacity: 1; filter: none; transform: none; }
-    }
-    /* Lines leave the way breath leaves on a cold night: upward, softening, gone. */
-    .cue.off { animation: line-out 950ms ease-in forwards; }
-    @keyframes line-out {
-      to { opacity: 0; filter: blur(12px); transform: translateY(-0.7em) scale(1.02); }
-    }
-    .cue.ache-line .ache { animation: ache 2.6s ease-in-out 1200ms infinite; }
-    @keyframes ache {
-      0%, 100% { text-shadow: 0 0 10px #ffb3c766, 0 2px 26px #070b22; }
-      50% { text-shadow: 0 0 30px #ffb3c7dd, 0 0 70px #ff7fa066; }
-    }
-
-    /* A small heart keeps the place during the instrumental parts. */
-    .rest {
-      grid-area: 1 / 1;
-      width: 22px;
-      height: 22px;
-      color: var(--gold);
-      fill: currentColor;
-      opacity: 0;
-      filter: drop-shadow(0 0 10px #ffb3c7);
-      transition: opacity 400ms ease;
-    }
-    .resting .rest { opacity: 0.85; transition: opacity 1600ms ease 1200ms; animation: beat 2.8s ease-in-out infinite; }
-    @keyframes beat {
-      0%, 100% { transform: scale(1); }
-      14% { transform: scale(1.16); }
-      28% { transform: scale(1); }
-      42% { transform: scale(1.1); }
-    }
-
-    /* Player */
-    .player {
-      position: fixed;
-      left: 50%;
-      bottom: max(14px, env(safe-area-inset-bottom));
-      z-index: 4;
+      position: relative;
+      height: 100svh;
       display: flex;
-      align-items: center;
-      gap: 12px;
-      width: min(600px, calc(100% - 32px));
-      padding: 2px 16px 2px 4px;
-      border: 1px solid #ffffff1f;
-      border-radius: 999px;
-      background: #070b2299;
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
-      opacity: 0;
-      transform: translate(-50%, 12px);
-      visibility: hidden;
-      transition: opacity 900ms ease 600ms, transform 900ms var(--ease-out) 600ms;
-    }
-    .started .player { opacity: 1; transform: translate(-50%, 0); visibility: visible; }
-    .toggle {
-      display: grid;
-      flex: none;
-      place-items: center;
-      width: 44px;
-      height: 44px;
-      padding: 0;
-      border: 0;
-      border-radius: 50%;
-      background: none;
-      cursor: pointer;
-    }
-    .toggle svg { width: 18px; height: 18px; fill: var(--gold); }
-    .toggle .play { display: none; }
-    .paused .toggle .play { display: block; }
-    .paused .toggle .pause { display: none; }
-    .buffering .toggle svg { animation: buffering 1s ease-in-out infinite alternate; }
-    @keyframes buffering { to { opacity: 0.3; } }
-    .seek {
-      --at: 0%;
-      flex: 1;
-      min-width: 0;
-      height: 44px;
-      margin: 0;
-      background: none;
-      cursor: pointer;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-    .seek::-webkit-slider-runnable-track {
-      height: 3px;
-      border-radius: 3px;
-      background: linear-gradient(90deg, var(--gold) var(--at), #ffffff33 var(--at));
-    }
-    .seek::-moz-range-track { height: 3px; border-radius: 3px; background: #ffffff33; }
-    .seek::-moz-range-progress { height: 3px; border-radius: 3px; background: var(--gold); }
-    .seek::-webkit-slider-thumb {
-      width: 13px;
-      height: 13px;
-      margin-top: -5px;
-      border-radius: 50%;
-      background: var(--text);
-      box-shadow: 0 0 10px #ffd59e;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-    .seek::-moz-range-thumb { width: 13px; height: 13px; border: 0; border-radius: 50%; background: var(--text); box-shadow: 0 0 10px #ffd59e; }
-    .clock {
-      flex: none;
-      color: var(--muted);
-      font-size: 17px;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums lining-nums;
-    }
-    .now-playing { flex: none; color: var(--muted); font-size: 17px; font-weight: 500; font-style: italic; white-space: nowrap; }
-    @media (max-width: 520px) { .now-playing { display: none; } }
-
-    /* The last screen, in the dawn */
-    .finale {
-      position: fixed;
-      inset: 0;
-      z-index: 3;
-      display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 26px;
-      padding: 30svh 16px 20svh;
+      padding: 0 16px;
+    }
+    main {
+      width: 100%;
+      max-width: 34em;
+      padding: 1.2em 0;
+      font-size: 22px;
       text-align: center;
-      opacity: 0;
-      visibility: hidden;
     }
-    .finished .finale { opacity: 1; visibility: visible; transition: opacity 1800ms ease 600ms; }
-    .finale p {
+
+    .stanza { margin: 0; }
+    .stanza p {
       margin: 0;
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(30px, 5.2vw, 52px);
-      font-style: italic;
-      line-height: 1.2;
+      line-height: 1.4;
+      font-weight: 500;
       text-wrap: balance;
-      text-shadow: 0 2px 26px #070b22, 0 0 6px #070b2299;
+      text-shadow: 0 1px 18px #070b22;
+    }
+    .stanza:nth-of-type(2) p:nth-child(3),
+    .stanza:nth-of-type(2) p:nth-child(4) { color: var(--muted); font-style: italic; }
+    .stanza.last p:last-child { color: var(--blush); font-weight: 600; }
+
+    .divider {
+      display: block;
+      margin: 0.7em auto;
+      color: var(--gold);
+      opacity: 0.7;
+      font-size: 0.6em;
+      line-height: 1;
+      letter-spacing: 1em;
+      padding-left: 1em;
     }
 
-    /* The whole song stays readable by screen readers, and by everyone without scripts. */
-    .lyrics { max-width: 720px; margin: 0 auto; padding: 32px 16px; font-size: 24px; line-height: 1.35; text-align: center; }
-    .lyrics section { margin-bottom: 32px; }
-    .lyrics p { margin: 0 0 8px; }
-    .js .lyrics {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
+    /* Lines drift in as they reach the reader. */
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      filter: blur(4px);
+      transition: opacity 1400ms ease, transform 1600ms var(--ease-out), filter 1400ms ease;
     }
-    .fallback-audio { display: block; width: min(600px, calc(100% - 32px)); margin: 24px auto 0; }
-    .js .fallback-audio { display: none; }
-    html:not(.js) .scene, html:not(.js) .stage, html:not(.js) .player, html:not(.js) .finale, html:not(.js) #start { display: none; }
-    html:not(.js) .cover { position: static; padding-top: 48px; }
-
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
-      to { opacity: 1; transform: none; filter: none; }
-    }
+    .js .reveal.shown { opacity: 1; transform: none; filter: none; }
 
     @media (prefers-reduced-motion: reduce) {
-      /* Lines simply fade in and out; nothing drifts or blurs. */
-      .cover > *, .cue.ache-line .ache, .resting .rest, .buffering .toggle svg { animation: none; }
-      .cover, .player { transform: none !important; }
-      .player { transform: translateX(-50%) !important; }
-      .word { animation: none; }
-      .cue { animation: calm-in 500ms ease both; }
-      .cue.off { animation: calm-out 500ms ease forwards; }
-      @keyframes calm-in { from { opacity: 0; } to { opacity: 1; } }
-      @keyframes calm-out { to { opacity: 0; } }
+      .js .reveal { opacity: 1; transform: none; filter: none; transition: none; }
     }
   </style>
 </head>
-<body class="paused">
-  <canvas class="scene" id="scene" aria-hidden="true"></canvas>
+<body>
+  <canvas class="sky" aria-hidden="true"></canvas>
 
+  <div class="stage">
   <main>
-    <header class="cover" id="cover">
-      <p class="eyebrow">За Мишето</p>
-      <h1>Приказка</h1>
-      <p class="lead">Колко време мина?</p>
-      <button class="btn" id="start" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>
-        Пусни приказката
-      </button>
-      <p class="sound-hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="cone" d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.3a8 8 0 0 1 0 11.4"/></svg> Усили звука, за да чуеш песента</p>
-    </header>
-
-    <div class="stage" id="stage" aria-hidden="true">
-      <svg class="rest" viewBox="0 0 24 24"><path d="M12 21s-8.5-5.2-8.5-11.2A4.8 4.8 0 0 1 12 6.9a4.8 4.8 0 0 1 8.5 2.9C20.5 15.8 12 21 12 21z"/></svg>
+    <div class="stanza">
+      <p class="reveal">Поредната нощ, в която не мога да заспя,</p>
+      <p class="reveal">мисля и търся причина, как да не свърши светът,</p>
+      <p class="reveal">но мракът е толкова силен, няма и лъч светлина,</p>
+      <p class="reveal">накъдето и да тръгна, все се връщам в самота.</p>
     </div>
 
-    <div class="finale" id="finale">
-      <p>Приказката свърши, но чета я <span class="gold">пак и пак</span></p>
-      <button class="btn" id="again" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>
-        Чуй я пак
-      </button>
+    <span class="divider reveal" aria-hidden="true">✦✦✦</span>
+
+    <div class="stanza">
+      <p class="reveal">Сърцето ми мрака не признава,</p>
+      <p class="reveal">не спира да те търси, дори за миг.</p>
+      <p class="reveal">Умът му казва: „Недей, изход няма –</p>
+      <p class="reveal">обречено си вечно да я търсиш, да се раждаш с надежда и да умираш безлик.“</p>
     </div>
 
-    <audio class="fallback-audio" id="song-audio" src="./prikazka.mp3#t=21.6" preload="metadata" controls></audio>
+    <span class="divider reveal" aria-hidden="true">✦✦✦</span>
 
-    <article class="lyrics" aria-label="Текст на песента">
-      <section aria-label="Куплет 1" data-kind="verse">
-        <p class="line" data-at="27.2" data-end="32.5">Имало едно време двама влюбени</p>
-        <p class="line" data-at="32.8" data-end="38.1">Приказката свърши лошо и ги раздели</p>
-        <p class="line" data-at="38.4" data-end="43.7"><span class="phrase">Мразя, като се разчувствам –</span> <span class="phrase">глупаво е, знам!</span></p>
-        <p class="line" data-at="44.0" data-end="49.8"><span class="phrase">И главата си блъскам,</span> <span class="phrase">и не излизаш пак оттам</span></p>
-      </section>
-      <section aria-label="Припев" data-kind="chorus">
-        <p class="line" data-at="55.1" data-end="60.4"><span class="phrase">Колко време мина?</span> <span class="phrase">Как си? С кой си, разкажи</span></p>
-        <p class="line" data-at="60.7" data-end="66.0"><span class="phrase">Колко време мина?</span> <span class="phrase">Аз ли как съм? <em class="ache">Липсваш ми</em></span></p>
-        <p class="line" data-at="66.3" data-end="71.3"><span class="phrase">Приказката свърши,</span> <span class="phrase">но чета я <em class="gold">пак и пак</em></span></p>
-        <p class="line" data-at="71.6" data-end="76.8">Друга да обичам аз след тебе не можах</p>
-      </section>
-      <section aria-label="Куплет 2" data-kind="verse">
-        <p class="line" data-at="99.9" data-end="105.2">Дай ми да си те прегърна и се наплачи</p>
-        <p class="line" data-at="105.5" data-end="110.8">Много искам да останеш, но сама реши</p>
-        <p class="line" data-at="111.1" data-end="116.4">Знам, че с друг отдавна пишеш друга приказка</p>
-        <p class="line" data-at="116.7" data-end="122.4"><span class="phrase">Но ако ме обичаш –</span> <em class="phrase gold">не си отивай никога!</em></p>
-      </section>
-      <section aria-label="Припев" data-kind="chorus">
-        <p class="line" data-at="127.7" data-end="132.9"><span class="phrase">Колко време мина?</span> <span class="phrase">Как си? С кой си, разкажи</span></p>
-        <p class="line" data-at="133.2" data-end="138.5"><span class="phrase">Колко време мина?</span> <span class="phrase">Аз ли как съм? <em class="ache">Липсваш ми</em></span></p>
-        <p class="line" data-at="138.8" data-end="143.3"><span class="phrase">Приказката свърши,</span> <span class="phrase">но чета я <em class="gold">пак и пак</em></span></p>
-        <p class="line" data-at="143.6" data-end="148.2">Друга да обичам аз след тебе не можах</p>
-      </section>
-      <section aria-label="Припев" data-kind="chorus">
-        <p class="line" data-at="172.0" data-end="177.3"><span class="phrase">Колко време мина?</span> <span class="phrase">Как си? С кой си, разкажи</span></p>
-        <p class="line" data-at="177.6" data-end="182.7"><span class="phrase">Колко време мина?</span> <span class="phrase">Аз ли как съм? <em class="ache">Липсваш ми</em></span></p>
-        <p class="line" data-at="183.0" data-end="188.3"><span class="phrase">Приказката свърши,</span> <span class="phrase">но чета я <em class="gold">пак и пак</em></span></p>
-        <p class="line" data-at="188.6" data-end="193.9">Друга да обичам аз след тебе не можах</p>
-        <p class="line" data-at="194.2" data-end="199.4">Друга да обичам аз след тебе не можах</p>
-      </section>
-    </article>
+    <div class="stanza last">
+      <p class="reveal">Но то не чува, не разбира,</p>
+      <p class="reveal">за него ти си цял един свят.</p>
+      <p class="reveal">Защото предпочита хиляди пъти с болка да умира,</p>
+      <p class="reveal">отколкото да живее без миг надежда цяла вечност без теб.</p>
+    </div>
   </main>
-
-  <p class="volume-note" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="cone" d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.3a8 8 0 0 1 0 11.4"/></svg> Усили звука</p>
-
-  <div class="player" id="player">
-    <button class="toggle" id="toggle" type="button" aria-label="Пауза">
-      <svg class="pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3.5v16H7zM13.5 4H17v16h-3.5z"/></svg>
-      <svg class="play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>
-    </button>
-    <input class="seek" id="seek" type="range" min="21.6" max="204.87" step="0.1" value="21.6" aria-label="Позиция в песента">
-    <span class="clock" id="clock">0:00</span>
-    <span class="now-playing">Меди · Приказка</span>
   </div>
 
   <script>
-    (() => {
-      // Send visit notifications only from the published site, not local previews.
-      const publishedHosts = ['love.mihaela-bella.love', 'agalchov.github.io'];
-      if (window.location.protocol !== 'https:' || !publishedHosts.includes(window.location.hostname)) return;
-
-      const webhookUrl = 'https://hook.eu1.make.com/kb18e5xlos01f63ynwfyus48sba5nxul';
-      const sessionKey = 'bella2.visit-notified';
-
-      function notifyVisit() {
-        // A background tab counts as a visit when the visitor first opens it.
-        if (document.visibilityState !== 'visible') return;
-        document.removeEventListener('visibilitychange', notifyVisit);
-
-        try {
-          if (window.sessionStorage.getItem(sessionKey)) return;
-          window.sessionStorage.setItem(sessionKey, '1');
-        } catch {
-          // Notifications still work when session storage is unavailable.
+    // Find the largest font size at which the whole poem fits on one screen.
+    (function () {
+      const main = document.querySelector('main');
+      function fit() {
+        let lo = 9, hi = 40;
+        for (let i = 0; i < 14; i++) {
+          const mid = (lo + hi) / 2;
+          main.style.fontSize = mid + 'px';
+          if (main.offsetHeight <= innerHeight) lo = mid; else hi = mid;
         }
-
-        const visit = new URLSearchParams({
-          event: 'site_visit',
-          page_url: window.location.origin + window.location.pathname,
-          visited_at: new Date().toISOString()
-        });
-
-        // Form data avoids a CORS preflight; Make's response need not be read.
-        fetch(webhookUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          credentials: 'omit',
-          referrerPolicy: 'no-referrer',
-          keepalive: true,
-          body: visit
-        }).catch(() => {
-          // A failed request can be tried again on the next page load.
-          try { window.sessionStorage.removeItem(sessionKey); } catch {}
-        });
+        main.style.fontSize = lo + 'px';
       }
-
-      if (document.visibilityState === 'visible') notifyVisit();
-      else document.addEventListener('visibilitychange', notifyVisit);
+      fit();
+      addEventListener('resize', fit);
+      if (document.fonts) document.fonts.ready.then(fit);
     })();
-  </script>
 
-  <script>
-    (() => {
-      const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const DURATION = 204.87;
-      // The long intro is skipped: the song starts one musical phrase before the first line.
-      const SONG_START = 21.6;
-      const FADE_IN = 1.5;
-      // How loud the song is, twice a second (0–9): the moon and the lake breathe with it.
-      const loudness = '32211232133544444454244444444444566656656546566665556654588775688865656688887467677667786476777766666776845655787577777645885667678556776767774578558776655686678676766756775767666657767666657577666576577676645675476767677845556658767658877686776778776665578968878866789677778976787887787668966887876555567668677656777688755567758785656776655345679778678877896779688868887987887689759888865887477876641100000000';
-
-      const root = document.documentElement;
-      const audio = document.getElementById('song-audio');
-      const stage = document.getElementById('stage');
-      const seek = document.getElementById('seek');
-      const clock = document.getElementById('clock');
-      const toggle = document.getElementById('toggle');
-
-      // ---- The timeline: each line knows when it is sung ----
-      const cues = [...document.querySelectorAll('.lyrics .line')].map((line) => ({
-        at: Number(line.dataset.at),
-        end: Number(line.dataset.end),
-        kind: line.closest('section').dataset.kind,
-        source: line
-      }));
-      cues.unshift({ at: SONG_START + 0.6, end: 26.6, kind: 'dedication', text: 'За Мишето' });
-
-      const wrapWords = (node, counter) => {
-        for (const child of [...node.childNodes]) {
-          if (child.nodeType !== Node.TEXT_NODE) {
-            wrapWords(child, counter);
-            continue;
-          }
-          const pieces = document.createDocumentFragment();
-          for (const part of child.textContent.split(/(\s+)/)) {
-            if (!part) continue;
-            if (!part.trim()) {
-              pieces.append(' ');
-              continue;
-            }
-            const word = document.createElement('span');
-            word.className = 'word';
-            word.textContent = part;
-            word.style.setProperty('--i', counter.count++);
-            pieces.append(word);
-          }
-          child.replaceWith(pieces);
-        }
-      };
-
-      function enter(cue) {
-        const line = document.createElement('p');
-        line.className = `cue ${cue.kind}`;
-        if (cue.source) line.innerHTML = cue.source.innerHTML;
-        else line.textContent = cue.text;
-        if (line.querySelector('.ache')) line.classList.add('ache-line');
-        const counter = { count: 0 };
-        wrapWords(line, counter);
-        // The words arrive at about the pace they are sung.
-        const gap = (cue.end - cue.at) * 1000 * 0.72 / Math.max(counter.count, 1);
-        line.style.setProperty('--gap', `${Math.round(gap)}ms`);
-        stage.append(line);
-      }
-
-      function leave(line) {
-        line.classList.remove('on');
-        line.classList.add('off');
-        line.addEventListener('animationend', (event) => { if (event.target === line) line.remove(); });
-      }
-
-      let current = -2;
-      function showCue(index) {
-        if (index === current) return;
-        current = index;
-        stage.querySelectorAll('.cue:not(.off)').forEach(leave);
-        const singing = index >= 0;
-        if (singing) enter(cues[index]);
-        document.body.classList.toggle('resting', !singing && started());
-      }
-
-      // Words appear a touch before they are sung, so the eye arrives with the voice.
-      const LEAD = 0.15;
-      function cueAt(t) {
-        for (let i = cues.length - 1; i >= 0; i -= 1) {
-          if (t + LEAD >= cues[i].at) return t + LEAD < cues[i].end ? i : -1;
-        }
-        return -1;
-      }
-
-      // ---- Playback: the music leads; a silent clock stands in if it cannot load ----
-      let silent = false, clockFrom = SONG_START, clockStart = null;
-      const started = () => document.body.classList.contains('started');
-      const time = () => {
-        if (!silent) return Math.max(SONG_START, audio.currentTime);
-        return clockStart === null ? clockFrom : clockFrom + (performance.now() - clockStart) / 1000;
-      };
-      const paused = () => (silent ? clockStart === null : audio.paused);
-
-      function begin() {
-        document.body.classList.remove('finished');
-        document.body.classList.add('started');
-        play();
-        toggle.focus({ preventScroll: true });
-      }
-      function play() {
-        if (silent) {
-          if (clockStart === null) clockStart = performance.now();
-          syncPaused();
-          return;
-        }
-        audio.play().catch(() => goSilent());
-        syncPaused();
-      }
-      function pause() {
-        if (silent) {
-          clockFrom = time();
-          clockStart = null;
-        } else {
-          audio.pause();
-        }
-        syncPaused();
-      }
-      function goSilent() {
-        if (silent || !started()) return;
-        silent = true;
-        document.body.classList.add('silent');
-        clockFrom = time();
-        clockStart = performance.now();
-        document.body.classList.remove('buffering');
-        syncPaused();
-      }
-      function syncPaused() {
-        const isPaused = paused();
-        document.body.classList.toggle('paused', isPaused);
-        toggle.setAttribute('aria-label', isPaused ? 'Пусни' : 'Пауза');
-      }
-      function finish() {
-        document.body.classList.remove('started', 'resting', 'buffering');
-        document.body.classList.add('finished');
-        clockFrom = SONG_START;
-        clockStart = null;
-        syncPaused();
-        document.getElementById('again').focus({ preventScroll: true });
-      }
-
-      document.getElementById('start').addEventListener('click', begin);
-      document.getElementById('again').addEventListener('click', () => {
-        if (silent) clockFrom = SONG_START;
-        else audio.currentTime = SONG_START;
-        begin();
+    // Lines drift in one after another.
+    (function () {
+      document.querySelectorAll('.reveal').forEach((el, i) => {
+        setTimeout(() => el.classList.add('shown'), 300 + i * 450);
       });
-      toggle.addEventListener('click', () => (paused() ? play() : pause()));
-      seek.addEventListener('input', () => {
-        const to = Number(seek.value);
-        if (silent) {
-          clockFrom = to;
-          if (clockStart !== null) clockStart = performance.now();
-        } else {
-          audio.currentTime = to;
+    })();
+
+    // Quiet twinkling stars with the odd falling one.
+    (function () {
+      const canvas = document.querySelector('.sky');
+      const ctx = canvas.getContext('2d');
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let w, h, stars = [], shooting = null;
+
+      function resize() {
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        w = innerWidth; h = innerHeight;
+        canvas.width = w * dpr; canvas.height = h * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = Math.round(w * h / 5200);
+        stars = Array.from({ length: count }, () => ({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 1.2 + 0.2,
+          p: Math.random() * Math.PI * 2,
+          s: Math.random() * 0.8 + 0.3,
+          warm: Math.random() < 0.15
+        }));
+      }
+
+      function draw(t) {
+        ctx.clearRect(0, 0, w, h);
+        for (const s of stars) {
+          const a = still ? 0.7 : 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t / 1000 * s.s + s.p));
+          ctx.fillStyle = s.warm ? `rgba(255,213,158,${a})` : `rgba(255,244,232,${a})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fill();
         }
-      });
-      document.addEventListener('keydown', (event) => {
-        if (event.code !== 'Space' || event.target.closest('button, input') || !started()) return;
-        event.preventDefault();
-        toggle.click();
-      });
-      // Coming in mid-phrase, the music fades up instead of starting abruptly.
-      // timeupdate keeps this going in a background tab, where frames stop.
-      function shapeSound() {
-        if (silent) return;
-        if (started() && !audio.seeking && audio.readyState > 0 && audio.currentTime < SONG_START - 0.5) audio.currentTime = SONG_START;
-        audio.volume = Math.min(1, Math.max(0, (audio.currentTime - SONG_START) / FADE_IN));
-      }
-      audio.addEventListener('timeupdate', shapeSound);
-      audio.addEventListener('ended', finish);
-      audio.addEventListener('error', goSilent);
-      for (const type of ['play', 'pause']) audio.addEventListener(type, syncPaused);
-      for (const type of ['waiting', 'stalled']) audio.addEventListener(type, () => document.body.classList.add('buffering'));
-      for (const type of ['playing', 'canplay', 'pause']) audio.addEventListener(type, () => document.body.classList.remove('buffering'));
-      if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({ title: 'Приказка', artist: 'Меди' });
-      }
-
-      const mmss = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
-      let shownSecond = -1;
-      function updatePlayer(t) {
-        if (document.activeElement !== seek || paused()) seek.value = t;
-        seek.style.setProperty('--at', `${((t - SONG_START) / (DURATION - SONG_START)) * 100}%`);
-        const second = Math.floor(t - SONG_START);
-        if (second !== shownSecond) {
-          shownSecond = second;
-          clock.textContent = mmss(t - SONG_START);
-        }
-      }
-
-      // ---- The painted lake ----
-      const canvas = document.getElementById('scene');
-      const frag = `precision highp float;
-      uniform vec2 uRes;
-      uniform float uT, uWarm, uDawn, uPulse, uWake;
-      const float HORIZON = -0.22;
-      const vec2 MOON = vec2(0.0, 0.3);
-
-      float hash(vec2 p) {
-        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-      }
-      float noise(vec2 p) {
-        vec2 i = floor(p), f = fract(p);
-        f = f * f * (3.0 - 2.0 * f);
-        return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y);
-      }
-      float fbm(vec2 p) {
-        float v = 0.0, a = 0.5;
-        for (int i = 0; i < 4; i++) {
-          v += a * noise(p);
-          p = p * 2.03 + vec2(1.7, 9.2);
-          a *= 0.5;
-        }
-        return v;
-      }
-
-      // One tower of the distant castle: a shaft under a pointed roof.
-      float tower(vec2 p, float x, float w, float h, float roof) {
-        p.x -= x;
-        float shaft = max(abs(p.x) - w, p.y - h);
-        float cone = max(abs(p.x) - w * 1.35 * (1.0 - (p.y - h) / roof), max(h - p.y, p.y - h - roof));
-        return min(shaft, cone);
-      }
-      float castle(vec2 p) {
-        float d = max(abs(p.x) - 0.05, p.y - 0.022);
-        d = min(d, tower(p, -0.05, 0.009, 0.046, 0.03));
-        d = min(d, tower(p, 0.052, 0.008, 0.038, 0.026));
-        d = min(d, tower(p, -0.012, 0.012, 0.066, 0.04));
-        d = min(d, tower(p, 0.022, 0.007, 0.05, 0.024));
-        return d;
-      }
-
-      vec3 above(vec2 p, float halfW) {
-        float h = clamp((p.y - HORIZON) / (0.5 - HORIZON), 0.0, 1.0);
-        vec3 top = mix(mix(vec3(0.018, 0.028, 0.085), vec3(0.07, 0.03, 0.13), uWarm), vec3(0.15, 0.11, 0.28), uDawn);
-        vec3 mid = mix(mix(vec3(0.05, 0.09, 0.21), vec3(0.2, 0.07, 0.2), uWarm), vec3(0.42, 0.2, 0.33), uDawn);
-        vec3 low = mix(mix(vec3(0.1, 0.17, 0.3), vec3(0.42, 0.15, 0.27), uWarm), vec3(0.74, 0.4, 0.34), uDawn);
-        vec3 col = mix(low, mid, smoothstep(0.0, 0.38, h));
-        col = mix(col, top, smoothstep(0.28, 1.0, h));
-
-        // Stars thin out towards the horizon and the morning.
-        vec2 grid = p * 62.0;
-        vec2 id = floor(grid);
-        float seed = hash(id);
-        if (seed > 0.72) {
-          vec2 spot = vec2(hash(id + 3.1), hash(id + 7.7)) - 0.5;
-          float d = length(fract(grid) - 0.5 - spot * 0.7);
-          float twinkle = 0.55 + 0.45 * sin(uT * (0.7 + seed * 2.2) + seed * 80.0);
-          col += vec3(1.0, 0.94, 0.86) * smoothstep(0.1, 0.0, d) * twinkle
-            * smoothstep(0.04, 0.34, h) * (1.0 - uDawn * 0.92) * (seed - 0.6) * 2.6;
-        }
-
-        // The moon, warming with the chorus and breathing with the music.
-        vec3 moonTint = mix(vec3(1.0, 0.96, 0.84), vec3(1.0, 0.76, 0.62), clamp(uWarm * 0.75 + uDawn * 0.5, 0.0, 1.0));
-        float d = length(p - MOON);
-        float swell = 0.085 + uPulse * 0.002;
-        col += moonTint * (0.2 + uPulse * 0.14) * exp(-d * 5.2);
-        col += moonTint * 0.2 * exp(-d * d * 150.0);
-        float disc = smoothstep(swell, swell - 0.0035, d);
-        float seas = fbm((p - MOON) * 19.0 + 4.0);
-        col = mix(col, moonTint * (0.8 + 0.3 * smoothstep(0.3, 0.68, seas)), disc * (1.0 - uDawn * 0.3));
-
-        // Clouds drift across, lit from the side nearest the moon.
-        float wisp = fbm(vec2(p.x * 2.3 + uT * 0.011, p.y * 7.0 + 2.0 + uT * 0.003));
-        float cloud = smoothstep(0.5, 0.8, wisp) * smoothstep(-0.14, 0.04, p.y);
-        vec3 cloudTint = mix(mid * 0.72, moonTint * 0.62, exp(-d * 3.4));
-        col = mix(col, cloudTint, cloud * 0.62);
-
-        // Far ridge carrying the castle, then the dark near hills.
-        float far = HORIZON + 0.04 + 0.036 * noise(vec2(p.x * 2.1 + 3.0, 1.0)) + 0.011 * noise(vec2(p.x * 8.0, 4.0));
-        vec3 farTint = mix(low, vec3(0.03, 0.05, 0.12), 0.74);
-        col = mix(col, farTint, smoothstep(far + 0.0015, far - 0.0015, p.y));
-
-        float scale = clamp(halfW * 1.25, 0.72, 1.25);
-        float cx = halfW * 0.72;
-        float base = HORIZON + 0.04 + 0.036 * noise(vec2(cx * 2.1 + 3.0, 1.0)) - 0.004;
-        vec2 q = (p - vec2(cx, base)) / scale;
-        float keep = castle(q);
-        col = mix(col, farTint * 0.78, smoothstep(0.0012, -0.0012, keep));
-        // A single window stays lit.
-        vec2 w = q - vec2(-0.012, 0.05);
-        float lit = smoothstep(0.0016, 0.0, max(abs(w.x) - 0.0024, abs(w.y) - 0.005));
-        col += vec3(1.0, 0.72, 0.38) * lit * (1.0 + uWarm * 0.7);
-        col += vec3(1.0, 0.6, 0.3) * 0.09 * exp(-dot(w, w) * 2600.0);
-
-        float near = HORIZON + 0.012 + 0.03 * noise(vec2(p.x * 1.3 + 9.0, 7.0)) + 0.012 * noise(vec2(p.x * 42.0, 2.0));
-        col = mix(col, vec3(0.012, 0.02, 0.05) + low * 0.05, smoothstep(near + 0.0015, near - 0.0015, p.y));
-        return col;
-      }
-
-      void main() {
-        vec2 p = (gl_FragCoord.xy - 0.5 * uRes) / uRes.y;
-        float halfW = 0.5 * uRes.x / uRes.y;
-        vec3 col;
-        if (p.y > HORIZON) {
-          col = above(p, halfW);
-          // Now and then a shooting star.
-          float k = floor(uT / 13.0), f = fract(uT / 13.0);
-          if (f < 0.07) {
-            vec2 from = vec2(mix(-halfW, halfW, 0.25 + 0.75 * hash(vec2(k, 1.0))), 0.44 - 0.1 * hash(vec2(k, 2.0)));
-            vec2 dir = normalize(vec2(-0.92, -0.38));
-            vec2 rel = p - (from + dir * f / 0.07 * 0.6);
-            float along = dot(rel, dir);
-            float off = length(rel - dir * along);
-            float tail = smoothstep(-0.17, 0.0, along) * step(along, 0.0);
-            col += vec3(1.0, 0.92, 0.8) * tail * tail * smoothstep(0.0018, 0.0, off) * sin(f / 0.07 * 3.14159);
+        if (!still) {
+          if (!shooting && Math.random() < 0.002) {
+            shooting = { x: Math.random() * w * 0.7 + w * 0.3, y: Math.random() * h * 0.4, life: 0 };
           }
-        } else {
-          // The lake mirrors the sky; ripples grow finer towards the far shore.
-          float depth = HORIZON - p.y;
-          float ripple = noise(vec2(p.x * 15.0 / (depth + 0.07), depth * 120.0 / (depth * 2.6 + 0.3) - uT * 0.75)) - 0.5;
-          ripple += 0.5 * (noise(vec2(p.x * 34.0 / (depth + 0.07), depth * 260.0 / (depth * 2.6 + 0.3) + uT * 0.5)) - 0.5);
-          float strength = 0.002 + depth * 0.17;
-          col = above(vec2(p.x + ripple * strength, HORIZON + depth * 1.5 + ripple * strength * 0.6), halfW) * 0.58;
-          col *= mix(0.95, 0.42, smoothstep(0.0, 0.28, depth));
-          // Moonlight scatters on the water in a long glittering path.
-          float path = exp(-pow(p.x / (0.035 + depth * 0.34), 2.0));
-          float rowY = depth * 520.0 / (depth * 2.6 + 0.3);
-          float glitter = pow(noise(vec2(p.x * 42.0 / (depth + 0.12) + uT * 0.15, rowY - uT * 1.2)), 3.0)
-            * noise(vec2(p.x * 90.0 / (depth + 0.12) - uT * 0.3, rowY * 0.6 + uT * 0.8)) * 1.6;
-          vec3 moonTint = mix(vec3(1.0, 0.93, 0.8), vec3(1.0, 0.7, 0.55), clamp(uWarm * 0.75 + uDawn * 0.5, 0.0, 1.0));
-          col += moonTint * path * (0.08 + glitter * (1.5 + uPulse * 1.5)) * mix(0.28, 1.0, uWake);
-        }
-
-        // Fireflies wander over the shore; the music wakes them.
-        for (int i = 0; i < 2; i++) {
-          float layer = float(i);
-          vec2 g = p * (6.0 + layer * 3.5) + vec2(layer * 13.0 + uT * 0.02, -uT * (0.05 + layer * 0.02));
-          vec2 cell = floor(g);
-          float s = hash(cell + layer);
-          vec2 spot = 0.5 + 0.34 * vec2(sin(uT * 0.5 + s * 40.0), cos(uT * 0.37 + s * 90.0));
-          vec2 rel = fract(g) - spot;
-          float fade = smoothstep(0.08, -0.14, p.y) * smoothstep(-0.5, -0.36, p.y);
-          float blink = 0.5 + 0.5 * sin(uT * (0.9 + s * 1.3) + s * 30.0);
-          col += vec3(1.0, 0.78, 0.42) * step(0.62, s) * exp(-dot(rel, rel) * 620.0) * blink * fade * (0.5 + uPulse + uWarm * 0.5);
-        }
-
-        col *= 1.0 - 0.75 * dot(p, p) / (0.25 + halfW * halfW);
-        col *= mix(0.62, 1.0, uWake);
-        // A whisper of grain keeps the dark gradients from banding.
-        col += (fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) - 0.5) / 160.0;
-        gl_FragColor = vec4(col, 1.0);
-      }`;
-      const vert = 'attribute vec2 a; void main() { gl_Position = vec4(a, 0.0, 1.0); }';
-      const gl = canvas.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'low-power' });
-      let uniforms = null, resolution = 1;
-
-      if (gl) {
-        const compile = (type, source) => {
-          const shader = gl.createShader(type);
-          gl.shaderSource(shader, source);
-          gl.compileShader(shader);
-          return shader;
-        };
-        const program = gl.createProgram();
-        gl.attachShader(program, compile(gl.VERTEX_SHADER, vert));
-        gl.attachShader(program, compile(gl.FRAGMENT_SHADER, frag));
-        gl.bindAttribLocation(program, 0, 'a');
-        gl.linkProgram(program);
-        if (gl.getProgramParameter(program, gl.LINK_STATUS)) {
-          gl.useProgram(program);
-          gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-          gl.enableVertexAttribArray(0);
-          gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-          uniforms = {};
-          for (const name of ['uRes', 'uT', 'uWarm', 'uDawn', 'uPulse', 'uWake']) uniforms[name] = gl.getUniformLocation(program, name);
-        } else {
-          // Without the shader the soft gradient on the page is the sky.
-          canvas.remove();
-        }
-      } else {
-        canvas.remove();
-      }
-
-      function sizeScene() {
-        if (!uniforms) return;
-        const ratio = Math.min(window.devicePixelRatio || 1, 1.5) * resolution;
-        canvas.width = Math.max(2, Math.round(window.innerWidth * ratio));
-        canvas.height = Math.max(2, Math.round(window.innerHeight * ratio));
-        gl.viewport(0, 0, canvas.width, canvas.height);
-        gl.uniform2f(uniforms.uRes, canvas.width, canvas.height);
-      }
-      sizeScene();
-      window.addEventListener('resize', sizeScene);
-
-      function loudnessAt(t) {
-        const x = Math.max(0, t * 2);
-        const i = Math.floor(x), f = x - i;
-        const a = Number(loudness[i] || 0), b = Number(loudness[i + 1] || 0);
-        return (a + (b - a) * f) / 9;
-      }
-
-      const ease = (value, target, rate, dt) => value + (target - value) * Math.min(1, dt * rate);
-      const smooth = (a, b, x) => {
-        const k = Math.min(1, Math.max(0, (x - a) / (b - a)));
-        return k * k * (3 - 2 * k);
-      };
-
-      let warm = 0, wake = 0, pulse = 0, dawn = 0, last = performance.now(), slowFrames = 0, frames = 0;
-      function frame(now) {
-        const dt = Math.min((now - last) / 1000, 0.1);
-        const spent = now - last;
-        last = now;
-        const finished = document.body.classList.contains('finished');
-        const t = finished ? DURATION : time();
-
-        if (started()) {
-          shapeSound();
-          showCue(cueAt(t));
-          updatePlayer(t);
-          if (silent && t >= DURATION) finish();
-        } else if (finished) {
-          showCue(-1);
-          updatePlayer(DURATION);
-        }
-
-        const singing = current >= 0 && cues[current].kind === 'chorus';
-        warm = ease(warm, singing ? 1 : 0, 0.8, dt);
-        wake = ease(wake, started() || finished ? 1 : 0, 0.6, dt);
-        pulse = ease(pulse, started() && !paused() ? loudnessAt(t) : 0.2, 5, dt);
-        // Night gives way to morning across the last part of the song.
-        dawn = ease(dawn, smooth(DURATION * 0.72, DURATION, t), 1, dt);
-
-        if (uniforms) {
-          gl.uniform1f(uniforms.uT, calm ? 40 : now / 1000);
-          gl.uniform1f(uniforms.uWarm, warm);
-          gl.uniform1f(uniforms.uDawn, dawn);
-          gl.uniform1f(uniforms.uPulse, calm ? 0.3 : pulse);
-          gl.uniform1f(uniforms.uWake, wake);
-          gl.drawArrays(gl.TRIANGLES, 0, 3);
-          canvas.classList.add('ready');
-
-          // Slower devices get a softer picture rather than a stuttering one.
-          frames += 1;
-          if (spent > 34) slowFrames += 1;
-          if (frames === 90) {
-            if (slowFrames > 45 && resolution > 0.45) {
-              resolution *= 0.75;
-              sizeScene();
-            }
-            frames = 0;
-            slowFrames = 0;
+          if (shooting) {
+            const len = 90, k = shooting.life / 60;
+            const x = shooting.x - shooting.life * 7, y = shooting.y + shooting.life * 3.5;
+            const g = ctx.createLinearGradient(x, y, x + len, y - len / 2);
+            g.addColorStop(0, `rgba(255,179,199,${1 - k})`);
+            g.addColorStop(1, 'rgba(255,179,199,0)');
+            ctx.strokeStyle = g;
+            ctx.lineWidth = 1.4;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + len, y - len / 2);
+            ctx.stroke();
+            if (++shooting.life > 60) shooting = null;
           }
+          requestAnimationFrame(draw);
         }
-        window.requestAnimationFrame(frame);
       }
-      syncPaused();
-      window.requestAnimationFrame(frame);
+
+      addEventListener('resize', () => { resize(); if (still) draw(0); });
+      resize();
+      requestAnimationFrame(draw);
     })();
   </script>
 </body>
