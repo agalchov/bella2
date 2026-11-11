@@ -44,11 +44,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 16px;
+      padding: 0 max(28px, 8vw);
     }
     main {
       width: 100%;
-      max-width: 34em;
+      max-width: 26em;
       padding: 1.2em 0;
       font-size: 22px;
       text-align: center;
@@ -98,7 +98,7 @@
   <main>
     <div class="stanza">
       <p class="reveal">Поредната нощ, в която не мога да заспя,</p>
-      <p class="reveal">мисля и търся причина, как да не свърши светът,</p>
+      <p class="reveal">мисля и търся причина, как да не свърши света,</p>
       <p class="reveal">но мракът е толкова силен, няма и лъч светлина,</p>
       <p class="reveal">накъдето и да тръгна, все се връщам в самота.</p>
     </div>
@@ -127,12 +127,13 @@
     // Find the largest font size at which the whole poem fits on one screen.
     (function () {
       const main = document.querySelector('main');
+      const stage = document.querySelector('.stage');
       function fit() {
         let lo = 9, hi = 40;
         for (let i = 0; i < 14; i++) {
           const mid = (lo + hi) / 2;
           main.style.fontSize = mid + 'px';
-          if (main.offsetHeight <= innerHeight) lo = mid; else hi = mid;
+          if (main.offsetHeight <= stage.clientHeight) lo = mid; else hi = mid;
         }
         main.style.fontSize = lo + 'px';
       }
